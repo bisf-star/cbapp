@@ -25,87 +25,77 @@
             margin: 0; padding: 0; 
             display: flex; align-items: center; justify-content: center; 
             min-height: 100vh; color: var(--text); 
-            overflow-x: hidden;
+            overflow: hidden;
         }
         
         .container { 
-            width: 100%; height: 100%; max-width: 450px; 
-            min-height: 100vh;
+            width: 100%; max-width: 450px; height: 100vh;
             background: var(--card); 
             display: flex; flex-direction: column;
-            padding: 40px 25px env(safe-area-inset-bottom);
+            padding: 20px 20px env(safe-area-inset-bottom);
             position: relative;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
 
-        /* Desktop Fix für Container */
         @media (min-width: 500px) {
-            .container { 
-                min-height: 85vh; height: auto; border-radius: 40px; margin: 20px;
-            }
+            .container { min-height: 80vh; height: auto; border-radius: 40px; }
         }
 
         .logout-btn { 
-            position: absolute; top: 35px; right: 25px; background: none; border: none; 
+            position: absolute; top: 20px; right: 20px; background: none; border: none; 
             cursor: pointer; color: var(--muted); padding: 5px; z-index: 10; 
         }
-        .logout-svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; }
+        .logout-svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; }
 
         .brand-title { 
-            font-size: 2.8rem; font-weight: 600; letter-spacing: -2px; 
+            font-size: 2rem; font-weight: 600; letter-spacing: -1.5px; 
             margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            line-height: 1.1; margin-top: 10px;
+            line-height: 1.2; margin-top: 5px;
         }
 
-        /* Lobby & Info */
-        .lobby-card { background: var(--light-bg); border-radius: 25px; padding: 25px; margin: 30px 0; border: 1px solid #eee; }
-        .lobby-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 1rem; }
-        .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; }
+        .lobby-card { background: var(--light-bg); border-radius: 20px; padding: 15px; margin: 15px 0; border: 1px solid #eee; }
+        .lobby-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.9rem; }
+        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
         .pill-done { background: #e3faf3; color: var(--accent-green); }
         .pill-wait { background: #fff1f1; color: var(--accent-red); }
 
-        .dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
         .dot-pulse { animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.4; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* Quiz UI */
-        .progress-container { display: flex; justify-content: center; gap: 8px; margin: 20px 0; }
-        .progress-dot { width: 35px; height: 6px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
-        .progress-dot.active { background: var(--secondary); width: 60px; }
+        .progress-container { display: flex; justify-content: center; gap: 6px; margin: 10px 0; }
+        .progress-dot { width: 25px; height: 5px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
+        .progress-dot.active { background: var(--secondary); width: 45px; }
         .progress-dot.done { background: var(--accent-green); }
         
-        h2 { font-size: 1.4rem; margin: 20px 0 30px 0; font-weight: 600; line-height: 1.4; flex-grow: 0; }
+        h2 { font-size: 1.1rem; margin: 10px 0 15px 0; font-weight: 600; line-height: 1.3; text-align: center; }
 
-        #input-zone { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+        #input-zone { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; overflow-y: auto; }
 
-        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 18px; margin: 10px 0; border-radius: 22px; text-align: left; display: flex; align-items: center; gap: 12px; font-size: 1rem; cursor: grab; }
-        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 25px; padding: 35px 10px; cursor: pointer; font-weight: 600; font-size: 1rem; min-height: 100px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); }
+        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 14px; margin: 6px 0; border-radius: 18px; text-align: left; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; touch-action: none; }
+        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
+        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 20px; padding: 25px 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); }
         
-        textarea { width: 100%; height: 150px; border-radius: 25px; border: 2px solid #edf2f7; padding: 20px; font-family: inherit; font-size: 1.1rem; outline: none; resize: none; background: var(--light-bg); }
+        textarea { width: 100%; height: 100px; border-radius: 20px; border: 2px solid #edf2f7; padding: 15px; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); }
         
         .btn-action { 
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
-            color: white; border: none; padding: 22px; width: 100%; border-radius: 25px; 
-            font-weight: 600; font-size: 1.1rem; cursor: pointer; 
-            margin-top: auto; margin-bottom: 10px;
-            box-shadow: 0 10px 20px rgba(255, 118, 117, 0.3);
+            color: white; border: none; padding: 18px; width: 100%; border-radius: 20px; 
+            font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 15px;
         }
 
-        /* Results */
-        .result-block { margin-top: 25px; text-align: left; width: 100%; }
-        .question-header { font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .res-bubble { padding: 15px; border-radius: 20px; font-size: 0.9rem; min-height: 60px; display: flex; flex-direction: column; justify-content: center; }
+        .result-block { margin-top: 15px; text-align: left; width: 100%; }
+        .question-header { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 3px; }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .res-bubble { padding: 12px; border-radius: 15px; font-size: 0.8rem; min-height: 50px; display: flex; flex-direction: column; justify-content: center; }
         .bubble-me { background: #f1f0ff; border: 1px solid var(--secondary); }
         .bubble-partner { background: #fff1f1; border: 1px solid #fab1a0; }
         .bubble-partner.ready { background: #e3faf3; border-color: var(--accent-green); }
-        .bubble-label { font-size: 0.65rem; font-weight: 600; margin-bottom: 5px; opacity: 0.6; }
+        .bubble-label { font-size: 0.6rem; font-weight: 600; margin-bottom: 3px; opacity: 0.6; }
         
         .hidden { display: none !important; }
-        .login-field { width: 100%; padding: 20px; margin: 10px 0; border-radius: 20px; border: 2px solid #eee; box-sizing: border-box; font-size: 1.1rem; outline: none; }
+        .login-field { width: 100%; padding: 16px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; outline: none; }
     </style>
 </head>
 <body>
@@ -115,29 +105,21 @@
             <svg class="logout-svg" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
         </button>
 
-        <div id="login-screen" class="hidden" style="margin-top: 20%;">
+        <div id="login-screen" class="hidden">
             <h1 class="brand-title">CB-App</h1>
-            <p style="color: var(--muted); margin: 10px 0 40px 0; font-size: 1.1rem;">Euer täglicher Moment.</p>
+            <p style="color: var(--muted); margin: 5px 0 20px 0; font-size: 0.9rem;">Euer täglicher Moment.</p>
             <input type="email" id="email" class="login-field" placeholder="E-Mail">
             <input type="password" id="password" class="login-field" placeholder="Passwort">
-            <button onclick="app.login()" id="login-btn" class="btn-action" style="background: var(--bg); margin-top: 20px;">Einloggen</button>
+            <button onclick="app.login()" id="login-btn" class="btn-action" style="background: var(--bg);">Einloggen</button>
         </div>
 
         <div id="lobby-screen" class="hidden">
             <h1 id="welcome-msg" class="brand-title">Willkommen</h1>
-            <p id="today-date" style="color: var(--muted); font-size: 1.1rem; margin: 10px 0;"></p>
-            
+            <p id="today-date" style="color: var(--muted); font-size: 0.9rem; margin: 5px 0;"></p>
             <div class="lobby-card">
-                <div class="lobby-item">
-                    <span>Deine Antwort:</span>
-                    <span id="my-lobby-status" class="status-pill"></span>
-                </div>
-                <div class="lobby-item">
-                    <span id="partner-lobby-name">Partner:</span>
-                    <span id="partner-lobby-status" class="status-pill"></span>
-                </div>
+                <div class="lobby-item"><span>Deine Antwort:</span><span id="my-lobby-status" class="status-pill"></span></div>
+                <div class="lobby-item"><span id="partner-lobby-name">Partner:</span><span id="partner-lobby-status" class="status-pill"></span></div>
             </div>
-
             <button id="start-btn" class="btn-action" onclick="app.startQuiz()">Loslegen 🚀</button>
         </div>
 
@@ -151,15 +133,15 @@
             <div id="input-zone">
                 <div id="options-list"></div>
                 <div id="tot-zone" class="tot-container hidden"></div>
-                <textarea id="text-input" class="hidden" placeholder="Was denkst du gerade?"></textarea>
+                <textarea id="text-input" class="hidden" placeholder="Deine Gedanken..."></textarea>
             </div>
             <button id="next-btn" class="btn-action" onclick="app.nextStep()">Weiter ✨</button>
         </div>
 
-        <div id="complete-view" class="hidden" style="overflow-y: auto;">
-            <h1 class="brand-title" style="font-size: 2.2rem; margin-bottom: 20px;">Eure Sicht</h1>
+        <div id="complete-view" class="hidden" style="overflow-y: auto; flex-grow: 1;">
+            <h1 class="brand-title" style="font-size: 1.8rem;">Eure Sicht</h1>
             <div id="results-display"></div>
-            <button style="background:none; border:none; color:#bbb; padding:20px; font-size:0.8rem; cursor:pointer; width: 100%;" onclick="app.resetToday()">Antworten korrigieren 📝</button>
+            <button style="background:none; border:none; color:#bbb; padding:15px; font-size:0.75rem; cursor:pointer; width: 100%;" onclick="app.resetToday()">Antworten korrigieren 📝</button>
         </div>
     </div>
 
@@ -215,13 +197,10 @@
                 this.meAnswered = !!me;
                 const otherDone = !!other;
 
-                const myS = document.getElementById('my-lobby-status');
-                myS.innerHTML = this.meAnswered ? 'Fertig ✅' : '<span class="dot dot-pulse"></span> Offen';
-                myS.className = "status-pill " + (this.meAnswered ? "pill-done" : "pill-wait");
-
-                const pS = document.getElementById('partner-lobby-status');
-                pS.innerHTML = otherDone ? 'Erledigt ✅' : '<span class="dot dot-pulse"></span> Überlegt...';
-                pS.className = "status-pill " + (otherDone ? "pill-done" : "pill-wait");
+                document.getElementById('my-lobby-status').innerHTML = this.meAnswered ? 'Fertig ✅' : '<span class="dot dot-pulse"></span> Offen';
+                document.getElementById('my-lobby-status').className = "status-pill " + (this.meAnswered ? "pill-done" : "pill-wait");
+                document.getElementById('partner-lobby-status').innerHTML = otherDone ? 'Erledigt ✅' : '<span class="dot dot-pulse"></span> Überlegt...';
+                document.getElementById('partner-lobby-status').className = "status-pill " + (otherDone ? "pill-done" : "pill-wait");
 
                 document.getElementById('start-btn').innerText = this.meAnswered ? "Ergebnisse ansehen ✨" : "Jetzt loslegen 🚀";
                 document.getElementById('lobby-screen').classList.remove('hidden');
@@ -282,16 +261,27 @@
             },
 
             async submitAll() {
+                const btn = document.getElementById('next-btn');
+                btn.disabled = true; btn.innerText = "Sende...";
                 const { error } = await sbClient.from('answers').insert([{ user_name: this.myName.toLowerCase(), choice: this.myAnswers.join(" | "), day_key: this.todayKey }]);
-                if (!error) { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); location.reload(); }
+                if (!error) { 
+                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); 
+                    this.meAnswered = true;
+                    this.showResults(); 
+                } else {
+                    alert("Fehler!"); btn.disabled = false;
+                }
             },
 
             async showResults() {
                 const { data } = await sbClient.from('answers').select('*').eq('day_key', this.todayKey);
                 const me = data?.find(a => a.user_name === this.myName.toLowerCase());
                 const other = data?.find(a => a.user_name === this.partnerName.toLowerCase());
+                
                 document.getElementById('lobby-screen').classList.add('hidden');
+                document.getElementById('quiz-view').classList.add('hidden');
                 document.getElementById('complete-view').classList.remove('hidden');
+                
                 const myS = me.choice.split(" | "), otherS = other ? other.choice.split(" | ") : null;
                 let h = "";
                 this.dailyQuestions.forEach((q, i) => {
