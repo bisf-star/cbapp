@@ -21,34 +21,44 @@
             margin: 0; padding: 10px; display: flex; align-items: center; justify-content: center; min-height: 100vh; color: var(--text); box-sizing: border-box; overflow-x: hidden;
         }
         .container { width: 100%; max-width: 400px; background: var(--card); border-radius: 35px; padding: 25px 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; position: relative; }
-        .logout-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--muted); z-index: 10; }
-        .brand-title { font-size: 2.5rem; font-weight: 600; letter-spacing: -2px; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* Lobby Styles */
+        /* Logout Icon Style */
+        .logout-btn { 
+            position: absolute; top: 20px; right: 20px; background: none; border: none; cursor: pointer; color: var(--muted); padding: 5px; z-index: 10; display: flex; align-items: center;
+        }
+        .logout-svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .brand-title { font-size: 2.2rem; font-weight: 600; letter-spacing: -1.5px; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
+        
+        /* Lobby */
         .lobby-card { background: var(--light-bg); border-radius: 20px; padding: 20px; margin: 20px 0; border: 1px solid #eee; text-align: left; }
-        .lobby-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: 400; color: var(--muted); }
-        .lobby-item b { color: var(--text); }
-        .status-pill { padding: 4px 10px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .lobby-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 0.9rem; }
+        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
         .pill-done { background: #e3faf3; color: var(--accent-green); }
         .pill-wait { background: #fff1f1; color: var(--accent-red); }
 
-        /* Progress */
-        .progress-container { display: flex; justify-content: center; gap: 5px; margin: 10px 0; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+        .dot-pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* Quiz */
+        .progress-container { display: flex; justify-content: center; gap: 5px; margin: 15px 0; }
         .progress-dot { width: 25px; height: 5px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
         .progress-dot.active { background: var(--secondary); width: 45px; }
         .progress-dot.done { background: var(--accent-green); }
         
-        h2 { font-size: 1.15rem; margin: 5px 0 15px 0; font-weight: 600; line-height: 1.3; min-height: 3rem; display: flex; align-items: center; justify-content: center; }
+        h2 { font-size: 1.15rem; margin: 10px 0 20px 0; font-weight: 600; line-height: 1.4; min-height: 3.5rem; display: flex; align-items: center; justify-content: center; }
 
-        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 12px; margin: 5px 0; border-radius: 15px; cursor: grab; text-align: left; display: flex; align-items: center; gap: 10px; font-size: 0.85rem; touch-action: none; }
-        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
-        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 18px; padding: 15px 5px; cursor: pointer; font-weight: 600; font-size: 0.8rem; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 14px; margin: 8px 0; border-radius: 18px; cursor: grab; text-align: left; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; touch-action: none; }
+        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 20px; padding: 20px 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; min-height: 70px; display: flex; align-items: center; justify-content: center; }
         .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); }
-        textarea { width: 100%; height: 80px; border-radius: 15px; border: 2px solid #edf2f7; padding: 10px; font-family: inherit; font-size: 0.95rem; outline: none; resize: none; background: var(--light-bg); }
+        textarea { width: 100%; height: 90px; border-radius: 18px; border: 2px solid #edf2f7; padding: 12px; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); }
         
-        .btn-action { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 18px; width: 100%; border-radius: 20px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(255, 118, 117, 0.2); }
-        
-        /* Result Styles */
+        .btn-action { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 18px; width: 100%; border-radius: 20px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(255, 118, 117, 0.2); transition: 0.2s; }
+        .btn-action:active { transform: scale(0.98); }
+
+        /* Results */
         .result-block { margin-top: 20px; text-align: left; }
         .question-header { font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; color: var(--muted); text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 4px; }
         .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
@@ -56,9 +66,7 @@
         .bubble-me { background: #f1f0ff; border: 1px solid var(--secondary); color: var(--text); }
         .bubble-partner { background: #fff1f1; border: 1px solid #fab1a0; color: var(--muted); }
         .bubble-partner.ready { background: #e3faf3; border-color: var(--accent-green); color: var(--text); }
-        .bubble-label { font-size: 0.6rem; font-weight: 600; margin-bottom: 4px; opacity: 0.7; }
         
-        .btn-reset { background: none; border: 1px solid #dfe4ea; color: var(--muted); padding: 10px 20px; border-radius: 15px; font-size: 0.75rem; margin-top: 20px; cursor: pointer; }
         .hidden { display: none !important; }
         .login-field { width: 100%; padding: 15px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; }
     </style>
@@ -66,9 +74,11 @@
 <body>
 
     <div class="container">
-        <button id="logout-icon" class="logout-btn hidden" onclick="app.logout()">🚪</button>
+        <button id="logout-icon" class="logout-btn hidden" onclick="app.logout()">
+            <svg class="logout-svg" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        </button>
 
-        <div id="login-screen">
+        <div id="login-screen" class="hidden">
             <h1 class="brand-title">CB</h1>
             <p style="color: var(--muted); margin: 5px 0 15px 0; font-size: 0.85rem;">Euer täglicher Moment.</p>
             <input type="email" id="email" class="login-field" placeholder="E-Mail">
@@ -77,17 +87,17 @@
         </div>
 
         <div id="lobby-screen" class="hidden">
-            <h1 class="brand-title">Dashboard</h1>
-            <p id="today-date" style="color: var(--muted); font-size: 0.9rem; margin-top: 5px;"></p>
+            <h1 id="welcome-msg" class="brand-title">Willkommen</h1>
+            <p id="today-date" style="color: var(--muted); font-size: 0.9rem; margin: 8px 0;"></p>
             
             <div class="lobby-card">
                 <div class="lobby-item">
                     <span>Deine Antwort:</span>
-                    <span id="my-lobby-status" class="status-pill">Laden...</span>
+                    <span id="my-lobby-status" class="status-pill"></span>
                 </div>
                 <div class="lobby-item">
                     <span id="partner-lobby-name">Partner:</span>
-                    <span id="partner-lobby-status" class="status-pill">Laden...</span>
+                    <span id="partner-lobby-status" class="status-pill"></span>
                 </div>
             </div>
 
@@ -110,10 +120,9 @@
         </div>
 
         <div id="complete-view" class="hidden">
-            <h1 class="brand-title" style="font-size: 2rem;">Vergleich</h1>
+            <h1 class="brand-title" style="font-size: 2rem;">Eure Sicht</h1>
             <div id="results-display"></div>
-            <button class="btn-reset" onclick="app.resetToday()">Antworten korrigieren 📝</button>
-            <p style="font-size: 0.7rem; color: var(--muted); margin-top: 15px;">Bis morgen! ❤️</p>
+            <button style="background:none; border:1px solid #ddd; color:#999; padding:8px 15px; border-radius:12px; font-size:0.7rem; margin-top:20px; cursor:pointer;" onclick="app.resetToday()">Antworten korrigieren 📝</button>
         </div>
     </div>
 
@@ -123,15 +132,18 @@
         const sbClient = supabase.createClient(SB_URL, SB_KEY);
 
         const pool = {
-            tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Direkt Vollgas 🏃"]}, {q: "Abend-Vibe?", o: ["Couch & Netflix 🍿", "Bar & Action 🍻"]}, {q: "Traumreise?", o: ["Berge 🏔️", "Strand 🌊"]}, {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"]}],
-            ranking: [{q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"]}, {q: "Beste Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Konzert"]}],
+            tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Vollgas 🏃"]}, {q: "Abend-Vibe?", o: ["Couch 🍿", "Action 🍻"]}, {q: "Reise?", o: ["Berge 🏔️", "Strand 🌊"]}, {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"]}],
+            ranking: [{q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"]}, {q: "Beste Date-Idee?", o: ["Kino", "Kochen", "Konzert", "Wandern"]}],
             text: [{q: "Drei Worte für unseren Tag.", o: []}, {q: "Was sollten wir bald mal machen?", o: []}]
         };
 
+        const greetings = [
+            "Schön, dass du da bist,", "Toll, dass es dich gibt,", "Hi mein Schatz,", "Ein Moment für euch,", "Geniess den Tag,"
+        ];
+
         const app = {
             session: null, todayKey: new Date().toISOString().split('T')[0],
-            myName: "", partnerName: "", currentStep: 0, dailyQuestions: [], myAnswers: [],
-            meAnswered: false, partnerAnswered: false,
+            myName: "", partnerName: "", currentStep: 0, dailyQuestions: [], myAnswers: [], meAnswered: false,
 
             async init() {
                 const { data: { session } } = await sbClient.auth.getSession();
@@ -141,8 +153,9 @@
                     this.generateDailyQuestions(); 
                     document.getElementById('logout-icon').classList.remove('hidden');
                     this.syncLobby(); 
+                } else {
+                    document.getElementById('login-screen').classList.remove('hidden');
                 }
-                else { document.getElementById('login-screen').classList.remove('hidden'); }
             },
 
             identifyUsers() {
@@ -150,6 +163,9 @@
                 if (email === 'bisf@gmx.de') { this.myName = "Bene"; this.partnerName = "Clara"; }
                 else if (email === 'clara-frey@gmx.de') { this.myName = "Clara"; this.partnerName = "Bene"; }
                 document.getElementById('partner-lobby-name').innerText = this.partnerName + ":";
+                
+                const greet = greetings[Math.floor(Math.random() * greetings.length)];
+                document.getElementById('welcome-msg').innerText = `${greet} ${this.myName}!`;
             },
 
             generateDailyQuestions() {
@@ -165,27 +181,24 @@
                 const other = data?.find(a => a.user_name === this.partnerName.toLowerCase());
                 
                 this.meAnswered = !!me;
-                this.partnerAnswered = !!other;
+                const otherDone = !!other;
 
-                const myStatus = document.getElementById('my-lobby-status');
-                myStatus.innerText = this.meAnswered ? "Erledigt ✅" : "Offen ⏳";
-                myStatus.className = "status-pill " + (this.meAnswered ? "pill-done" : "pill-wait");
+                const myS = document.getElementById('my-lobby-status');
+                myS.innerHTML = this.meAnswered ? '<span class="dot"></span> Fertig' : '<span class="dot dot-pulse"></span> Offen';
+                myS.className = "status-pill " + (this.meAnswered ? "pill-done" : "pill-wait");
 
-                const pStatus = document.getElementById('partner-lobby-status');
-                pStatus.innerText = this.partnerAnswered ? "Fertig ✅" : "Denkt nach ⏳";
-                pStatus.className = "status-pill " + (this.partnerAnswered ? "pill-done" : "pill-wait");
+                const pS = document.getElementById('partner-lobby-status');
+                pS.innerHTML = otherDone ? '<span class="dot"></span> Erledigt' : '<span class="dot dot-pulse"></span> Überlegt...';
+                pS.className = "status-pill " + (otherDone ? "pill-done" : "pill-wait");
 
-                const startBtn = document.getElementById('start-btn');
-                startBtn.innerText = this.meAnswered ? "Ergebnisse ansehen ✨" : "Jetzt loslegen 🚀";
-                
-                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('start-btn').innerText = this.meAnswered ? "Ergebnisse ansehen ✨" : "Jetzt loslegen 🚀";
                 document.getElementById('lobby-screen').classList.remove('hidden');
+                document.getElementById('login-screen').classList.add('hidden');
             },
 
             startQuiz() {
-                if(this.meAnswered) {
-                    this.showResults();
-                } else {
+                if(this.meAnswered) this.showResults();
+                else {
                     document.getElementById('lobby-screen').classList.add('hidden');
                     document.getElementById('quiz-view').classList.remove('hidden');
                     this.renderStep();
@@ -194,9 +207,7 @@
 
             renderStep() {
                 if (this.currentStep > 2) return;
-                const btn = document.getElementById('next-btn');
-                btn.innerText = (this.currentStep < 2) ? "Weiter ✨" : `Gedanken an ${this.partnerName} senden ✈️`;
-                
+                document.getElementById('next-btn').innerText = (this.currentStep < 2) ? "Weiter ✨" : `An ${this.partnerName} senden ✈️`;
                 for(let i=0; i<3; i++) document.getElementById(`p-dot-${i}`).className = 'progress-dot' + (i === this.currentStep ? ' active' : (i < this.currentStep ? ' done' : ''));
                 
                 const q = this.dailyQuestions[this.currentStep];
@@ -239,49 +250,39 @@
             },
 
             async submitAll() {
-                const finalStr = this.myAnswers.join(" | ");
-                const { error } = await sbClient.from('answers').insert([{ user_name: this.myName.toLowerCase(), choice: finalStr, day_key: this.todayKey }]);
-                if (error) alert("Fehler beim Speichern.");
-                else { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); location.reload(); }
+                const { error } = await sbClient.from('answers').insert([{ user_name: this.myName.toLowerCase(), choice: this.myAnswers.join(" | "), day_key: this.todayKey }]);
+                if (!error) { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); location.reload(); }
             },
 
             async showResults() {
                 const { data } = await sbClient.from('answers').select('*').eq('day_key', this.todayKey);
                 const me = data?.find(a => a.user_name === this.myName.toLowerCase());
                 const other = data?.find(a => a.user_name === this.partnerName.toLowerCase());
-                
                 document.getElementById('lobby-screen').classList.add('hidden');
                 document.getElementById('complete-view').classList.remove('hidden');
-                
-                const mySplit = me.choice.split(" | ");
-                const otherSplit = other ? other.choice.split(" | ") : null;
-                let html = "";
+                const myS = me.choice.split(" | "), otherS = other ? other.choice.split(" | ") : null;
+                let h = "";
                 this.dailyQuestions.forEach((q, i) => {
-                    html += `
-                        <div class="result-block">
-                            <div class="question-header">${q.q}</div>
-                            <div class="comparison-grid">
-                                <div class="res-bubble bubble-me"><span class="bubble-label">Ich</span>${mySplit[i]}</div>
-                                <div class="res-bubble bubble-partner ${otherSplit ? 'ready' : ''}"><span class="bubble-label">${this.partnerName}</span>${otherSplit ? otherSplit[i] : '⌛ Wartet...'}</div>
-                            </div>
-                        </div>`;
+                    h += `<div class="result-block"><div class="question-header">${q.q}</div><div class="comparison-grid">
+                        <div class="res-bubble bubble-me"><b>Ich</b>${myS[i]}</div>
+                        <div class="res-bubble bubble-partner ${otherS ? 'ready' : ''}"><b>${this.partnerName}</b>${otherS ? otherS[i] : '⌛ Wartet...'}</div>
+                    </div></div>`;
                 });
-                document.getElementById('results-display').innerHTML = html;
+                document.getElementById('results-display').innerHTML = h;
             },
 
             async resetToday() {
-                if(!confirm("Antworten für heute wirklich löschen?")) return;
-                await sbClient.from('answers').delete().eq('day_key', this.todayKey).eq('user_name', this.myName.toLowerCase());
-                location.reload();
+                if(confirm("Antworten neu schreiben?")) {
+                    await sbClient.from('answers').delete().eq('day_key', this.todayKey).eq('user_name', this.myName.toLowerCase());
+                    location.reload();
+                }
             },
 
             async login() {
-                const email = document.getElementById('email').value.trim();
-                const password = document.getElementById('password').value;
-                const btn = document.getElementById('login-btn');
-                btn.innerText = "Verbindung..."; btn.disabled = true;
-                const { error } = await sbClient.auth.signInWithPassword({ email, password });
-                if (error) { alert(error.message); btn.innerText = "Einloggen"; btn.disabled = false; }
+                const e = document.getElementById('email').value.trim(), p = document.getElementById('password').value;
+                const b = document.getElementById('login-btn'); b.innerText = "Prüfe..."; b.disabled = true;
+                const { error } = await sbClient.auth.signInWithPassword({ email: e, password: p });
+                if (error) { alert(error.message); b.innerText = "Einloggen"; b.disabled = false; }
                 else location.reload();
             },
 
