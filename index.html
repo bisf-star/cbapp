@@ -16,90 +16,104 @@
             --card: rgba(255, 255, 255, 0.98); --text: #2d3436; 
             --muted: #636e72; --accent-green: #00b894; --accent-red: #fab1a0; --light-bg: #f8fafc;
         }
-        body { font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #2d3436, #0f0c29); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: var(--text); padding: 15px; box-sizing: border-box; overflow-x: hidden; }
+        body { 
+            font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #2d3436, #0f0c29); 
+            margin: 0; padding: 10px; display: flex; align-items: center; justify-content: center; min-height: 100vh; color: var(--text); box-sizing: border-box; overflow-x: hidden;
+        }
+        .container { width: 100%; max-width: 400px; background: var(--card); border-radius: 35px; padding: 25px 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; position: relative; }
+        .logout-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--muted); z-index: 10; }
+        .brand-title { font-size: 2.5rem; font-weight: 600; letter-spacing: -2px; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .container { width: 100%; max-width: 400px; background: var(--card); border-radius: 35px; padding: 30px 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); text-align: center; margin: auto; backdrop-filter: blur(10px); }
-        
-        .brand-title { font-size: 3rem; font-weight: 600; letter-spacing: -2px; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        /* Fortschritt */
-        .progress-container { display: flex; justify-content: center; gap: 6px; margin: 10px 0; }
+        /* Lobby Styles */
+        .lobby-card { background: var(--light-bg); border-radius: 20px; padding: 20px; margin: 20px 0; border: 1px solid #eee; text-align: left; }
+        .lobby-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: 400; color: var(--muted); }
+        .lobby-item b { color: var(--text); }
+        .status-pill { padding: 4px 10px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .pill-done { background: #e3faf3; color: var(--accent-green); }
+        .pill-wait { background: #fff1f1; color: var(--accent-red); }
+
+        /* Progress */
+        .progress-container { display: flex; justify-content: center; gap: 5px; margin: 10px 0; }
         .progress-dot { width: 25px; height: 5px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
         .progress-dot.active { background: var(--secondary); width: 45px; }
         .progress-dot.done { background: var(--accent-green); }
-
-        .status-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 0.75rem; font-weight: 600; color: var(--muted); background: #f1f2f6; padding: 8px 15px; border-radius: 50px; text-transform: uppercase; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #dfe4ea; }
-        .dot-active { background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
-        .dot-waiting { background: var(--accent-red); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-        h2 { font-size: 1.25rem; color: var(--text); margin: 10px 0 20px 0; font-weight: 600; line-height: 1.3; min-height: 3.5rem; display: flex; align-items: center; justify-content: center; }
-
-        /* Eingabefelder & Buttons */
-        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 14px; margin: 6px 0; border-radius: 18px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
-        .option-item.selected { background: #f1f0ff; border-color: var(--secondary); color: #574b90; font-weight: 600; }
         
-        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
-        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 20px; padding: 20px 10px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 0.85rem; display: flex; flex-direction: column; justify-content: center; min-height: 80px; }
+        h2 { font-size: 1.15rem; margin: 5px 0 15px 0; font-weight: 600; line-height: 1.3; min-height: 3rem; display: flex; align-items: center; justify-content: center; }
+
+        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 12px; margin: 5px 0; border-radius: 15px; cursor: grab; text-align: left; display: flex; align-items: center; gap: 10px; font-size: 0.85rem; touch-action: none; }
+        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 18px; padding: 15px 5px; cursor: pointer; font-weight: 600; font-size: 0.8rem; min-height: 60px; display: flex; align-items: center; justify-content: center; }
         .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); }
-
-        textarea { width: 100%; height: 90px; border-radius: 18px; border: 2px solid #edf2f7; padding: 12px; box-sizing: border-box; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); }
-
-        .info-box { background: #f1f2ff; border-radius: 20px; padding: 12px; margin-top: 15px; text-align: left; font-size: 0.7rem; color: #574b90; border: 1px solid #dcdde1; }
-        .info-box b { color: var(--secondary); display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 1px; }
-
-        .btn-action { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 18px; width: 100%; border-radius: 20px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 15px; box-shadow: 0 8px 15px rgba(255, 118, 117, 0.2); }
+        textarea { width: 100%; height: 80px; border-radius: 15px; border: 2px solid #edf2f7; padding: 10px; font-family: inherit; font-size: 0.95rem; outline: none; resize: none; background: var(--light-bg); }
         
-        .result-card { text-align: left; background: #fdfdfd; padding: 15px; border-radius: 20px; border: 1px solid #edf2f7; margin-top: 12px; font-size: 0.85rem; line-height: 1.4; }
-        .result-card b { display: block; margin-bottom: 2px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; font-size: 0.65rem; }
+        .btn-action { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 18px; width: 100%; border-radius: 20px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(255, 118, 117, 0.2); }
         
+        /* Result Styles */
+        .result-block { margin-top: 20px; text-align: left; }
+        .question-header { font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; color: var(--muted); text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .res-bubble { padding: 12px; border-radius: 18px; font-size: 0.8rem; min-height: 50px; display: flex; flex-direction: column; justify-content: center; }
+        .bubble-me { background: #f1f0ff; border: 1px solid var(--secondary); color: var(--text); }
+        .bubble-partner { background: #fff1f1; border: 1px solid #fab1a0; color: var(--muted); }
+        .bubble-partner.ready { background: #e3faf3; border-color: var(--accent-green); color: var(--text); }
+        .bubble-label { font-size: 0.6rem; font-weight: 600; margin-bottom: 4px; opacity: 0.7; }
+        
+        .btn-reset { background: none; border: 1px solid #dfe4ea; color: var(--muted); padding: 10px 20px; border-radius: 15px; font-size: 0.75rem; margin-top: 20px; cursor: pointer; }
         .hidden { display: none !important; }
-        .login-field { width: 100%; padding: 15px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; outline: none; }
+        .login-field { width: 100%; padding: 15px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <button id="logout-icon" class="logout-btn hidden" onclick="app.logout()">🚪</button>
+
         <div id="login-screen">
             <h1 class="brand-title">CB</h1>
-            <p style="color: var(--muted); margin: 5px 0 20px 0; font-size: 0.9rem;">Euer täglicher Moment.</p>
+            <p style="color: var(--muted); margin: 5px 0 15px 0; font-size: 0.85rem;">Euer täglicher Moment.</p>
             <input type="email" id="email" class="login-field" placeholder="E-Mail">
             <input type="password" id="password" class="login-field" placeholder="Passwort">
-            <button onclick="app.login()" id="login-btn" class="btn-action" style="background: var(--bg); margin-top: 10px;">Einloggen</button>
+            <button onclick="app.login()" id="login-btn" class="btn-action" style="background: var(--bg);">Einloggen</button>
         </div>
 
-        <div id="main-screen" class="hidden">
+        <div id="lobby-screen" class="hidden">
+            <h1 class="brand-title">Dashboard</h1>
+            <p id="today-date" style="color: var(--muted); font-size: 0.9rem; margin-top: 5px;"></p>
+            
+            <div class="lobby-card">
+                <div class="lobby-item">
+                    <span>Deine Antwort:</span>
+                    <span id="my-lobby-status" class="status-pill">Laden...</span>
+                </div>
+                <div class="lobby-item">
+                    <span id="partner-lobby-name">Partner:</span>
+                    <span id="partner-lobby-status" class="status-pill">Laden...</span>
+                </div>
+            </div>
+
+            <button id="start-btn" class="btn-action" onclick="app.startQuiz()">Loslegen 🚀</button>
+        </div>
+
+        <div id="quiz-view" class="hidden">
             <div class="progress-container">
                 <div id="p-dot-0" class="progress-dot"></div>
                 <div id="p-dot-1" class="progress-dot"></div>
                 <div id="p-dot-2" class="progress-dot"></div>
             </div>
-            
-            <div class="status-badge">
-                <span id="dot-status" class="dot"></span>
-                <span id="status-text">Status...</span>
-            </div>
-
             <h2 id="question-text">...</h2>
-
             <div id="input-zone">
                 <div id="options-list"></div>
                 <div id="tot-zone" class="tot-container hidden"></div>
                 <textarea id="text-input" class="hidden" placeholder="Was denkst du gerade?"></textarea>
-                
-                <div class="info-box">
-                    <b id="mode-title">KATEGORIE</b>
-                    <span id="mode-desc">Beschreibung...</span>
-                </div>
             </div>
-
             <button id="next-btn" class="btn-action" onclick="app.nextStep()">Weiter ✨</button>
+        </div>
 
-            <div id="complete-view" class="hidden">
-                <div id="results-container"></div>
-                <button onclick="app.logout()" style="background:none; color:var(--muted); border:none; width:100%; margin-top:20px; cursor:pointer; font-size:0.75rem;">Abmelden</button>
-            </div>
+        <div id="complete-view" class="hidden">
+            <h1 class="brand-title" style="font-size: 2rem;">Vergleich</h1>
+            <div id="results-display"></div>
+            <button class="btn-reset" onclick="app.resetToday()">Antworten korrigieren 📝</button>
+            <p style="font-size: 0.7rem; color: var(--muted); margin-top: 15px;">Bis morgen! ❤️</p>
         </div>
     </div>
 
@@ -109,125 +123,88 @@
         const sbClient = supabase.createClient(SB_URL, SB_KEY);
 
         const pool = {
-            tot: [
-                {q: "Morgenstund?", o: ["Lange schlummern 😴", "Direkt Vollgas 🏃"], d: "ENTSCHEIDUNG"},
-                {q: "Abend-Vibe?", o: ["Couch & Netflix 🍿", "Bar & Freunde 🍻"], d: "ENTSCHEIDUNG"},
-                {q: "Traumreise?", o: ["Berge 🏔️", "Strand 🌊"], d: "ENTSCHEIDUNG"},
-                {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"], d: "ENTSCHEIDUNG"}
-            ],
-            ranking: [
-                {q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"], d: "SORTIEREN"},
-                {q: "Beste Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Konzert"], d: "SORTIEREN"}
-            ],
-            text: [
-                {q: "Drei Worte für unseren Tag.", o: [], d: "DEINE GEDANKEN"},
-                {q: "Was sollten wir bald mal machen?", o: [], d: "DEINE GEDANKEN"}
-            ]
+            tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Direkt Vollgas 🏃"]}, {q: "Abend-Vibe?", o: ["Couch & Netflix 🍿", "Bar & Action 🍻"]}, {q: "Traumreise?", o: ["Berge 🏔️", "Strand 🌊"]}, {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"]}],
+            ranking: [{q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"]}, {q: "Beste Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Konzert"]}],
+            text: [{q: "Drei Worte für unseren Tag.", o: []}, {q: "Was sollten wir bald mal machen?", o: []}]
         };
 
         const app = {
-            session: null,
-            todayKey: new Date().toISOString().split('T')[0],
-            myName: "", partnerName: "",
-            currentStep: 0,
-            dailyQuestions: [],
-            myAnswers: [],
+            session: null, todayKey: new Date().toISOString().split('T')[0],
+            myName: "", partnerName: "", currentStep: 0, dailyQuestions: [], myAnswers: [],
+            meAnswered: false, partnerAnswered: false,
 
             async init() {
-                // Prüft SOFORT ob eine Session da ist
                 const { data: { session } } = await sbClient.auth.getSession();
-                
-                if (session) {
-                    this.session = session;
-                    this.identifyUsers();
-                    this.generateDailyQuestions();
-                    this.showMain();
-                } else {
-                    // Bleib beim Login-Screen
-                    document.getElementById('login-screen').classList.remove('hidden');
-                    document.getElementById('main-screen').classList.add('hidden');
+                if (session) { 
+                    this.session = session; 
+                    this.identifyUsers(); 
+                    this.generateDailyQuestions(); 
+                    document.getElementById('logout-icon').classList.remove('hidden');
+                    this.syncLobby(); 
                 }
+                else { document.getElementById('login-screen').classList.remove('hidden'); }
             },
 
             identifyUsers() {
                 const email = this.session.user.email.toLowerCase();
-                if (email === 'bisf@gmx.de') { this.myName = "bene"; this.partnerName = "clara"; }
-                else if (email === 'clara-frey@gmx.de') { this.myName = "clara"; this.partnerName = "bene"; }
-                this.updateBtnText();
-            },
-
-            updateBtnText() {
-                const btn = document.getElementById('next-btn');
-                if (this.currentStep < 2) {
-                    btn.innerText = "Weiter ✨";
-                } else {
-                    const me = this.myName.charAt(0).toUpperCase() + this.myName.slice(1);
-                    const you = this.partnerName.charAt(0).toUpperCase() + this.partnerName.slice(1);
-                    btn.innerText = `Gedanken von ${me} an ${you} senden ✈️`;
-                }
+                if (email === 'bisf@gmx.de') { this.myName = "Bene"; this.partnerName = "Clara"; }
+                else if (email === 'clara-frey@gmx.de') { this.myName = "Clara"; this.partnerName = "Bene"; }
+                document.getElementById('partner-lobby-name').innerText = this.partnerName + ":";
             },
 
             generateDailyQuestions() {
                 const seed = parseInt(this.todayKey.replace(/-/g, ''));
                 const getQ = (list, offset) => list[(seed + offset) % list.length];
-                this.dailyQuestions = [
-                    {...getQ(pool.tot, 0), type: 'tot', desc: 'Wähle deinen Favoriten!'},
-                    {...getQ(pool.ranking, 1), type: 'ranking', desc: 'Halte gedrückt und schiebe die Karten.'},
-                    {...getQ(pool.text, 2), type: 'text', desc: 'Lass dein Herz sprechen.'}
-                ];
+                this.dailyQuestions = [{...getQ(pool.tot, 0), type: 'tot'}, {...getQ(pool.ranking, 1), type: 'ranking'}, {...getQ(pool.text, 2), type: 'text'}];
             },
 
-            async login() {
-                const email = document.getElementById('email').value.trim();
-                const password = document.getElementById('password').value;
-                const loginBtn = document.getElementById('login-btn');
-
-                if(!email || !password) return alert("Logindaten eingeben! ❤️");
-
-                loginBtn.innerText = "Prüfe...";
-                loginBtn.disabled = true;
-
-                const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
+            async syncLobby() {
+                document.getElementById('today-date').innerText = new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+                const { data } = await sbClient.from('answers').select('*').eq('day_key', this.todayKey);
+                const me = data?.find(a => a.user_name === this.myName.toLowerCase());
+                const other = data?.find(a => a.user_name === this.partnerName.toLowerCase());
                 
-                if (error) {
-                    alert("Login fehlgeschlagen: " + error.message);
-                    loginBtn.innerText = "Einloggen";
-                    loginBtn.disabled = false;
-                } else {
-                    // Seite neu laden nach Login für sauberen Start
-                    location.reload();
-                }
-            },
+                this.meAnswered = !!me;
+                this.partnerAnswered = !!other;
 
-            async logout() {
-                await sbClient.auth.signOut();
-                location.reload();
-            },
+                const myStatus = document.getElementById('my-lobby-status');
+                myStatus.innerText = this.meAnswered ? "Erledigt ✅" : "Offen ⏳";
+                myStatus.className = "status-pill " + (this.meAnswered ? "pill-done" : "pill-wait");
 
-            showMain() {
+                const pStatus = document.getElementById('partner-lobby-status');
+                pStatus.innerText = this.partnerAnswered ? "Fertig ✅" : "Denkt nach ⏳";
+                pStatus.className = "status-pill " + (this.partnerAnswered ? "pill-done" : "pill-wait");
+
+                const startBtn = document.getElementById('start-btn');
+                startBtn.innerText = this.meAnswered ? "Ergebnisse ansehen ✨" : "Jetzt loslegen 🚀";
+                
                 document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('main-screen').classList.remove('hidden');
-                this.syncStatus();
-                this.renderStep();
+                document.getElementById('lobby-screen').classList.remove('hidden');
+            },
+
+            startQuiz() {
+                if(this.meAnswered) {
+                    this.showResults();
+                } else {
+                    document.getElementById('lobby-screen').classList.add('hidden');
+                    document.getElementById('quiz-view').classList.remove('hidden');
+                    this.renderStep();
+                }
             },
 
             renderStep() {
                 if (this.currentStep > 2) return;
-                this.updateBtnText();
-
-                for(let i=0; i<3; i++) {
-                    document.getElementById(`p-dot-${i}`).className = 'progress-dot' + (i === this.currentStep ? ' active' : (i < this.currentStep ? ' done' : ''));
-                }
-
+                const btn = document.getElementById('next-btn');
+                btn.innerText = (this.currentStep < 2) ? "Weiter ✨" : `Gedanken an ${this.partnerName} senden ✈️`;
+                
+                for(let i=0; i<3; i++) document.getElementById(`p-dot-${i}`).className = 'progress-dot' + (i === this.currentStep ? ' active' : (i < this.currentStep ? ' done' : ''));
+                
                 const q = this.dailyQuestions[this.currentStep];
                 document.getElementById('question-text').innerText = q.q;
-                document.getElementById('mode-title').innerText = q.d;
-                document.getElementById('mode-desc').innerText = q.desc;
-
+                
                 const list = document.getElementById('options-list');
                 const tot = document.getElementById('tot-zone');
                 const txt = document.getElementById('text-input');
-                
                 list.innerHTML = ""; tot.innerHTML = "";
                 list.classList.add('hidden'); tot.classList.add('hidden'); txt.classList.add('hidden');
 
@@ -235,16 +212,13 @@
                     tot.classList.remove('hidden');
                     q.o.forEach(opt => {
                         const div = document.createElement('div'); div.className = 'tot-item'; div.innerText = opt;
-                        div.onclick = () => { 
-                            document.querySelectorAll('.tot-item').forEach(i => i.classList.remove('selected')); 
-                            div.classList.add('selected'); 
-                        };
+                        div.onclick = () => { document.querySelectorAll('.tot-item').forEach(i => i.classList.remove('selected')); div.classList.add('selected'); };
                         tot.appendChild(div);
                     });
                 } else if (q.type === 'ranking') {
                     list.classList.remove('hidden');
                     q.o.forEach(opt => { const div = document.createElement('div'); div.className = 'option-item'; div.innerText = opt; list.appendChild(div); });
-                    Sortable.create(list, { animation: 150 });
+                    Sortable.create(list, { animation: 200, forceFallback: true });
                 } else if (q.type === 'text') {
                     txt.classList.remove('hidden'); txt.value = "";
                 }
@@ -256,8 +230,8 @@
                 if (q.type === 'tot') ans = document.querySelector('.tot-item.selected')?.innerText;
                 else if (q.type === 'ranking') ans = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" > ");
                 else if (q.type === 'text') ans = document.getElementById('text-input').value.trim();
-
-                if (!ans) return alert("Ein kleiner Gedankenstupser fehlt noch! ✨");
+                
+                if (!ans) return alert("Antwort fehlt! ✨");
                 this.myAnswers.push(ans);
                 this.currentStep++;
                 if (this.currentStep < 3) this.renderStep();
@@ -266,40 +240,52 @@
 
             async submitAll() {
                 const finalStr = this.myAnswers.join(" | ");
-                const { error } = await sbClient.from('answers').insert([{ user_name: this.myName, choice: finalStr, day_key: this.todayKey }]);
-                if (error) alert("Du hast heute schon geantwortet!");
-                else { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); this.syncStatus(); }
+                const { error } = await sbClient.from('answers').insert([{ user_name: this.myName.toLowerCase(), choice: finalStr, day_key: this.todayKey }]);
+                if (error) alert("Fehler beim Speichern.");
+                else { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); location.reload(); }
             },
 
-            async syncStatus() {
+            async showResults() {
                 const { data } = await sbClient.from('answers').select('*').eq('day_key', this.todayKey);
-                const other = data?.find(a => a.user_name === this.partnerName);
-                const me = data?.find(a => a.user_name === this.myName);
+                const me = data?.find(a => a.user_name === this.myName.toLowerCase());
+                const other = data?.find(a => a.user_name === this.partnerName.toLowerCase());
                 
-                const dot = document.getElementById('dot-status');
-                const stText = document.getElementById('status-text');
-                const targetName = this.partnerName.toUpperCase();
+                document.getElementById('lobby-screen').classList.add('hidden');
+                document.getElementById('complete-view').classList.remove('hidden');
+                
+                const mySplit = me.choice.split(" | ");
+                const otherSplit = other ? other.choice.split(" | ") : null;
+                let html = "";
+                this.dailyQuestions.forEach((q, i) => {
+                    html += `
+                        <div class="result-block">
+                            <div class="question-header">${q.q}</div>
+                            <div class="comparison-grid">
+                                <div class="res-bubble bubble-me"><span class="bubble-label">Ich</span>${mySplit[i]}</div>
+                                <div class="res-bubble bubble-partner ${otherSplit ? 'ready' : ''}"><span class="bubble-label">${this.partnerName}</span>${otherSplit ? otherSplit[i] : '⌛ Wartet...'}</div>
+                            </div>
+                        </div>`;
+                });
+                document.getElementById('results-display').innerHTML = html;
+            },
 
-                if (other) { dot.className = "dot dot-active"; stText.innerText = `${targetName} HAT GEANTWORTET ✨`; }
-                else { dot.className = "dot dot-waiting"; stText.innerText = `${targetName} ÜBERLEGT NOCH...`; }
+            async resetToday() {
+                if(!confirm("Antworten für heute wirklich löschen?")) return;
+                await sbClient.from('answers').delete().eq('day_key', this.todayKey).eq('user_name', this.myName.toLowerCase());
+                location.reload();
+            },
 
-                if (me) {
-                    document.getElementById('input-zone').classList.add('hidden');
-                    document.getElementById('next-btn').classList.add('hidden');
-                    document.getElementById('complete-view').classList.remove('hidden');
-                    const resCont = document.getElementById('results-container');
-                    resCont.innerHTML = "";
-                    const mySplit = me.choice.split(" | ");
-                    const otherSplit = other ? other.choice.split(" | ") : null;
+            async login() {
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const btn = document.getElementById('login-btn');
+                btn.innerText = "Verbindung..."; btn.disabled = true;
+                const { error } = await sbClient.auth.signInWithPassword({ email, password });
+                if (error) { alert(error.message); btn.innerText = "Einloggen"; btn.disabled = false; }
+                else location.reload();
+            },
 
-                    this.dailyQuestions.forEach((q, i) => {
-                        const card = document.createElement('div'); card.className = 'result-card';
-                        card.innerHTML = `<b>${q.q}</b>Ich: ${mySplit[i]}<br>` + 
-                                       (otherSplit ? `${targetName}: ${otherSplit[i]}` : `<i>Warten auf ${targetName}...</i>`);
-                        resCont.appendChild(card);
-                    });
-                }
-            }
+            async logout() { await sbClient.auth.signOut(); location.reload(); }
         };
         app.init();
     </script>
