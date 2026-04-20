@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>CB-App</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -16,59 +16,96 @@
             --card: rgba(255, 255, 255, 0.98); --text: #2d3436; 
             --muted: #636e72; --accent-green: #00b894; --accent-red: #fab1a0; --light-bg: #f8fafc;
         }
-        body { 
-            font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #2d3436, #0f0c29); 
-            margin: 0; padding: 10px; display: flex; align-items: center; justify-content: center; min-height: 100vh; color: var(--text); box-sizing: border-box; overflow-x: hidden;
-        }
-        .container { width: 100%; max-width: 400px; background: var(--card); border-radius: 35px; padding: 25px 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; position: relative; }
-        
-        /* Logout Icon Style */
-        .logout-btn { 
-            position: absolute; top: 20px; right: 20px; background: none; border: none; cursor: pointer; color: var(--muted); padding: 5px; z-index: 10; display: flex; align-items: center;
-        }
-        .logout-svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-        .brand-title { font-size: 2.2rem; font-weight: 600; letter-spacing: -1.5px; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: radial-gradient(circle at top right, #2d3436, #0f0c29); 
+            margin: 0; padding: 0; 
+            display: flex; align-items: center; justify-content: center; 
+            min-height: 100vh; color: var(--text); 
+            overflow-x: hidden;
+        }
         
-        /* Lobby */
-        .lobby-card { background: var(--light-bg); border-radius: 20px; padding: 20px; margin: 20px 0; border: 1px solid #eee; text-align: left; }
-        .lobby-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 0.9rem; }
-        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+        .container { 
+            width: 100%; height: 100%; max-width: 450px; 
+            min-height: 100vh;
+            background: var(--card); 
+            display: flex; flex-direction: column;
+            padding: 40px 25px env(safe-area-inset-bottom);
+            position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        /* Desktop Fix für Container */
+        @media (min-width: 500px) {
+            .container { 
+                min-height: 85vh; height: auto; border-radius: 40px; margin: 20px;
+            }
+        }
+
+        .logout-btn { 
+            position: absolute; top: 35px; right: 25px; background: none; border: none; 
+            cursor: pointer; color: var(--muted); padding: 5px; z-index: 10; 
+        }
+        .logout-svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+        .brand-title { 
+            font-size: 2.8rem; font-weight: 600; letter-spacing: -2px; 
+            margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            line-height: 1.1; margin-top: 10px;
+        }
+
+        /* Lobby & Info */
+        .lobby-card { background: var(--light-bg); border-radius: 25px; padding: 25px; margin: 30px 0; border: 1px solid #eee; }
+        .lobby-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 1rem; }
+        .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; }
         .pill-done { background: #e3faf3; color: var(--accent-green); }
         .pill-wait { background: #fff1f1; color: var(--accent-red); }
 
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
         .dot-pulse { animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.4; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* Quiz */
-        .progress-container { display: flex; justify-content: center; gap: 5px; margin: 15px 0; }
-        .progress-dot { width: 25px; height: 5px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
-        .progress-dot.active { background: var(--secondary); width: 45px; }
+        /* Quiz UI */
+        .progress-container { display: flex; justify-content: center; gap: 8px; margin: 20px 0; }
+        .progress-dot { width: 35px; height: 6px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
+        .progress-dot.active { background: var(--secondary); width: 60px; }
         .progress-dot.done { background: var(--accent-green); }
         
-        h2 { font-size: 1.15rem; margin: 10px 0 20px 0; font-weight: 600; line-height: 1.4; min-height: 3.5rem; display: flex; align-items: center; justify-content: center; }
+        h2 { font-size: 1.4rem; margin: 20px 0 30px 0; font-weight: 600; line-height: 1.4; flex-grow: 0; }
 
-        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 14px; margin: 8px 0; border-radius: 18px; cursor: grab; text-align: left; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; touch-action: none; }
-        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 20px; padding: 20px 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; min-height: 70px; display: flex; align-items: center; justify-content: center; }
-        .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); }
-        textarea { width: 100%; height: 90px; border-radius: 18px; border: 2px solid #edf2f7; padding: 12px; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); }
+        #input-zone { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+
+        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 18px; margin: 10px 0; border-radius: 22px; text-align: left; display: flex; align-items: center; gap: 12px; font-size: 1rem; cursor: grab; }
+        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 25px; padding: 35px 10px; cursor: pointer; font-weight: 600; font-size: 1rem; min-height: 100px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); }
         
-        .btn-action { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 18px; width: 100%; border-radius: 20px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(255, 118, 117, 0.2); transition: 0.2s; }
-        .btn-action:active { transform: scale(0.98); }
+        textarea { width: 100%; height: 150px; border-radius: 25px; border: 2px solid #edf2f7; padding: 20px; font-family: inherit; font-size: 1.1rem; outline: none; resize: none; background: var(--light-bg); }
+        
+        .btn-action { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
+            color: white; border: none; padding: 22px; width: 100%; border-radius: 25px; 
+            font-weight: 600; font-size: 1.1rem; cursor: pointer; 
+            margin-top: auto; margin-bottom: 10px;
+            box-shadow: 0 10px 20px rgba(255, 118, 117, 0.3);
+        }
 
         /* Results */
-        .result-block { margin-top: 20px; text-align: left; }
-        .question-header { font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; color: var(--muted); text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 4px; }
-        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .res-bubble { padding: 12px; border-radius: 18px; font-size: 0.8rem; min-height: 50px; display: flex; flex-direction: column; justify-content: center; }
-        .bubble-me { background: #f1f0ff; border: 1px solid var(--secondary); color: var(--text); }
-        .bubble-partner { background: #fff1f1; border: 1px solid #fab1a0; color: var(--muted); }
-        .bubble-partner.ready { background: #e3faf3; border-color: var(--accent-green); color: var(--text); }
+        .result-block { margin-top: 25px; text-align: left; width: 100%; }
+        .question-header { font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .res-bubble { padding: 15px; border-radius: 20px; font-size: 0.9rem; min-height: 60px; display: flex; flex-direction: column; justify-content: center; }
+        .bubble-me { background: #f1f0ff; border: 1px solid var(--secondary); }
+        .bubble-partner { background: #fff1f1; border: 1px solid #fab1a0; }
+        .bubble-partner.ready { background: #e3faf3; border-color: var(--accent-green); }
+        .bubble-label { font-size: 0.65rem; font-weight: 600; margin-bottom: 5px; opacity: 0.6; }
         
         .hidden { display: none !important; }
-        .login-field { width: 100%; padding: 15px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; }
+        .login-field { width: 100%; padding: 20px; margin: 10px 0; border-radius: 20px; border: 2px solid #eee; box-sizing: border-box; font-size: 1.1rem; outline: none; }
     </style>
 </head>
 <body>
@@ -78,17 +115,17 @@
             <svg class="logout-svg" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
         </button>
 
-        <div id="login-screen" class="hidden">
-            <h1 class="brand-title">CB</h1>
-            <p style="color: var(--muted); margin: 5px 0 15px 0; font-size: 0.85rem;">Euer täglicher Moment.</p>
+        <div id="login-screen" class="hidden" style="margin-top: 20%;">
+            <h1 class="brand-title">CB-App</h1>
+            <p style="color: var(--muted); margin: 10px 0 40px 0; font-size: 1.1rem;">Euer täglicher Moment.</p>
             <input type="email" id="email" class="login-field" placeholder="E-Mail">
             <input type="password" id="password" class="login-field" placeholder="Passwort">
-            <button onclick="app.login()" id="login-btn" class="btn-action" style="background: var(--bg);">Einloggen</button>
+            <button onclick="app.login()" id="login-btn" class="btn-action" style="background: var(--bg); margin-top: 20px;">Einloggen</button>
         </div>
 
         <div id="lobby-screen" class="hidden">
             <h1 id="welcome-msg" class="brand-title">Willkommen</h1>
-            <p id="today-date" style="color: var(--muted); font-size: 0.9rem; margin: 8px 0;"></p>
+            <p id="today-date" style="color: var(--muted); font-size: 1.1rem; margin: 10px 0;"></p>
             
             <div class="lobby-card">
                 <div class="lobby-item">
@@ -104,7 +141,7 @@
             <button id="start-btn" class="btn-action" onclick="app.startQuiz()">Loslegen 🚀</button>
         </div>
 
-        <div id="quiz-view" class="hidden">
+        <div id="quiz-view" class="hidden" style="flex-grow: 1; display: flex; flex-direction: column;">
             <div class="progress-container">
                 <div id="p-dot-0" class="progress-dot"></div>
                 <div id="p-dot-1" class="progress-dot"></div>
@@ -119,10 +156,10 @@
             <button id="next-btn" class="btn-action" onclick="app.nextStep()">Weiter ✨</button>
         </div>
 
-        <div id="complete-view" class="hidden">
-            <h1 class="brand-title" style="font-size: 2rem;">Eure Sicht</h1>
+        <div id="complete-view" class="hidden" style="overflow-y: auto;">
+            <h1 class="brand-title" style="font-size: 2.2rem; margin-bottom: 20px;">Eure Sicht</h1>
             <div id="results-display"></div>
-            <button style="background:none; border:1px solid #ddd; color:#999; padding:8px 15px; border-radius:12px; font-size:0.7rem; margin-top:20px; cursor:pointer;" onclick="app.resetToday()">Antworten korrigieren 📝</button>
+            <button style="background:none; border:none; color:#bbb; padding:20px; font-size:0.8rem; cursor:pointer; width: 100%;" onclick="app.resetToday()">Antworten korrigieren 📝</button>
         </div>
     </div>
 
@@ -133,13 +170,11 @@
 
         const pool = {
             tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Vollgas 🏃"]}, {q: "Abend-Vibe?", o: ["Couch 🍿", "Action 🍻"]}, {q: "Reise?", o: ["Berge 🏔️", "Strand 🌊"]}, {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"]}],
-            ranking: [{q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"]}, {q: "Beste Date-Idee?", o: ["Kino", "Kochen", "Konzert", "Wandern"]}],
+            ranking: [{q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"]}, {q: "Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Wandern"]}],
             text: [{q: "Drei Worte für unseren Tag.", o: []}, {q: "Was sollten wir bald mal machen?", o: []}]
         };
 
-        const greetings = [
-            "Schön, dass du da bist,", "Toll, dass es dich gibt,", "Hi mein Schatz,", "Ein Moment für euch,", "Geniess den Tag,"
-        ];
+        const greetings = ["Schön, dass du da bist,", "Toll, dass es dich gibt,", "Hi mein Schatz,", "Zeit für euch,", "Geniess den Tag,"];
 
         const app = {
             session: null, todayKey: new Date().toISOString().split('T')[0],
@@ -148,9 +183,7 @@
             async init() {
                 const { data: { session } } = await sbClient.auth.getSession();
                 if (session) { 
-                    this.session = session; 
-                    this.identifyUsers(); 
-                    this.generateDailyQuestions(); 
+                    this.session = session; this.identifyUsers(); this.generateDailyQuestions(); 
                     document.getElementById('logout-icon').classList.remove('hidden');
                     this.syncLobby(); 
                 } else {
@@ -162,10 +195,9 @@
                 const email = this.session.user.email.toLowerCase();
                 if (email === 'bisf@gmx.de') { this.myName = "Bene"; this.partnerName = "Clara"; }
                 else if (email === 'clara-frey@gmx.de') { this.myName = "Clara"; this.partnerName = "Bene"; }
-                document.getElementById('partner-lobby-name').innerText = this.partnerName + ":";
-                
                 const greet = greetings[Math.floor(Math.random() * greetings.length)];
                 document.getElementById('welcome-msg').innerText = `${greet} ${this.myName}!`;
+                document.getElementById('partner-lobby-name').innerText = this.partnerName + ":";
             },
 
             generateDailyQuestions() {
@@ -184,11 +216,11 @@
                 const otherDone = !!other;
 
                 const myS = document.getElementById('my-lobby-status');
-                myS.innerHTML = this.meAnswered ? '<span class="dot"></span> Fertig' : '<span class="dot dot-pulse"></span> Offen';
+                myS.innerHTML = this.meAnswered ? 'Fertig ✅' : '<span class="dot dot-pulse"></span> Offen';
                 myS.className = "status-pill " + (this.meAnswered ? "pill-done" : "pill-wait");
 
                 const pS = document.getElementById('partner-lobby-status');
-                pS.innerHTML = otherDone ? '<span class="dot"></span> Erledigt' : '<span class="dot dot-pulse"></span> Überlegt...';
+                pS.innerHTML = otherDone ? 'Erledigt ✅' : '<span class="dot dot-pulse"></span> Überlegt...';
                 pS.className = "status-pill " + (otherDone ? "pill-done" : "pill-wait");
 
                 document.getElementById('start-btn').innerText = this.meAnswered ? "Ergebnisse ansehen ✨" : "Jetzt loslegen 🚀";
@@ -264,8 +296,8 @@
                 let h = "";
                 this.dailyQuestions.forEach((q, i) => {
                     h += `<div class="result-block"><div class="question-header">${q.q}</div><div class="comparison-grid">
-                        <div class="res-bubble bubble-me"><b>Ich</b>${myS[i]}</div>
-                        <div class="res-bubble bubble-partner ${otherS ? 'ready' : ''}"><b>${this.partnerName}</b>${otherS ? otherS[i] : '⌛ Wartet...'}</div>
+                        <div class="res-bubble bubble-me"><span class="bubble-label">Ich</span>${myS[i]}</div>
+                        <div class="res-bubble bubble-partner ${otherS ? 'ready' : ''}"><span class="bubble-label">${this.partnerName}</span>${otherS ? otherS[i] : '⌛ Wartet...'}</div>
                     </div></div>`;
                 });
                 document.getElementById('results-display').innerHTML = h;
