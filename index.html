@@ -16,15 +16,14 @@
             --card: rgba(255, 255, 255, 0.98); --text: #2d3436; 
             --muted: #636e72; --accent-green: #00b894; --accent-red: #fab1a0; --light-bg: #f8fafc;
         }
-        body { font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #2d3436, #0f0c29); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: var(--text); padding: 20px; box-sizing: border-box; }
-        .container { width: 100%; max-width: 420px; background: var(--card); border-radius: 40px; padding: 40px 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); text-align: center; margin: auto; backdrop-filter: blur(10px); animation: fadeIn 0.6s ease-out; position: relative; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
+        body { font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #2d3436, #0f0c29); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: var(--text); padding: 20px; box-sizing: border-box; overflow-x: hidden; }
+        .container { width: 100%; max-width: 420px; background: var(--card); border-radius: 40px; padding: 40px 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); text-align: center; margin: auto; backdrop-filter: blur(10px); }
+        
         .brand-title { font-size: 3.5rem; font-weight: 600; letter-spacing: -3px; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         .progress-container { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
-        .progress-dot { width: 40px; height: 6px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
-        .progress-dot.active { background: var(--secondary); width: 60px; }
+        .progress-dot { width: 30px; height: 6px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
+        .progress-dot.active { background: var(--secondary); width: 50px; }
         .progress-dot.done { background: var(--accent-green); }
 
         .status-badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 25px; font-size: 0.85rem; font-weight: 600; color: var(--muted); background: #f1f2f6; padding: 10px 20px; border-radius: 50px; }
@@ -33,25 +32,28 @@
         .dot-waiting { background: var(--accent-red); animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        h2 { font-size: 1.4rem; color: var(--text); margin-bottom: 20px; font-weight: 600; line-height: 1.3; min-height: 4rem; display: flex; align-items: center; justify-content: center; }
+        h2 { font-size: 1.3rem; color: var(--text); margin-bottom: 20px; font-weight: 600; line-height: 1.4; min-height: 4rem; display: flex; align-items: center; justify-content: center; }
 
-        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 16px; margin: 8px 0; border-radius: 20px; cursor: pointer; transition: 0.2s; text-align: left; display: flex; align-items: center; gap: 12px; font-size: 0.95rem; }
+        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 16px; margin: 8px 0; border-radius: 20px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 12px; font-size: 0.95rem; }
         .option-item.selected { background: #f1f0ff; border-color: var(--secondary); color: #574b90; font-weight: 600; }
-        .this-or-that-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
-        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 22px; padding: 25px 10px; cursor: pointer; transition: 0.3s; font-weight: 600; }
+        
+        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
+        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 22px; padding: 25px 10px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 0.9rem; }
         .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.03); }
 
-        textarea { width: 100%; height: 120px; border-radius: 20px; border: 2px solid #edf2f7; padding: 15px; box-sizing: border-box; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); }
+        textarea { width: 100%; height: 100px; border-radius: 20px; border: 2px solid #edf2f7; padding: 15px; box-sizing: border-box; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); }
 
         .info-box { background: #f1f2ff; border-radius: 22px; padding: 15px; margin-top: 20px; text-align: left; font-size: 0.75rem; color: #574b90; border: 1px solid #dcdde1; }
         .info-box b { color: var(--secondary); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
 
-        button#next-btn { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 22px; width: 100%; border-radius: 22px; font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 15px; box-shadow: 0 8px 15px rgba(255, 118, 117, 0.2); transition: 0.3s; }
-        button#next-btn:active { transform: scale(0.98); }
+        .btn-action { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 20px; width: 100%; border-radius: 22px; font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 15px; box-shadow: 0 8px 15px rgba(255, 118, 117, 0.2); transition: 0.3s; }
+        .btn-action:active { transform: scale(0.98); }
 
-        .result-card { text-align: left; background: #fdfdfd; padding: 20px; border-radius: 22px; border: 1px solid #edf2f7; margin-top: 20px; font-size: 0.9rem; }
+        .result-card { text-align: left; background: #fdfdfd; padding: 20px; border-radius: 22px; border: 1px solid #edf2f7; margin-top: 15px; font-size: 0.9rem; line-height: 1.5; }
         .result-card b { display: block; margin-bottom: 4px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; font-size: 0.7rem; }
-        .hidden { display: none; }
+        
+        .hidden { display: none !important; }
+        input.login-field { width: 100%; padding: 18px; margin: 10px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; outline: none; }
     </style>
 </head>
 <body>
@@ -59,10 +61,10 @@
     <div class="container">
         <div id="login-screen">
             <h1 class="brand-title">CB</h1>
-            <p style="color: var(--muted); margin: 15px 0 35px 0;">Euer täglicher Moment.</p>
-            <input type="email" id="email" style="width:100%; padding:18px; margin:10px 0; border-radius:15px; border:2px solid #eee; box-sizing:border-box;" placeholder="E-Mail">
-            <input type="password" id="password" style="width:100%; padding:18px; margin:10px 0; border-radius:15px; border:2px solid #eee; box-sizing:border-box;" placeholder="Passwort">
-            <button onclick="app.login()" style="background:var(--bg); color:white; width:100%; padding:18px; border-radius:15px; border:none; margin-top:10px; font-weight:600; cursor:pointer;">Einloggen</button>
+            <p style="color: var(--muted); margin: 10px 0 30px 0;">Euer täglicher Moment.</p>
+            <input type="email" id="email" class="login-field" placeholder="E-Mail">
+            <input type="password" id="password" class="login-field" placeholder="Passwort">
+            <button onclick="app.login()" class="btn-action" style="background: var(--bg); margin-top: 10px;">Einloggen</button>
         </div>
 
         <div id="main-screen" class="hidden">
@@ -81,20 +83,20 @@
 
             <div id="input-zone">
                 <div id="options-list"></div>
-                <div id="tot-zone" class="this-or-that-container hidden"></div>
+                <div id="tot-zone" class="tot-container hidden"></div>
                 <textarea id="text-input" class="hidden" placeholder="Deine Antwort..."></textarea>
                 
                 <div class="info-box">
-                    <b id="mode-title">Modus</b>
-                    <span id="mode-desc">Beschreibung lädt...</span>
+                    <b id="mode-title">KATEGORIE</b>
+                    <span id="mode-desc">Beschreibung...</span>
                 </div>
             </div>
 
-            <button id="next-btn" onclick="app.nextStep()">Weiter ✨</button>
+            <button id="next-btn" class="btn-action" onclick="app.nextStep()">Gedanken von Bene senden ✨</button>
 
             <div id="complete-view" class="hidden">
                 <div id="results-container"></div>
-                <button onclick="app.logout()" style="background:none; color:var(--muted); border:none; width:100%; margin-top:20px; cursor:pointer; font-size:0.8rem;">Abmelden</button>
+                <button onclick="app.logout()" style="background:none; color:var(--muted); border:none; width:100%; margin-top:25px; cursor:pointer; font-size:0.8rem;">Abmelden</button>
             </div>
         </div>
     </div>
@@ -107,87 +109,37 @@
         const pool = {
             tot: [
                 {q: "Morgenstund?", o: ["Lange schlummern 😴", "Direkt Vollgas 🏃"]},
-                {q: "Abend-Vibe?", o: ["Couch & Netflix 🍿", "Bar & Action 🍻"]},
+                {q: "Abend-Vibe?", o: ["Couch & Netflix 🍿", "Bar & Freunde 🍻"]},
                 {q: "Traumreise?", o: ["Berge 🏔️", "Strand 🌊"]},
-                {q: "Getränk?", o: ["Kaffee ☕", "Tee 🍵"]},
+                {q: "Heißgetränk?", o: ["Kaffee ☕", "Tee 🍵"]},
+                {q: "Kochen?", o: ["Selber machen 👨‍🍳", "Bestellen 🍕"]},
                 {q: "Superkraft?", o: ["Fliegen 🦅", "Zeit anhalten ⏳"]},
-                {q: "Essen?", o: ["Selber kochen 👨‍🍳", "Bestellen 🍕"]},
-                {q: "Wohnen?", o: ["Modernes Loft 🏙️", "Haus am See 🏡"]},
-                {q: "Musik?", o: ["Charts 🎧", "Oldies 📻"]},
-                {q: "Snack?", o: ["Chips 🥨", "Schokolade 🍫"]},
-                {q: "Element?", o: ["Feuer 🔥", "Wasser 💧"]},
-                {q: "Urlaub?", o: ["Abenteuer ⛺", "Luxus 🏨"]},
-                {q: "Typ?", o: ["Nachteule 🦉", "Frühaufsteher ☀️"]},
-                {q: "Hobby?", o: ["Gaming 🎮", "Sport 🏋️"]},
-                {q: "Auto?", o: ["Klassiker 🏎️", "Modern ⚡"]},
-                {q: "Wochenende?", o: ["Planen 🗓️", "Einfach los 🚗"]},
-                {q: "Stadt?", o: ["Trubel 🌃", "Natur 🌲"]},
-                {q: "Film?", o: ["Komödie 😂", "Thriller 😱"]},
+                {q: "Wetter?", o: ["Sonne ☀️", "Gewitter ⚡"]},
+                {q: "Technik?", o: ["Apple 🍏", "Android 🤖"]},
+                {q: "Wohnen?", o: ["Loft Stadt 🏙️", "Haus am See 🏡"]},
+                {q: "Abenteuer?", o: ["Skydiving 🪂", "Roadtrip 🚗"]},
                 {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"]},
-                {q: "Geschenk?", o: ["Erlebnis 🎫", "Etwas Festes 🎁"]},
-                {q: "Abendessen?", o: ["Schick ausgehen 🍷", "Gemütlich daheim 🏠"]},
-                {q: "Zukunft?", o: ["Weltreise 🌍", "Hausbau 🧱"]},
+                {q: "Haustier?", o: ["Hund 🐶", "Katze 🐱"]},
+                {q: "Klassiker?", o: ["Star Wars ⚔️", "Harry Potter 🪄"]},
+                {q: "Snack?", o: ["Süß 🍫", "Salzig 🥨"]},
+                {q: "Zukunft?", o: ["Weltreise 🌍", "Hausbau 🏠"]},
                 {q: "Social?", o: ["Große Party 🎉", "Kleiner Kreis 👥"]},
                 {q: "Outfit?", o: ["Casual 👟", "Elegant 👔"]},
-                {q: "Krimi?", o: ["Buch 📖", "Film 📺"]},
-                {q: "Wellness?", o: ["Sauna 🔥", "Massage 💆"]},
-                {q: "Sprache?", o: ["Spanisch 🇪🇸", "Französisch 🇫🇷"]},
                 {q: "Eis?", o: ["Waffel 🍦", "Becher 🍨"]},
                 {q: "Foto?", o: ["Digital 📸", "Polaroid 🎞️"]},
-                {q: "Farbe?", o: ["Bunt 🌈", "Minimalistisch ⚪"]},
-                {q: "Haustier?", o: ["Hund 🐶", "Katze 🐱"]},
-                {q: "Sport?", o: ["Team ⚽", "Einzel 🧘"]},
-                {q: "Technik?", o: ["Apple 🍏", "Android 🤖"]},
-                {q: "Power?", o: ["Gedankenlesen 🧠", "Teleportation 🌌"]},
-                {q: "Klassiker?", o: ["Star Wars ⚔️", "Harry Potter 🪄"]},
-                {q: "Wetter?", o: ["Sonnenschein ☀️", "Gewitter ⚡"]},
-                {q: "Süßigkeit?", o: ["Gummibärchen 🧸", "Keks 🍪"]},
-                {q: "Backen?", o: ["Kuchen 🍰", "Pizza 🍕"]},
-                {q: "Entspannung?", o: ["Badewanne 🛁", "Lesen 📚"]},
-                {q: "Museum?", o: ["Kunst 🎨", "Geschichte 🦖"]},
-                {q: "Schuh?", o: ["Sneaker 👟", "Barfuß 🦶"]}
+                {q: "Sport?", o: ["Team ⚽", "Einzel 🧘"]}
             ],
             ranking: [
                 {q: "Wichtigste Beziehungs-Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"]},
                 {q: "Beste Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Konzert"]},
-                {q: "Was macht ein Heim gemütlich?", o: ["Licht", "Düfte", "Ordnung", "Fotos"]},
-                {q: "Bester Urlaubstyp?", o: ["Städtetrip", "Strand", "Wandern", "Wellness"]},
-                {q: "Haushalt-Prio?", o: ["Küche", "Bad", "Bett", "Wäsche"]},
-                {q: "Zukunfts-Fokus?", o: ["Reisen", "Karriere", "Haus", "Familie"]},
-                {q: "Charakter-Check?", o: ["Geduld", "Mut", "Witz", "Ruhe"]},
-                {q: "Sonntags-Ablauf?", o: ["Brunch", "Sport", "Chillen", "Flohmarkt"]},
-                {q: "Was schätzt du an mir?", o: ["Art", "Aussehen", "Intelligenz", "Stärke"]},
-                {q: "Kommunikation?", o: ["Zuhören", "Reden", "Schreiben", "Blicke"]},
+                {q: "Was macht ein Heim gemütlich?", o: ["Licht", "Düfte", "Ordnung", "Pflanzen"]},
+                {q: "Bester Urlaubstyp?", o: ["Städtetrip", "Strandurlaub", "Wandern", "Wellness"]},
+                {q: "Haushalt-Prio?", o: ["Küche sauber", "Bett gemacht", "Müll weg", "Wäsche fertig"]},
+                {q: "Zukunfts-Fokus?", o: ["Reisen", "Karriere", "Eigenheim", "Familie"]},
                 {q: "Liebesbeweis?", o: ["Worte", "Zeit", "Geschenke", "Taten"]},
-                {q: "Film-Abend?", o: ["Action", "Romantik", "Horror", "Doku"]},
-                {q: "Lieblings-Essen?", o: ["Pasta", "Sushi", "Burger", "Tapas"]},
-                {q: "Wochenend-Ziel?", o: ["Paris", "London", "Rom", "Wien"]},
-                {q: "Sinne?", o: ["Sehen", "Hören", "Fühlen", "Riechen"]},
+                {q: "Sonntags-Aktivität?", o: ["Brunch", "Sport", "Flohmarkt", "Nichts tun"]},
                 {q: "Stress-Killer?", o: ["Musik", "Schlaf", "Sport", "Gespräche"]},
-                {q: "Hobby-Prio?", o: ["Kreativ", "Sportlich", "Wissen", "Sozial"]},
-                {q: "Jahreszeit?", o: ["Frühling", "Sommer", "Herbst", "Winter"]},
-                {q: "Geschenk-Art?", o: ["Persönlich", "Nützlich", "Luxus", "Erlebnis"]},
-                {q: "Frühstück?", o: ["Ei", "Obst", "Brot", "Müsli"]},
-                {q: "Wohnort-Wunsch?", o: ["Großstadt", "Dorf", "Vorstadt", "Insel"]},
-                {q: "Möbel-Stil?", o: ["Modern", "Vintage", "Boho", "Industrial"]},
-                {q: "Getränke-Ranking?", o: ["Wasser", "Saft", "Wein", "Bier"]},
-                {q: "Reise-Transport?", o: ["Auto", "Bahn", "Flugzeug", "Schiff"]},
-                {q: "Musik-Stil?", o: ["Pop", "Rock", "Techno", "Jazz"]},
-                {q: "Serien-Länge?", o: ["Kurzfilm", "Sitcom", "Drama-Serie", "Epos"]},
-                {q: "Farben?", o: ["Blau", "Rot", "Grün", "Gelb"]},
-                {q: "Abend-Ritual?", o: ["Tee trinken", "Lesen", "Handy weg", "Kuscheln"]},
-                {q: "Morgen-Ritual?", o: ["Kaffee", "Duschen", "Dehnen", "News"]},
-                {q: "Stärke?", o: ["Optimismus", "Disziplin", "Kreativität", "Empathie"]},
-                {q: "Kleidung?", o: ["Hoodie", "Hemd", "Sportlich", "Vintage"]},
-                {q: "Wetter-Favorit?", o: ["Sonne", "Schnee", "Sturm", "Nebel"]},
-                {q: "Sprache lernen?", o: ["Italienisch", "Japanisch", "Schwedisch", "Arabisch"]},
-                {q: "Haushalt-Hass?", o: ["Bügeln", "Abwasch", "Müll", "Fenster"]},
-                {q: "Tier?", o: ["Wolf", "Löwe", "Eule", "Delfin"]},
-                {q: "Feier?", o: ["Geburtstag", "Silvester", "Weihnachten", "Jahrestag"]},
-                {q: "Landschaft?", o: ["Wald", "Wüste", "Ozean", "Gletscher"]},
-                {q: "Instrument?", o: ["Klavier", "Gitarre", "Drums", "Geige"]},
-                {q: "Gefühl?", o: ["Sicherheit", "Abenteuer", "Freiheit", "Geborgenheit"]},
-                {q: "Stadt-Vibe?", o: ["Historisch", "Futuristisch", "Grün", "Alternativ"]}
+                {q: "Charakter-Eigenschaft?", o: ["Geduld", "Mut", "Witz", "Ruhe"]}
             ],
             text: [
                 {q: "Mein schönstes Outfit diese Woche?", o: []},
@@ -196,40 +148,15 @@
                 {q: "Wofür bin ich dir heute dankbar?", o: []},
                 {q: "Ein Lied, das mich an uns erinnert.", o: []},
                 {q: "Was war heute mein bester Moment?", o: []},
-                {q: "Ein Kompliment, das ich dir heute geben will.", o: []},
+                {q: "Ein Kompliment für dich heute.", o: []},
                 {q: "Was liebst du an unserem Alltag?", o: []},
                 {q: "Wo siehst du uns in 5 Jahren?", o: []},
-                {q: "Was ist ein Traum, den wir teilen?", o: []},
-                {q: "Was bringt mich zum Lächeln bei dir?", o: []},
-                {q: "Wohin würden wir heute spontan fliegen?", o: []},
-                {q: "Ein Hobby, das wir testen sollten.", o: []},
-                {q: "Was war mein erster Gedanke heute an dich?", o: []},
-                {q: "Bester Insider-Witz von uns?", o: []},
-                {q: "Was ist unsere größte Stärke?", o: []},
-                {q: "Dein Lieblingsfoto von uns?", o: []},
-                {q: "Ein Ort, an den wir zurückkehren müssen.", o: []},
-                {q: "Was hast du heute von mir gelernt?", o: []},
-                {q: "Welches Tier wären wir als Team?", o: []},
-                {q: "Was schätze ich an deinem Charakter?", o: []},
-                {q: "Ein Abenteuer für die Bucket List?", o: []},
-                {q: "Was macht uns einzigartig?", o: []},
-                {q: "Dein Wunsch für unser Wochenende?", o: []},
-                {q: "Was bedeutet 'Zuhause' für dich?", o: []},
-                {q: "Eine kleine Geste, die mir viel bedeutet?", o: []},
-                {q: "Worauf bist du heute stolz bei uns?", o: []},
-                {q: "Was war dein Highlight im letzten Urlaub?", o: []},
-                {q: "Wie würde unser eigener Film heißen?", o: []},
-                {q: "Was ist mein bester Charakterzug?", o: []},
-                {q: "Was kochen wir als Nächstes?", o: []},
-                {q: "Ein Ziel für diesen Monat?", o: []},
-                {q: "Worauf freust du dich heute Abend?", o: []},
-                {q: "Was ist unser gemeinsames Lied?", o: []},
-                {q: "Was war unsere beste Entscheidung?", o: []},
-                {q: "Wie beschreibst du mich Fremden?", o: []},
-                {q: "Was macht mich zu deinem Lieblingsmensch?", o: []},
-                {q: "Ein Ort, den wir noch entdecken müssen?", o: []},
-                {q: "Was gibt dir Kraft in unserer Beziehung?", o: []},
-                {q: "Worüber haben wir zuletzt Tränen gelacht?", o: []}
+                {q: "Was bringt mich bei dir zum Lächeln?", o: []},
+                {q: "Spontan-Trip heute: Wohin?", o: []},
+                {q: "Was habe ich heute von dir gelernt?", o: []},
+                {q: "Unsere größte gemeinsame Stärke?", o: []},
+                {q: "Was war dein erster Gedanke heute an mich?", o: []},
+                {q: "Dein Wunsch für unser Wochenende?", o: []}
             ]
         };
 
@@ -243,30 +170,48 @@
 
             async init() {
                 const { data: { session } } = await sbClient.auth.getSession();
-                if (session) { this.session = session; this.identifyUsers(); this.generateDailyQuestions(); this.showMain(); }
+                if (session) { 
+                    this.session = session; 
+                    this.identifyUsers(); 
+                    this.generateDailyQuestions(); 
+                    this.showMain(); 
+                }
             },
 
             identifyUsers() {
                 const email = this.session.user.email.toLowerCase();
                 if (email === 'bisf@gmx.de') { this.myName = "bene"; this.partnerName = "clara"; }
                 else if (email === 'clara-frey@gmx.de') { this.myName = "clara"; this.partnerName = "bene"; }
+                this.updateButtonText();
+            },
+
+            updateButtonText() {
+                const btn = document.getElementById('next-btn');
+                const nameDisplay = this.myName.charAt(0).toUpperCase() + this.myName.slice(1);
+                if (this.currentStep < 2) {
+                    btn.innerText = "Weiter ✨";
+                } else {
+                    btn.innerText = `Gedanken von ${nameDisplay} senden ✈️`;
+                }
             },
 
             generateDailyQuestions() {
                 const seed = parseInt(this.todayKey.replace(/-/g, ''));
                 const getQ = (list, offset) => list[(seed + offset) % list.length];
                 this.dailyQuestions = [
-                    {...getQ(pool.tot, seed % 7), type: 'tot', desc: 'This or That: Wähle eins!'},
-                    {...getQ(pool.ranking, (seed + 11) % 5), type: 'ranking', desc: 'Ranking: Drag & Drop'},
-                    {...getQ(pool.text, (seed + 17) % 3), type: 'text', desc: 'Deep Dive: Schreib mir...'}
+                    {...getQ(pool.tot, 0), type: 'tot', desc: 'Wähle deine Seite!'},
+                    {...getQ(pool.ranking, 1), type: 'ranking', desc: 'Sortiere nach Wichtigkeit.'},
+                    {...getQ(pool.text, 2), type: 'text', desc: 'Deep Dive: Schreib etwas Schönes.'}
                 ];
             },
 
             async login() {
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password').value;
+                if(!email || !password) return alert("Bitte E-Mail und Passwort eingeben.");
                 const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
-                if (error) alert(error.message); else location.reload();
+                if (error) alert("Login fehlgeschlagen: " + error.message); 
+                else location.reload();
             },
 
             async logout() { await sbClient.auth.signOut(); location.reload(); },
@@ -280,18 +225,10 @@
 
             renderStep() {
                 if (this.currentStep > 2) return;
-                
-                const btn = document.getElementById('next-btn');
-                if (this.currentStep === 2) {
-                    const target = this.partnerName.charAt(0).toUpperCase() + this.partnerName.slice(1);
-                    btn.innerText = `Meine Gedanken an ${target} schicken ✈️`;
-                } else {
-                    btn.innerText = "Weiter ✨";
-                }
+                this.updateButtonText();
 
                 for(let i=0; i<3; i++) {
-                    const d = document.getElementById(`p-dot-${i}`);
-                    d.className = 'progress-dot' + (i === this.currentStep ? ' active' : (i < this.currentStep ? ' done' : ''));
+                    document.getElementById(`p-dot-${i}`).className = 'progress-dot' + (i === this.currentStep ? ' active' : (i < this.currentStep ? ' done' : ''));
                 }
 
                 const q = this.dailyQuestions[this.currentStep];
@@ -302,5 +239,92 @@
                 const list = document.getElementById('options-list');
                 const tot = document.getElementById('tot-zone');
                 const txt = document.getElementById('text-input');
+                
                 list.innerHTML = ""; tot.innerHTML = "";
-                list.classList.add('hidden'
+                list.classList.add('hidden'); tot.classList.add('hidden'); txt.classList.add('hidden');
+
+                if (q.type === 'tot') {
+                    tot.classList.remove('hidden');
+                    q.o.forEach(opt => {
+                        const div = document.createElement('div'); div.className = 'tot-item'; div.innerText = opt;
+                        div.onclick = () => { 
+                            document.querySelectorAll('.tot-item').forEach(i => i.classList.remove('selected')); 
+                            div.classList.add('selected'); 
+                        };
+                        tot.appendChild(div);
+                    });
+                } else if (q.type === 'ranking') {
+                    list.classList.remove('hidden');
+                    q.o.forEach(opt => { 
+                        const div = document.createElement('div'); 
+                        div.className = 'option-item'; 
+                        div.innerText = opt; 
+                        list.appendChild(div); 
+                    });
+                    Sortable.create(list, { animation: 150 });
+                } else if (q.type === 'text') {
+                    txt.classList.remove('hidden');
+                    txt.value = "";
+                }
+            },
+
+            nextStep() {
+                let ans = "";
+                const q = this.dailyQuestions[this.currentStep];
+                if (q.type === 'tot') ans = document.querySelector('.tot-item.selected')?.innerText;
+                else if (q.type === 'ranking') ans = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" > ");
+                else if (q.type === 'text') ans = document.getElementById('text-input').value.trim();
+
+                if (!ans) return alert("Antwort fehlt noch! ✨");
+                this.myAnswers.push(ans);
+                this.currentStep++;
+                
+                if (this.currentStep < 3) this.renderStep();
+                else this.submitAll();
+            },
+
+            async submitAll() {
+                const finalStr = this.myAnswers.join(" | ");
+                const { error } = await sbClient.from('answers').insert([{ user_name: this.myName, choice: finalStr, day_key: this.todayKey }]);
+                if (error) alert("Du hast heute schon geantwortet!");
+                else { 
+                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); 
+                    this.syncStatus(); 
+                }
+            },
+
+            async syncStatus() {
+                const { data } = await sbClient.from('answers').select('*').eq('day_key', this.todayKey);
+                const other = data?.find(a => a.user_name === this.partnerName);
+                const me = data?.find(a => a.user_name === this.myName);
+                
+                const dot = document.getElementById('dot-status');
+                const stText = document.getElementById('status-text');
+                const targetName = this.partnerName.toUpperCase();
+
+                if (other) { dot.className = "dot dot-active"; stText.innerText = `${targetName} HAT GEANTWORTET ✨`; }
+                else { dot.className = "dot dot-waiting"; stText.innerText = `${targetName} ÜBERLEGT NOCH...`; }
+
+                if (me) {
+                    document.getElementById('input-zone').classList.add('hidden');
+                    document.getElementById('next-btn').classList.add('hidden');
+                    document.getElementById('complete-view').classList.remove('hidden');
+                    const resCont = document.getElementById('results-container');
+                    resCont.innerHTML = "";
+                    const mySplit = me.choice.split(" | ");
+                    const otherSplit = other ? other.choice.split(" | ") : null;
+
+                    this.dailyQuestions.forEach((q, i) => {
+                        const card = document.createElement('div'); 
+                        card.className = 'result-card';
+                        card.innerHTML = `<b>${q.q}</b>Ich: ${mySplit[i]}<br>` + 
+                                       (otherSplit ? `${targetName}: ${otherSplit[i]}` : `<i>Warten auf ${targetName}...</i>`);
+                        resCont.appendChild(card);
+                    });
+                }
+            }
+        };
+        app.init();
+    </script>
+</body>
+</html>
