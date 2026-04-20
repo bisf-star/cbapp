@@ -45,9 +45,8 @@
             -webkit-overflow-scrolling: touch; display: flex; flex-direction: column;
         }
 
-        /* SICHERER FOOTER-ABSTAND */
         .footer-bar { 
-            padding: 15px 25px calc(50px + env(safe-area-inset-bottom)) 25px; 
+            padding: 15px 25px calc(60px + env(safe-area-inset-bottom)) 25px; 
             flex-shrink: 0; background: white; border-top: 1px solid #f1f2f6;
             z-index: 10;
         }
@@ -134,21 +133,19 @@
 
         async init() {
             const { data: { session } } = await sb.auth.getSession();
-            if (!session) {
-                this.renderLogin();
-            } else {
-                window.onpopstate = (e) => { if (e.state) location.reload(); };
-                const email = session.user.email.toLowerCase();
-                const rawName = email === 'bisf@gmx.de' ? "Bene" : "Clara";
-                this.user = rawName;
-                this.partner = this.user === "Bene" ? "Clara" : "Bene";
-                document.getElementById('logout-btn').classList.remove('hidden');
-                this.showLobby();
-            }
+            if (!session) return this.renderLogin();
+            
+            // --- AUTOMATISCHES AUFRÄUMEN NACH MITTERNACHT ---
+            await sb.from('answers').delete().lt('day_key', this.day);
+
+            const email = session.user.email.toLowerCase();
+            this.user = email === 'bisf@gmx.de' ? "Bene" : "Clara";
+            this.partner = this.user === "Bene" ? "Clara" : "Bene";
+            document.getElementById('logout-btn').classList.remove('hidden');
+            this.showLobby();
         },
 
-        async showLobby(push = true) {
-            if (push) history.pushState({view: 'lobby'}, "");
+        async showLobby() {
             const { data } = await sb.from('answers').select('*').eq('day_key', this.day);
             const me = data?.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
@@ -183,8 +180,7 @@
             this.step = 0; this.results = []; this.renderQuiz();
         },
 
-        renderQuiz(push = true) {
-            if (push) history.pushState({view: 'quiz', step: this.step}, "");
+        renderQuiz() {
             const q = this.dailyQs[this.step];
             document.getElementById('nav-label').innerText = "Unsere Gedanken";
             
@@ -237,18 +233,18 @@
             const btn = document.getElementById('action-btn');
             btn.disabled = true; btn.innerText = "Einen Moment...";
             
-            const { error } = await sb.from('answers').insert([{ user_name: this.user.toLowerCase(), choice: this.results.join(" | "), day_key: this.day }]);
+            const { error } = await sb.from('answers').upsert({ user_name: this.user.toLowerCase(), choice: this.results.join(" | "), day_key: this.day }, { onConflict: 'user_name,day_key' });
+            
             this.isSubmitting = false;
-            if (error) { alert("Das hat nicht geklappt."); btn.disabled = false; btn.innerText = "Nochmal versuchen"; }
+            if (error) { alert("Fehler beim Speichern."); btn.disabled = false; btn.innerText = "Nochmal versuchen"; }
             else { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); this.showComparison(); }
         },
 
-        async showComparison(push = true) {
-            if (push) history.pushState({view: 'results'}, "");
+        async showComparison() {
             const { data } = await sb.from('answers').select('*').eq('day_key', this.day);
             const me = data?.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
-            const myA = me.choice.split(" | "), otherA = other ? other.choice.split(" | ") : null;
+            const myA = me ? me.choice.split(" | ") : ["-", "-", "-"], otherA = other ? other.choice.split(" | ") : null;
 
             document.getElementById('nav-label').innerText = "Was wir denken";
             let html = `<h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 25px;">Unsere Antworten</h2>`;
@@ -262,15 +258,15 @@
                         </div>
                     </div>`;
             });
-            html += `<button class="btn-action" style="background:#f1f2f6; color:var(--muted); box-shadow:none; margin-top:10px; animation:none;" id="del-btn">Alles löschen & neu starten 📝</button>`;
+            html += `<button class="btn-action" style="background:#f1f2f6; color:var(--muted); box-shadow:none; margin-top:10px; animation:none;" id="del-btn">Meine Antwort korrigieren 📝</button>`;
             
             document.getElementById('main-content').innerHTML = html;
             const btn = document.getElementById('action-btn');
-            btn.innerText = "Zurück zum Start 🏠";
-            btn.onclick = () => this.showLobby();
+            btn.innerText = "Zurück zur Übersicht 🏠";
+            btn.onclick = () => location.reload();
 
             document.getElementById('del-btn').onclick = async () => {
-                if (confirm("Möchtest du deine heutigen Antworten wirklich löschen und neu starten?")) {
+                if (confirm("Möchtest du deine heutige Antwort korrigieren?")) {
                     await sb.from('answers').delete().eq('day_key', this.day).eq('user_name', this.user.toLowerCase());
                     location.reload();
                 }
@@ -279,10 +275,8 @@
 
         renderLogin() {
             document.getElementById('nav-label').innerText = "Anmelden";
-            document.getElementById('logout-btn').classList.add('hidden');
             document.getElementById('main-content').innerHTML = `
                 <h2 style="margin-top:30px; text-align:left; font-size: 2rem;">Unsere App</h2>
-                <p style="color:var(--muted); margin-bottom:35px;">Anmelden, um den Moment zu starten.</p>
                 <input id="em" type="email" class="login-field" placeholder="E-Mail Adresse">
                 <input id="pw" type="password" class="login-field" placeholder="Passwort">
             `;
@@ -296,10 +290,7 @@
             };
         },
 
-        async logout() {
-            await sb.auth.signOut();
-            location.href = location.pathname; // Erzwingt Neuladen zur Login-Seite
-        }
+        async logout() { await sb.auth.signOut(); location.reload(); }
     };
     app.init();
 </script>
