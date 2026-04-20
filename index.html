@@ -45,6 +45,7 @@
             -webkit-overflow-scrolling: touch; display: flex; flex-direction: column;
         }
 
+        /* FIXED FOOTER - Der Button wird niemals abgeschnitten */
         .footer-bar { 
             padding: 15px 25px calc(30px + env(safe-area-inset-bottom)) 25px; 
             flex-shrink: 0; background: white; border-top: 1px solid #f1f2f6;
@@ -56,7 +57,7 @@
             background: linear-gradient(135deg, var(--primary), var(--secondary)); 
             color: white; font-weight: 600; font-size: 1.1rem; cursor: pointer;
             box-shadow: 0 10px 25px rgba(255, 118, 117, 0.35);
-            position: relative; overflow: hidden;
+            position: relative; overflow: hidden; transition: 0.3s;
         }
         .btn-action::after {
             content: ''; position: absolute; top: -50%; left: -100%; width: 100%; height: 200%;
@@ -123,7 +124,7 @@
     const pool = {
         tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], i: "Was passt heute?"}],
         ranking: [{q: "Beste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], i: "Schiebe deine Favoriten nach oben."}],
-        text: [{q: "Was schätzt du heute?", o: [], i: "Ein kleiner Satz für euch."}]
+        text: [{q: "Was schätzt du heute an uns?", o: [], i: "Ein kleiner Satz für euch."}]
     };
 
     const greetings = ["Schön, dass du da bist, ", "Toll, dass es dich gibt, ", "Hi, ", "Ein Moment für euch, ", "Genieße den Tag, "];
@@ -133,19 +134,7 @@
         step: 0, results: [], dailyQs: [], isSubmitting: false,
 
         async init() {
-            // Logik für Browser-Zurück
-            window.onpopstate = (e) => {
-                if (e.state && e.state.view) {
-                    if (e.state.view === 'lobby') this.showLobby(false);
-                    if (e.state.view === 'quiz') {
-                        this.step = e.state.step;
-                        this.results = e.state.results;
-                        this.renderQuiz(false);
-                    }
-                    if (e.state.view === 'results') this.showComparison(false);
-                }
-            };
-
+            window.onpopstate = (e) => { if(e.state) location.reload(); };
             const { data: { session } } = await sb.auth.getSession();
             if (!session) return this.renderLogin();
             
@@ -236,7 +225,7 @@
             else if (q.o.length > 2) val = Array.from(document.querySelectorAll('.rank-card span:last-child')).map(s => s.innerText).join(" > ");
             else val = document.getElementById('txt-val').value.trim();
 
-            if (!val) return alert("Halt! Deine Antwort fehlt.");
+            if (!val) return alert("Antwort fehlt noch! ✨");
             this.results.push(val);
             if (this.step < 2) { this.step++; this.renderQuiz(); }
             else this.submit();
@@ -250,7 +239,7 @@
             
             const { error } = await sb.from('answers').insert([{ user_name: this.user.toLowerCase(), choice: this.results.join(" | "), day_key: this.day }]);
             this.isSubmitting = false;
-            if (error) { alert("Fehler!"); btn.disabled = false; }
+            if (error) { alert("Senden fehlgeschlagen! Fehler: " + error.message); btn.disabled = false; btn.innerText = "Nochmal versuchen"; }
             else { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); this.showComparison(); }
         },
 
@@ -269,7 +258,7 @@
                         <div style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; margin-bottom:10px;">${q.q}</div>
                         <div class="tot-grid">
                             <div class="res-bubble" style="background:#f1f0ff; border-color:var(--secondary);"><b>ICH</b>${myA[i]}</div>
-                            <div class="res-bubble" style="background:${otherA?'#e3faf3':'#fff1f1'};"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : '⌛ Wartet...'}</div>
+                            <div class="res-bubble" style="background:${otherA?'#e3faf3':'#fff1f1'};"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : 'Wartet...'}</div>
                         </div>
                     </div>`;
             });
@@ -291,7 +280,7 @@
         renderLogin() {
             document.getElementById('logout-btn').classList.add('hidden');
             document.getElementById('main-content').innerHTML = `
-                <h2 style="margin-top:30px; text-align:left;">CB-App</h2>
+                <h2 style="margin-top:30px; text-align:left; font-size: 2rem;">CB-App</h2>
                 <p style="color:var(--muted); margin-bottom:35px;">Log dich ein, um euren Moment zu starten.</p>
                 <input id="em" type="email" class="login-field" placeholder="E-Mail Adresse">
                 <input id="pw" type="password" class="login-field" placeholder="Passwort">
