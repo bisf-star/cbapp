@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CB-App</title>
 
+    <meta property="og:title" content="CB-App">
+    <meta property="og:description" content="Euer tägliches Verbindungs-Ritual. Ein Moment für euch zwei.">
+    <meta property="og:image" content="https://app.beneclara.de/vorschau.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://app.beneclara.de">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CB-App">
+    <meta name="twitter:description" content="Euer tägliches Verbindungs-Ritual.">
+    <meta name="twitter:image" content="https://app.beneclara.de/vorschau.jpg">
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -44,6 +55,7 @@
             text-align: center; 
             margin: auto;
             box-sizing: border-box;
+            position: relative;
         }
 
         .brand-title {
@@ -78,17 +90,19 @@
             width: 100%; padding: 18px; margin: 10px 0; border-radius: 16px; 
             border: 2px solid #f1f2f6; box-sizing: border-box; font-size: 1rem; outline: none; transition: 0.3s;
         }
+        input:focus { border-color: var(--secondary); box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1); }
 
         .option-item { 
             background: var(--light-bg); border: 2px solid #f1f2f6; padding: 18px; 
             margin: 12px 0; border-radius: 18px; cursor: pointer; transition: 0.2s;
-            text-align: left;
+            text-align: left; font-weight: 400;
         }
         .option-item.selected { 
             background: #f1f2ff; border-color: var(--secondary); color: var(--secondary); font-weight: 600; 
         }
         
         .ranking-list .option-item { cursor: grab; display: flex; align-items: center; gap: 15px; }
+        .ranking-list .option-item::before { content: '☰'; color: #b2bec3; font-size: 1.2rem; }
 
         textarea { 
             width: 100%; height: 130px; border-radius: 20px; border: 2px solid #f1f2f6; 
@@ -98,8 +112,10 @@
         button { 
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
             color: white; border: none; padding: 20px; width: 100%; border-radius: 20px; 
-            font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 20px; transition: 0.3s;
+            font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 20px;
+            box-shadow: 0 12px 24px rgba(108, 92, 231, 0.3); transition: 0.3s;
         }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
 
         .hidden { display: none; }
 
@@ -120,8 +136,8 @@
         <div id="login-screen">
             <h1 class="brand-title">CB-App</h1>
             <p style="color: var(--muted); margin-bottom: 35px; font-size: 0.95rem;">Euer tägliches Verbindungs-Ritual.</p>
-            <input type="email" id="email" placeholder="E-Mail Adresse">
-            <input type="password" id="password" placeholder="Passwort">
+            <input type="email" id="email" placeholder="E-Mail Adresse" autocomplete="email">
+            <input type="password" id="password" placeholder="Passwort" autocomplete="current-password">
             <button onclick="app.login()" id="login-btn">Anmelden</button>
         </div>
 
@@ -143,7 +159,9 @@
         </div>
     </div>
 
-    <div class="footer">Made for Bene & Clara</div>
+    <div class="footer">
+        Made with love for Bene & Clara 2026
+    </div>
 
     <script>
         const SB_URL = "https://eedbdbqvwpquoxzbunwo.supabase.co";
@@ -161,7 +179,10 @@
             questions: [
                 { type: "choice", q: "Was ist unsere größte Stärke als Team?", opts: ["Humor", "Ehrlichkeit", "Kommunikation", "Loyalität"] },
                 { type: "ranking", q: "Ranke diese Urlaubs-Arten:", opts: ["City Trip", "Strandurlaub", "Berge & Wandern", "Roadtrip"] },
-                { type: "text", q: "Was ist eine kleine Sache, die ich heute für dich tun könnte?", opts: [] }
+                { type: "text", q: "Was ist eine kleine Sache, die ich heute für dich tun könnte?", opts: [] },
+                { type: "choice", q: "Welches Tier wären wir als Team?", opts: ["Wölfe", "Otter", "Löwen", "Pinguine"] },
+                { type: "ranking", q: "Wichtigste Sache im Haushalt?", opts: ["Saubere Küche", "Gemachtes Bett", "Viel Tageslicht", "Leerer Mülleimer"] },
+                { type: "text", q: "Beschreibe unseren heutigen Tag in 3 Worten.", opts: [] }
             ],
 
             async init() {
@@ -190,11 +211,16 @@
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password').value;
                 const btn = document.getElementById('login-btn');
+
+                if (!email || !password) return alert("Bitte alles ausfüllen!");
+                btn.disabled = true;
                 btn.innerText = "Prüfe...";
-                
+
                 const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
+                
                 if (error) {
                     alert("Fehler: " + error.message);
+                    btn.disabled = false;
                     btn.innerText = "Anmelden";
                 } else {
                     this.session = data.session;
@@ -203,7 +229,10 @@
                 }
             },
 
-            async logout() { await sbClient.auth.signOut(); location.reload(); },
+            async logout() {
+                await sbClient.auth.signOut();
+                location.reload();
+            },
 
             showMain() {
                 document.getElementById('login-screen').classList.add('hidden');
@@ -247,15 +276,16 @@
                 else if (this.currQ.type === 'choice') val = document.querySelector('.option-item.selected')?.innerText;
                 else if (this.currQ.type === 'ranking') val = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" → ");
 
-                if (!val) return alert("Bitte wähle eine Antwort!");
+                if (!val) return alert("Antwort fehlt noch!");
 
                 const { error } = await sbClient.from('answers').insert([
                     { user_name: this.myName.toLowerCase(), choice: val, day_key: this.todayKey }
                 ]);
 
-                if (error) alert("Du hast heute schon geantwortet!");
-                else {
-                    confetti({ particleCount: 70, spread: 90, origin: { y: 0.6 } });
+                if (error) {
+                    alert("Du hast heute schon geantwortet!");
+                } else {
+                    confetti({ particleCount: 70, spread: 90, origin: { y: 0.6 }, colors: ['#d63031', '#6c5ce7'] });
                     this.syncResults();
                 }
             },
@@ -273,12 +303,13 @@
                         document.getElementById('input-zone').classList.add('hidden');
                         document.getElementById('complete-view').classList.remove('hidden');
                         document.getElementById('results-box').innerHTML = 
-                            `<b>Deine Antwort:</b> ${me.choice}<br><br>` + 
-                            (other ? `<b>Von ${this.partnerName}:</b> ${other.choice}` : `<i>${this.partnerName} hat noch nicht geantwortet...</i>`);
+                            `<b>Deine Antwort:</b> ${me.choice.replace(/\n/g, '<br>')}<br><br>` + 
+                            (other ? `<b>Von ${this.partnerName}:</b> ${other.choice.replace(/\n/g, '<br>')}` : `<i>${this.partnerName} hat noch nicht geantwortet...</i>`);
                     }
                 }
             }
         };
+
         app.init();
     </script>
 </body>
