@@ -134,7 +134,7 @@
         step: 0, results: [], dailyQs: [], isSubmitting: false,
 
         async init() {
-            // Fragen basierend auf Datum generieren (immer verfügbar machen)
+            // Fragen sofort generieren
             const seed = parseInt(this.day.replace(/-/g, ''));
             this.dailyQs = [
                 pool.tot[seed % pool.tot.length], 
@@ -147,13 +147,10 @@
             if (!session || error) {
                 this.renderLogin();
             } else {
-                // Alte Daten bereinigen
                 await sb.from('answers').delete().lt('day_key', this.day);
-                
                 const email = session.user.email.toLowerCase();
                 this.user = email === 'bisf@gmx.de' ? "Bene" : "Clara";
                 this.partner = this.user === "Bene" ? "Clara" : "Bene";
-                
                 document.getElementById('logout-btn').classList.remove('hidden');
                 this.showLobby();
             }
@@ -314,30 +311,46 @@
 
         renderLogin() {
             document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('footer-ui').classList.remove('hidden');
             document.getElementById('main-content').innerHTML = `
                 <h2 style="margin-top:30px; text-align:left; font-size: 2rem;">CB-App</h2>
                 <input id="em" type="email" class="login-field" placeholder="E-Mail">
                 <input id="pw" type="password" class="login-field" placeholder="Passwort">
             `;
-            const footer = document.getElementById('footer-ui');
-            footer.classList.remove('hidden');
             const btn = document.getElementById('action-btn');
+            btn.disabled = false;
             btn.innerText = "Einloggen ✨";
             btn.onclick = async () => {
+                btn.disabled = true;
+                btn.innerText = "Prüfe...";
                 const { error } = await sb.auth.signInWithPassword({ 
                     email: document.getElementById('em').value, 
                     password: document.getElementById('pw').value 
                 });
-                if (error) alert("Logindaten nicht korrekt!"); else window.location.reload();
+                if (error) {
+                    alert("Logindaten nicht korrekt!");
+                    btn.disabled = false;
+                    btn.innerText = "Einloggen ✨";
+                } else {
+                    this.init(); // Fast-Login ohne Reload
+                }
             };
         },
 
         async logout() {
+            // Sofortige visuelle Rückmeldung
+            document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('footer-ui').classList.add('hidden');
+            document.getElementById('main-content').innerHTML = "<p style='text-align:center; margin-top:50px; color:white;'>Abmeldung...</p>";
+
             await sb.auth.signOut();
             localStorage.clear();
             sessionStorage.clear();
-            // Ersetzt die aktuelle Seite im Verlauf und lädt neu, um Cache-Probleme zu vermeiden
-            window.location.replace(window.location.origin + window.location.pathname);
+            
+            // Fast-Logout: Einfach die Login-Maske neu rendern
+            setTimeout(() => {
+                this.renderLogin();
+            }, 200);
         }
     };
     app.init();
