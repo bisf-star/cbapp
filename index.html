@@ -362,7 +362,7 @@
             document.getElementById('footer-ui').classList.remove('hidden');
             const btn = document.getElementById('action-btn');
             btn.disabled = false;
-            btn.innerText = me ? "Zu unseren Gedanken ✨" : "Jetzt starten 🚀";
+            btn.innerText = me ? "Zu unseren Antworten ✨" : "Jetzt starten 🚀";
             btn.onclick = () => me ? this.showComparison() : this.startQuiz();
         },
 
@@ -454,7 +454,7 @@
                     </div>`).join('')}
             `;
             const btn = document.getElementById('action-btn');
-            btn.innerText = "Gedanken korrigieren 📝";
+            btn.innerText = "Antworten korrigieren 📝";
             btn.disabled = false;
             btn.onclick = () => this.deleteMyOwn();
         },
