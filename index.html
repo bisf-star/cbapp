@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CB-App</title>
+    <title>CB-App Premium</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -16,88 +16,158 @@
             --card: rgba(255, 255, 255, 0.98); --text: #2d3436; 
             --muted: #636e72; --accent-green: #00b894; --accent-red: #fab1a0; --light-bg: #f8fafc;
         }
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; -webkit-overflow-scrolling: touch; }
+
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+
         body { 
             font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #2d3436, #0f0c29); 
             margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; 
             min-height: 100vh; color: var(--text); overflow: hidden;
         }
+        
         .container { 
             width: 100%; max-width: 450px; height: 100vh; background: var(--card); 
-            display: flex; flex-direction: column; padding: 15px 20px env(safe-area-inset-bottom); position: relative;
+            display: flex; flex-direction: column; padding: env(safe-area-inset-top) 25px env(safe-area-inset-bottom) 25px; 
+            position: relative; animation: slideUp 0.8s ease;
         }
-        .top-bar { display: flex; justify-content: space-between; align-items: center; height: 40px; margin-bottom: 5px; }
-        .logout-btn { background: #eee; border: none; border-radius: 10px; cursor: pointer; color: var(--muted); padding: 5px 10px; font-size: 0.7rem; font-weight: 600; }
-        .brand-title { font-size: 1.6rem; font-weight: 600; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Navigation & Header */
+        .header-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
+        .brand-logo { font-size: 2.2rem; font-weight: 600; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; letter-spacing: -1.5px; }
         
-        .progress-container { display: flex; justify-content: center; gap: 5px; margin: 10px 0; }
-        .progress-dot { width: 15px; height: 4px; border-radius: 5px; background: #dfe4ea; transition: 0.3s; }
-        .progress-dot.active { background: var(--secondary); width: 35px; }
-        .progress-dot.done { background: var(--accent-green); }
+        .logout-icon { background: #f1f2f6; border: none; border-radius: 14px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .logout-icon:active { transform: scale(0.9); background: #eee; }
 
-        .mode-info { background: #f1f2ff; border-radius: 12px; padding: 10px; margin-bottom: 10px; border-left: 4px solid var(--secondary); font-size: 0.75rem; color: #574b90; text-align: left; }
-        h2 { font-size: 1.1rem; margin: 5px 0 15px 0; font-weight: 600; line-height: 1.3; text-align: center; }
-
-        #input-zone { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; padding-bottom: 10px; }
-        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 12px; margin: 5px 0; border-radius: 15px; text-align: left; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; touch-action: none; }
-        .num-tag { background: var(--secondary); color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; flex-shrink: 0; }
-        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 15px; padding: 20px 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; min-height: 70px; display: flex; align-items: center; justify-content: center; text-align: center; }
-        .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); }
-        textarea { width: 100%; height: 100px; border-radius: 15px; border: 2px solid #edf2f7; padding: 12px; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); }
-
-        .btn-action { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 18px; width: 100%; border-radius: 18px; font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        /* Lobby / Dashboard */
+        .welcome-section { text-align: left; margin: 20px 0; }
+        .lobby-status-box { background: var(--light-bg); border-radius: 24px; padding: 25px; margin: 20px 0; border: 1px solid #edf2f7; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+        .status-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 1rem; }
         
-        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; text-align: left; }
-        .res-box { padding: 10px; border-radius: 12px; font-size: 0.75rem; border: 1px solid #eee; }
-        .res-me { background: #f1f0ff; border-color: var(--secondary); }
-        .res-partner { background: #fff1f1; }
-        .res-partner.ready { background: #e3faf3; border-color: var(--accent-green); }
+        .status-indicator { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; transition: 0.3s; }
+        .status-done { background: #e3faf3; color: var(--accent-green); }
+        .status-open { background: #fff1f1; color: var(--accent-red); }
+
+        .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.4; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* Quiz Styles */
+        .progress-bar { display: flex; justify-content: center; gap: 8px; margin: 10px 0 30px 0; }
+        .step-dot { width: 30px; height: 6px; border-radius: 10px; background: #dfe4ea; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .step-dot.active { background: var(--secondary); width: 60px; }
+        .step-dot.done { background: var(--accent-green); }
+
+        .info-tab { background: #f1f2ff; border-radius: 18px; padding: 15px; margin-bottom: 20px; font-size: 0.85rem; border-left: 5px solid var(--secondary); animation: fadeIn 0.5s ease; }
+        h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 25px; line-height: 1.3; }
+
+        #input-area { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; }
+
+        .option-card { background: var(--light-bg); border: 2px solid #edf2f7; padding: 18px; margin-bottom: 12px; border-radius: 20px; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
+        .rank-circle { background: var(--secondary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600; }
+
+        .tot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .tot-btn { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 24px; padding: 40px 10px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .tot-btn.active { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); box-shadow: 0 10px 20px rgba(255, 118, 117, 0.3); }
+
+        textarea { width: 100%; height: 160px; border-radius: 24px; border: 2px solid #edf2f7; padding: 20px; font-family: inherit; font-size: 1.1rem; outline: none; resize: none; background: var(--light-bg); transition: 0.3s; }
+        textarea:focus { border-color: var(--secondary); background: white; }
+
+        /* Footer & Main Button */
+        .footer-zone { padding: 20px 0 40px 0; }
+        .btn-main { 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color: white; border: none; padding: 22px; width: 100%; border-radius: 24px; 
+            font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(255, 118, 117, 0.3);
+        }
+        .btn-main:active { transform: scale(0.96); opacity: 0.9; }
+
+        /* Ergebnisse / Vergleich */
+        .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .bubble { padding: 15px; border-radius: 22px; font-size: 0.85rem; line-height: 1.4; position: relative; }
+        .bubble label { display: block; font-size: 0.65rem; font-weight: 600; opacity: 0.6; margin-bottom: 5px; text-transform: uppercase; }
+        .bubble-me { background: #f1f0ff; border: 1px solid var(--secondary); }
+        .bubble-partner { background: #fff1f1; border: 1px solid #fab1a0; }
+        .bubble-partner.done { background: #e3faf3; border-color: var(--accent-green); }
+
         .hidden { display: none !important; }
-        .login-field { width: 100%; padding: 15px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; }
+        .login-input { width: 100%; padding: 20px; margin-bottom: 12px; border-radius: 20px; border: 2px solid #eee; font-size: 1rem; outline: none; }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="top-bar">
-            <h1 id="brand-ui" class="brand-title">CB-App</h1>
-            <button id="logout-icon" class="logout-btn hidden" onclick="app.logout()">Logout</button>
+        <div class="header-bar">
+            <h1 id="nav-title" class="brand-logo">CB</h1>
+            <button id="logout-btn" class="logout-icon hidden" onclick="app.logout()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#636e72" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4m7 14l5-5-5-5m5 5H9"/></svg>
+            </button>
         </div>
 
-        <div id="content" style="flex-grow:1; display:flex; flex-direction:column;">
-            <div id="login-screen" class="hidden">
-                <p style="color: var(--muted); margin-bottom: 20px;">Anmelden</p>
-                <input type="email" id="email" class="login-field" placeholder="E-Mail">
-                <input type="password" id="password" class="login-field" placeholder="Passwort">
-                <button onclick="app.login()" class="btn-action">Einloggen</button>
+        <div id="view-content" style="flex-grow: 1; display: flex; flex-direction: column;">
+            
+            <div id="login-screen" class="hidden" style="margin-top: 40px;">
+                <h2 style="text-align: left; font-size: 2rem;">Willkommen zurück.</h2>
+                <p style="color: var(--muted); margin-bottom: 40px;">Melde dich an, um euren heutigen Moment zu starten.</p>
+                <input type="email" id="email" class="login-input" placeholder="E-Mail Adresse">
+                <input type="password" id="password" class="login-input" placeholder="Passwort">
+                <button onclick="app.login()" class="btn-main" style="margin-top: 20px;">Einloggen</button>
             </div>
 
             <div id="lobby-screen" class="hidden">
-                <h2 id="greet-ui" style="text-align:left; font-size: 1.4rem;">Hi!</h2>
-                <div style="background: #f8fafc; border-radius: 15px; padding: 15px; margin-bottom: 20px; font-size: 0.9rem;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Ich:</span><span id="my-st">Laden...</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Partner:</span><span id="p-st">Laden...</span></div>
+                <div class="welcome-section">
+                    <h2 id="greet-name" style="margin: 0; font-size: 1.8rem;">Hallo! ❤️</h2>
+                    <p id="display-date" style="color: var(--muted); margin-top: 5px;"></p>
                 </div>
-                <button onclick="app.startQuiz()" class="btn-action" id="start-btn">Start</button>
+                
+                <div class="lobby-status-box">
+                    <div class="status-row">
+                        <span>Meine Antwort</span>
+                        <div id="my-status-pill" class="status-indicator"></div>
+                    </div>
+                    <div class="status-row">
+                        <span id="p-label-name">Partner</span>
+                        <div id="p-status-pill" class="status-indicator"></div>
+                    </div>
+                </div>
+
+                <div class="footer-zone">
+                    <button id="start-btn" class="btn-main" onclick="app.startFlow()">Jetzt loslegen 🚀</button>
+                </div>
             </div>
 
-            <div id="quiz-screen" class="hidden" style="flex-grow:1; display:flex; flex-direction:column;">
-                <div class="progress-container"><div id="p0" class="progress-dot"></div><div id="p1" class="progress-dot"></div><div id="p2" class="progress-dot"></div></div>
-                <div class="mode-info"><b id="m-title">INFO</b><span id="m-desc">Wähle weise.</span></div>
+            <div id="quiz-view" class="hidden" style="flex-grow: 1; display: flex; flex-direction: column;">
+                <div class="progress-bar">
+                    <div id="dot-0" class="step-dot"></div>
+                    <div id="dot-1" class="step-dot"></div>
+                    <div id="dot-2" class="step-dot"></div>
+                </div>
+
+                <div class="info-tab">
+                    <b id="cat-label" style="text-transform: uppercase; font-size: 0.7rem; color: var(--secondary); display: block; margin-bottom: 4px;">Kategorie</b>
+                    <span id="cat-desc">...</span>
+                </div>
+
                 <h2 id="q-text">...</h2>
-                <div id="input-zone">
-                    <div id="options-list"></div>
-                    <div id="tot-zone" class="tot-container hidden"></div>
-                    <textarea id="text-input" class="hidden" placeholder="Schreib hier..."></textarea>
+
+                <div id="input-area">
+                    <div id="rank-list"></div>
+                    <div id="tot-area" class="tot-grid hidden"></div>
+                    <textarea id="text-input" class="hidden" placeholder="Was geht dir durch den Kopf?"></textarea>
                 </div>
-                <button id="next-btn" class="btn-action" onclick="app.nextStep()">Weiter ✨</button>
+
+                <div class="footer-zone">
+                    <button id="next-btn" class="btn-main" onclick="app.handleNext()">Weiter ✨</button>
+                </div>
             </div>
 
-            <div id="result-screen" class="hidden" style="overflow-y: auto;">
-                <h2 style="text-align:left;">Eure Antworten</h2>
-                <div id="results-display"></div>
-                <button style="background:none; border:none; color:#bbb; padding:15px; width:100%; font-size:0.7rem;" onclick="app.resetToday()">Korrigieren 📝</button>
+            <div id="result-view" class="hidden" style="overflow-y: auto;">
+                <h2 style="font-size: 1.8rem; margin-bottom: 20px;">Euer Vergleich</h2>
+                <div id="result-container"></div>
+                <button style="background:none; border:none; color:var(--muted); padding:30px; width:100%; font-size:0.8rem;" onclick="app.resetData()">Antworten korrigieren 📝</button>
             </div>
+
         </div>
     </div>
 
@@ -107,55 +177,64 @@
         const sbClient = supabase.createClient(SB_URL, SB_KEY);
 
         const pool = {
-            tot: [{q: "Frühaufsteher?", o: ["Ja ☀️", "Nein 😴"], i: "This or That: Wähle eine Seite!"}, {q: "Pizza?", o: ["Salami 🍕", "Margherita 🧀"], i: "Entscheide dich!"}],
-            ranking: [{q: "Wochenend-Plan?", o: ["Chillen", "Action", "Freunde", "Sport"], i: "Ranking: Sortiere nach Prio!"}],
-            text: [{q: "Was liebst du an heute?", o: [], i: "Gedanken: Schreib einen Satz."}]
+            tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Vollgas 🏃"], i: "Entscheide dich für eine der beiden Optionen."}, {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"], i: "Wähle weise..."}, {q: "Abend-Vibe?", o: ["Couch 🛋️", "Ausgehen 💃"], i: "Was passt heute besser?"}],
+            ranking: [{q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"], i: "Sortiere nach Wichtigkeit (Platz 1 oben)."}, {q: "Beste Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Wandern"], i: "Was fändest du heute am schönsten?"}],
+            text: [{q: "Drei Worte für unseren Tag.", o: [], i: "Schreib etwas Kurzes und Liebes."}, {q: "Was sollten wir bald mal machen?", o: [], i: "Ein kleiner Wunsch für die Zukunft."}]
         };
 
         const app = {
             session: null, today: new Date().toISOString().split('T')[0],
-            myName: "", pName: "", step: 0, dailyQs: [], answers: [],
+            myName: "", pName: "", step: 0, dailyQs: [], answers: [], meDone: false,
 
             async init() {
                 const { data: { session } } = await sbClient.auth.getSession();
                 if (session) { 
                     this.session = session; 
-                    const email = session.user.email.toLowerCase();
-                    this.myName = email === 'bisf@gmx.de' ? "Bene" : "Clara";
-                    this.pName = this.myName === "Bene" ? "Clara" : "Bene";
-                    document.getElementById('logout-icon').classList.remove('hidden');
-                    this.loadLobby();
+                    this.identify(); 
+                    document.getElementById('logout-btn').classList.remove('hidden');
+                    this.syncLobby(); 
                 } else {
                     document.getElementById('login-screen').classList.remove('hidden');
                 }
             },
 
-            async loadLobby() {
-                document.getElementById('greet-ui').innerText = `Hallo ${this.myName}! ❤️`;
+            identify() {
+                const email = this.session.user.email.toLowerCase();
+                this.myName = email === 'bisf@gmx.de' ? "Bene" : "Clara";
+                this.pName = this.myName === "Bene" ? "Clara" : "Bene";
+                document.getElementById('nav-title').innerText = `Hi, ${this.myName}`;
+                document.getElementById('greet-name').innerText = `Schön, dass du da bist, ${this.myName}! ❤️`;
+                document.getElementById('p-label-name').innerText = this.pName;
+            },
+
+            async syncLobby() {
+                document.getElementById('display-date').innerText = new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
                 const { data } = await sbClient.from('answers').select('*').eq('day_key', this.today);
-                const meAns = data?.find(a => a.user_name === this.myName.toLowerCase());
-                const otherAns = data?.find(a => a.user_name === this.pName.toLowerCase());
+                const me = data?.find(a => a.user_name === this.myName.toLowerCase());
+                const other = data?.find(a => a.user_name === this.pName.toLowerCase());
                 
-                document.getElementById('my-st').innerText = meAns ? "Fertig ✅" : "Offen ⏳";
-                document.getElementById('p-st').innerText = otherAns ? "Fertig ✅" : "Überlegt... ⏳";
-                document.getElementById('start-btn').innerText = meAns ? "Ergebnisse ansehen ✨" : "Jetzt loslegen 🚀";
-                
+                this.meDone = !!me;
+                const otherDone = !!other;
+
+                const myPill = document.getElementById('my-status-pill');
+                myPill.innerHTML = this.meDone ? 'Fertig ✅' : '<span class="pulse-dot"></span> Offen';
+                myPill.className = "status-indicator " + (this.meDone ? "status-done" : "status-open");
+
+                const pPill = document.getElementById('p-status-pill');
+                pPill.innerHTML = otherDone ? 'Erledigt ✅' : '<span class="pulse-dot"></span> Denkt nach...';
+                pPill.className = "status-indicator " + (otherDone ? "status-done" : "status-open");
+
+                document.getElementById('start-btn').innerText = this.meDone ? "Ergebnisse ansehen ✨" : "Heute starten 🚀";
                 document.getElementById('lobby-screen').classList.remove('hidden');
-                document.getElementById('login-screen').classList.add('hidden');
             },
 
-            startQuiz() {
-                const seed = parseInt(this.today.replace(/-/g, ''));
-                this.dailyQs = [pool.tot[seed % pool.tot.length], pool.ranking[seed % pool.ranking.length], pool.text[seed % pool.text.length]];
-                this.syncCheck();
-            },
-
-            async syncCheck() {
-                const { data } = await sbClient.from('answers').select('*').eq('day_key', this.today).eq('user_name', this.myName.toLowerCase());
-                if (data && data.length > 0) this.showResults();
+            startFlow() {
+                if(this.meDone) this.showFinal();
                 else {
+                    const seed = parseInt(this.today.replace(/-/g, ''));
+                    this.dailyQs = [pool.tot[seed % pool.tot.length], pool.ranking[seed % pool.ranking.length], pool.text[seed % pool.text.length]];
                     document.getElementById('lobby-screen').classList.add('hidden');
-                    document.getElementById('quiz-screen').classList.remove('hidden');
+                    document.getElementById('quiz-view').classList.remove('hidden');
                     this.render();
                 }
             },
@@ -163,92 +242,88 @@
             render() {
                 const q = this.dailyQs[this.step];
                 document.getElementById('q-text').innerText = q.q;
-                document.getElementById('m-title').innerText = q.o.length === 2 ? "THIS OR THAT" : (q.o.length === 0 ? "GEDANKEN" : "RANKING");
-                document.getElementById('m-desc').innerText = q.i;
+                document.getElementById('cat-label').innerText = q.o.length === 2 ? "This or That" : (q.o.length === 0 ? "Gedanken" : "Ranking");
+                document.getElementById('cat-desc').innerText = q.i;
                 document.getElementById('next-btn').innerText = this.step < 2 ? "Weiter ✨" : `An ${this.pName} senden ✈️`;
                 
-                for(let i=0; i<3; i++) document.getElementById(`p${i}`).className = 'progress-dot' + (i === this.step ? ' active' : (i < this.step ? ' done' : ''));
+                for(let i=0; i<3; i++) document.getElementById(`dot-${i}`).className = 'step-dot' + (i === this.step ? ' active' : (i < this.step ? ' done' : ''));
 
-                const list = document.getElementById('options-list');
-                const tot = document.getElementById('tot-zone');
-                const txt = document.getElementById('text-input');
-                list.innerHTML = ""; tot.innerHTML = "";
-                list.classList.add('hidden'); tot.classList.add('hidden'); txt.classList.add('hidden');
+                const list = document.getElementById('rank-list'), tot = document.getElementById('tot-area'), txt = document.getElementById('text-input');
+                list.innerHTML = ""; tot.innerHTML = ""; list.classList.add('hidden'); tot.classList.add('hidden'); txt.classList.add('hidden');
 
                 if (q.o.length === 2) {
                     tot.classList.remove('hidden');
                     q.o.forEach(o => {
-                        const d = document.createElement('div'); d.className = 'tot-item'; d.innerText = o;
-                        d.onclick = () => { document.querySelectorAll('.tot-item').forEach(x => x.classList.remove('selected')); d.classList.add('selected'); };
+                        const d = document.createElement('div'); d.className = 'tot-btn'; d.innerText = o;
+                        d.onclick = () => { document.querySelectorAll('.tot-btn').forEach(b => b.classList.remove('active')); d.classList.add('active'); };
                         tot.appendChild(d);
                     });
                 } else if (q.o.length > 2) {
                     list.classList.remove('hidden');
                     q.o.forEach((o, i) => {
-                        const d = document.createElement('div'); d.className = 'option-item';
-                        d.innerHTML = `<span class="num-tag">${i+1}</span><span>${o}</span>`;
-                        list.appendChild(d);
+                        const d = document.createElement('div'); d.className = 'option-card';
+                        d.innerHTML = `<span class="rank-circle">${i+1}</span><span>${o}</span>`; list.appendChild(d);
                     });
-                    Sortable.create(list, { animation: 150, onEnd: () => { document.querySelectorAll('.num-tag').forEach((n, i) => n.innerText = i + 1); }});
+                    Sortable.create(list, { animation: 250, forceFallback: true, onEnd: () => { document.querySelectorAll('.rank-circle').forEach((n, i) => n.innerText = i + 1); }});
                 } else {
                     txt.classList.remove('hidden'); txt.value = "";
                 }
             },
 
-            async nextStep() {
+            async handleNext() {
                 const q = this.dailyQs[this.step];
                 let a = "";
-                if (q.o.length === 2) a = document.querySelector('.tot-item.selected')?.innerText;
-                else if (q.o.length > 2) a = Array.from(document.querySelectorAll('.option-item span:last-child')).map(s => s.innerText).join(" > ");
+                if (q.o.length === 2) a = document.querySelector('.tot-btn.active')?.innerText;
+                else if (q.o.length > 2) a = Array.from(document.querySelectorAll('.option-card span:last-child')).map(s => s.innerText).join(" > ");
                 else a = document.getElementById('text-input').value.trim();
 
-                if (!a) return alert("Halt! Deine Antwort fehlt.");
+                if (!a) return alert("Halt! Du hast noch nichts gewählt. ✨");
                 this.answers.push(a);
+
                 if (this.step < 2) { this.step++; this.render(); }
-                else { this.submit(); }
+                else { 
+                    const btn = document.getElementById('next-btn');
+                    btn.disabled = true; btn.innerText = "Moment...";
+                    const { error } = await sbClient.from('answers').insert([{ user_name: this.myName.toLowerCase(), choice: this.answers.join(" | "), day_key: this.today }]);
+                    if (!error) { confetti(); this.meDone = true; this.showFinal(); }
+                    else { alert("Fehler beim Senden!"); btn.disabled = false; }
+                }
             },
 
-            async submit() {
-                const btn = document.getElementById('next-btn');
-                btn.disabled = true; btn.innerText = "Wird gesendet...";
-                const { error } = await sbClient.from('answers').insert([{ user_name: this.myName.toLowerCase(), choice: this.answers.join(" | "), day_key: this.today }]);
-                if (!error) { confetti(); this.showResults(); } else { alert("Fehler!"); btn.disabled = false; }
-            },
-
-            async showResults() {
+            async showFinal() {
                 const { data } = await sbClient.from('answers').select('*').eq('day_key', this.today);
                 const me = data?.find(a => a.user_name === this.myName.toLowerCase());
                 const other = data?.find(a => a.user_name === this.pName.toLowerCase());
-                document.getElementById('lobby-screen').classList.add('hidden');
-                document.getElementById('quiz-screen').classList.add('hidden');
-                document.getElementById('result-screen').classList.remove('hidden');
                 
+                document.getElementById('quiz-view').classList.add('hidden');
+                document.getElementById('lobby-screen').classList.add('hidden');
+                document.getElementById('result-view').classList.remove('hidden');
+
                 const seed = parseInt(this.today.replace(/-/g, ''));
                 const qs = [pool.tot[seed % pool.tot.length], pool.ranking[seed % pool.ranking.length], pool.text[seed % pool.text.length]];
-                const myA = me.choice.split(" | "), otherA = other ? other.choice.split(" | ") : null;
+                const myS = me.choice.split(" | "), otherS = other ? other.choice.split(" | ") : null;
                 
                 let h = "";
                 qs.forEach((q, i) => {
-                    h += `<div style="margin-top:15px; font-weight:600; font-size:0.8rem; color:#888;">${q.q}</div>
-                    <div class="result-grid">
-                        <div class="res-box res-me"><b>ICH</b>${myA[i]}</div>
-                        <div class="res-box res-partner ${otherA ? 'ready' : ''}"><b>${this.pName}</b>${otherA ? otherA[i] : '⌛ Wartet...'}</div>
-                    </div>`;
+                    h += `<div style="margin-top:25px;"><div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; margin-bottom:8px; border-bottom:1px solid #eee; padding-bottom:5px;">${q.q}</div>
+                        <div class="compare-row">
+                            <div class="bubble bubble-me"><label>Ich</label>${myS[i]}</div>
+                            <div class="bubble bubble-partner ${otherS ? 'done' : ''}"><label>${this.pName}</label>${otherS ? otherS[i] : '⌛ Wartet...'}</div>
+                        </div></div>`;
                 });
-                document.getElementById('results-display').innerHTML = h;
+                document.getElementById('result-container').innerHTML = h;
             },
 
-            async resetToday() {
-                if(!confirm("Antworten löschen?")) return;
+            async resetData() {
+                if(!confirm("Antworten löschen und neu starten?")) return;
                 await sbClient.from('answers').delete().eq('day_key', this.today).eq('user_name', this.myName.toLowerCase());
                 location.reload();
             },
 
             async login() {
-                const email = document.getElementById('email').value.trim();
-                const pass = document.getElementById('password').value;
-                const { error } = await sbClient.auth.signInWithPassword({ email, password: pass });
-                if (error) alert(error.message); else location.reload();
+                const e = document.getElementById('email').value.trim(), p = document.getElementById('password').value;
+                const { error } = await sbClient.auth.signInWithPassword({ email: e, password: p });
+                if (error) alert("Login fehlgeschlagen."); else location.reload();
             },
             logout() { sbClient.auth.signOut().then(() => location.reload()); }
         };
