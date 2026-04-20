@@ -16,44 +16,45 @@
             --card: rgba(255, 255, 255, 0.98); --text: #2d3436; 
             --muted: #636e72; --accent-green: #00b894; --accent-red: #fab1a0; --light-bg: #f8fafc;
         }
-        body { font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #2d3436, #0f0c29); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: var(--text); padding: 20px; box-sizing: border-box; overflow-x: hidden; }
-        .container { width: 100%; max-width: 420px; background: var(--card); border-radius: 40px; padding: 40px 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); text-align: center; margin: auto; backdrop-filter: blur(10px); }
+        body { font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #2d3436, #0f0c29); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: var(--text); padding: 15px; box-sizing: border-box; overflow-x: hidden; }
         
-        .brand-title { font-size: 3.5rem; font-weight: 600; letter-spacing: -3px; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .container { width: 100%; max-width: 400px; background: var(--card); border-radius: 35px; padding: 30px 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); text-align: center; margin: auto; backdrop-filter: blur(10px); }
         
-        .progress-container { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
-        .progress-dot { width: 30px; height: 6px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
-        .progress-dot.active { background: var(--secondary); width: 50px; }
+        .brand-title { font-size: 3rem; font-weight: 600; letter-spacing: -2px; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .progress-container { display: flex; justify-content: center; gap: 6px; margin: 10px 0; }
+        .progress-dot { width: 25px; height: 5px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
+        .progress-dot.active { background: var(--secondary); width: 45px; }
         .progress-dot.done { background: var(--accent-green); }
 
-        .status-badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 25px; font-size: 0.85rem; font-weight: 600; color: var(--muted); background: #f1f2f6; padding: 10px 20px; border-radius: 50px; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; background: #dfe4ea; }
-        .dot-active { background: var(--accent-green); box-shadow: 0 0 12px var(--accent-green); }
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 0.75rem; font-weight: 600; color: var(--muted); background: #f1f2f6; padding: 8px 15px; border-radius: 50px; text-transform: uppercase; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #dfe4ea; }
+        .dot-active { background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
         .dot-waiting { background: var(--accent-red); animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        h2 { font-size: 1.3rem; color: var(--text); margin-bottom: 20px; font-weight: 600; line-height: 1.4; min-height: 4rem; display: flex; align-items: center; justify-content: center; }
+        h2 { font-size: 1.25rem; color: var(--text); margin: 10px 0 20px 0; font-weight: 600; line-height: 1.3; min-height: 3.5rem; display: flex; align-items: center; justify-content: center; }
 
-        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 16px; margin: 8px 0; border-radius: 20px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 12px; font-size: 0.95rem; }
+        /* Anpassung für Mobile-Buttons */
+        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 14px; margin: 6px 0; border-radius: 18px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
         .option-item.selected { background: #f1f0ff; border-color: var(--secondary); color: #574b90; font-weight: 600; }
         
-        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
-        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 22px; padding: 25px 10px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 0.9rem; }
-        .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.03); }
+        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
+        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 20px; padding: 20px 10px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 0.85rem; display: flex; flex-direction: column; justify-content: center; min-height: 80px; }
+        .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); }
 
-        textarea { width: 100%; height: 100px; border-radius: 20px; border: 2px solid #edf2f7; padding: 15px; box-sizing: border-box; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); }
+        textarea { width: 100%; height: 90px; border-radius: 18px; border: 2px solid #edf2f7; padding: 12px; box-sizing: border-box; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); }
 
-        .info-box { background: #f1f2ff; border-radius: 22px; padding: 15px; margin-top: 20px; text-align: left; font-size: 0.75rem; color: #574b90; border: 1px solid #dcdde1; }
-        .info-box b { color: var(--secondary); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .info-box { background: #f1f2ff; border-radius: 20px; padding: 12px; margin-top: 15px; text-align: left; font-size: 0.7rem; color: #574b90; border: 1px solid #dcdde1; }
+        .info-box b { color: var(--secondary); display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .btn-action { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 20px; width: 100%; border-radius: 22px; font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 15px; box-shadow: 0 8px 15px rgba(255, 118, 117, 0.2); transition: 0.3s; }
-        .btn-action:active { transform: scale(0.98); }
-
-        .result-card { text-align: left; background: #fdfdfd; padding: 20px; border-radius: 22px; border: 1px solid #edf2f7; margin-top: 15px; font-size: 0.9rem; line-height: 1.5; }
-        .result-card b { display: block; margin-bottom: 4px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; font-size: 0.7rem; }
+        .btn-action { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 18px; width: 100%; border-radius: 20px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 15px; box-shadow: 0 8px 15px rgba(255, 118, 117, 0.2); }
+        
+        .result-card { text-align: left; background: #fdfdfd; padding: 15px; border-radius: 20px; border: 1px solid #edf2f7; margin-top: 12px; font-size: 0.85rem; line-height: 1.4; }
+        .result-card b { display: block; margin-bottom: 2px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; font-size: 0.65rem; }
         
         .hidden { display: none !important; }
-        input.login-field { width: 100%; padding: 18px; margin: 10px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; outline: none; }
+        input.login-field { width: 100%; padding: 15px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; }
     </style>
 </head>
 <body>
@@ -61,7 +62,7 @@
     <div class="container">
         <div id="login-screen">
             <h1 class="brand-title">CB</h1>
-            <p style="color: var(--muted); margin: 10px 0 30px 0;">Euer täglicher Moment.</p>
+            <p style="color: var(--muted); margin: 5px 0 20px 0; font-size: 0.9rem;">Euer täglicher Moment.</p>
             <input type="email" id="email" class="login-field" placeholder="E-Mail">
             <input type="password" id="password" class="login-field" placeholder="Passwort">
             <button onclick="app.login()" class="btn-action" style="background: var(--bg); margin-top: 10px;">Einloggen</button>
@@ -84,7 +85,7 @@
             <div id="input-zone">
                 <div id="options-list"></div>
                 <div id="tot-zone" class="tot-container hidden"></div>
-                <textarea id="text-input" class="hidden" placeholder="Deine Antwort..."></textarea>
+                <textarea id="text-input" class="hidden" placeholder="Schreib etwas Liebes..."></textarea>
                 
                 <div class="info-box">
                     <b id="mode-title">KATEGORIE</b>
@@ -92,11 +93,11 @@
                 </div>
             </div>
 
-            <button id="next-btn" class="btn-action" onclick="app.nextStep()">Gedanken von Bene senden ✨</button>
+            <button id="next-btn" class="btn-action" onclick="app.nextStep()">Weiter ✨</button>
 
             <div id="complete-view" class="hidden">
                 <div id="results-container"></div>
-                <button onclick="app.logout()" style="background:none; color:var(--muted); border:none; width:100%; margin-top:25px; cursor:pointer; font-size:0.8rem;">Abmelden</button>
+                <button onclick="app.logout()" style="background:none; color:var(--muted); border:none; width:100%; margin-top:20px; cursor:pointer; font-size:0.75rem;">Abmelden</button>
             </div>
         </div>
     </div>
@@ -108,55 +109,22 @@
 
         const pool = {
             tot: [
-                {q: "Morgenstund?", o: ["Lange schlummern 😴", "Direkt Vollgas 🏃"]},
-                {q: "Abend-Vibe?", o: ["Couch & Netflix 🍿", "Bar & Freunde 🍻"]},
-                {q: "Traumreise?", o: ["Berge 🏔️", "Strand 🌊"]},
-                {q: "Heißgetränk?", o: ["Kaffee ☕", "Tee 🍵"]},
-                {q: "Kochen?", o: ["Selber machen 👨‍🍳", "Bestellen 🍕"]},
-                {q: "Superkraft?", o: ["Fliegen 🦅", "Zeit anhalten ⏳"]},
-                {q: "Wetter?", o: ["Sonne ☀️", "Gewitter ⚡"]},
-                {q: "Technik?", o: ["Apple 🍏", "Android 🤖"]},
-                {q: "Wohnen?", o: ["Loft Stadt 🏙️", "Haus am See 🏡"]},
-                {q: "Abenteuer?", o: ["Skydiving 🪂", "Roadtrip 🚗"]},
-                {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"]},
-                {q: "Haustier?", o: ["Hund 🐶", "Katze 🐱"]},
-                {q: "Klassiker?", o: ["Star Wars ⚔️", "Harry Potter 🪄"]},
-                {q: "Snack?", o: ["Süß 🍫", "Salzig 🥨"]},
-                {q: "Zukunft?", o: ["Weltreise 🌍", "Hausbau 🏠"]},
-                {q: "Social?", o: ["Große Party 🎉", "Kleiner Kreis 👥"]},
-                {q: "Outfit?", o: ["Casual 👟", "Elegant 👔"]},
-                {q: "Eis?", o: ["Waffel 🍦", "Becher 🍨"]},
-                {q: "Foto?", o: ["Digital 📸", "Polaroid 🎞️"]},
-                {q: "Sport?", o: ["Team ⚽", "Einzel 🧘"]}
+                {q: "Morgenstund?", o: ["Lange schlummern 😴", "Direkt Vollgas 🏃"], d: "ENTSCHEIDUNG"},
+                {q: "Abend-Vibe?", o: ["Couch & Netflix 🍿", "Bar & Freunde 🍻"], d: "ENTSCHEIDUNG"},
+                {q: "Traumreise?", o: ["Berge 🏔️", "Strand 🌊"], d: "ENTSCHEIDUNG"},
+                {q: "Heißgetränk?", o: ["Kaffee ☕", "Tee 🍵"], d: "ENTSCHEIDUNG"},
+                {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"], d: "ENTSCHEIDUNG"},
+                {q: "Zukunft?", o: ["Weltreise 🌍", "Hausbau 🏠"], d: "ENTSCHEIDUNG"}
             ],
             ranking: [
-                {q: "Wichtigste Beziehungs-Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"]},
-                {q: "Beste Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Konzert"]},
-                {q: "Was macht ein Heim gemütlich?", o: ["Licht", "Düfte", "Ordnung", "Pflanzen"]},
-                {q: "Bester Urlaubstyp?", o: ["Städtetrip", "Strandurlaub", "Wandern", "Wellness"]},
-                {q: "Haushalt-Prio?", o: ["Küche sauber", "Bett gemacht", "Müll weg", "Wäsche fertig"]},
-                {q: "Zukunfts-Fokus?", o: ["Reisen", "Karriere", "Eigenheim", "Familie"]},
-                {q: "Liebesbeweis?", o: ["Worte", "Zeit", "Geschenke", "Taten"]},
-                {q: "Sonntags-Aktivität?", o: ["Brunch", "Sport", "Flohmarkt", "Nichts tun"]},
-                {q: "Stress-Killer?", o: ["Musik", "Schlaf", "Sport", "Gespräche"]},
-                {q: "Charakter-Eigenschaft?", o: ["Geduld", "Mut", "Witz", "Ruhe"]}
+                {q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"], d: "SORTIEREN"},
+                {q: "Beste Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Konzert"], d: "SORTIEREN"},
+                {q: "Heim-Gemütlichkeit?", o: ["Licht", "Düfte", "Ordnung", "Fotos"], d: "SORTIEREN"}
             ],
             text: [
-                {q: "Mein schönstes Outfit diese Woche?", o: []},
-                {q: "Was sollten wir bald mal zusammen machen?", o: []},
-                {q: "Drei Worte für unseren heutigen Tag.", o: []},
-                {q: "Wofür bin ich dir heute dankbar?", o: []},
-                {q: "Ein Lied, das mich an uns erinnert.", o: []},
-                {q: "Was war heute mein bester Moment?", o: []},
-                {q: "Ein Kompliment für dich heute.", o: []},
-                {q: "Was liebst du an unserem Alltag?", o: []},
-                {q: "Wo siehst du uns in 5 Jahren?", o: []},
-                {q: "Was bringt mich bei dir zum Lächeln?", o: []},
-                {q: "Spontan-Trip heute: Wohin?", o: []},
-                {q: "Was habe ich heute von dir gelernt?", o: []},
-                {q: "Unsere größte gemeinsame Stärke?", o: []},
-                {q: "Was war dein erster Gedanke heute an mich?", o: []},
-                {q: "Dein Wunsch für unser Wochenende?", o: []}
+                {q: "Drei Worte für unseren Tag.", o: [], d: "DEINE GEDANKEN"},
+                {q: "Was sollten wir bald mal machen?", o: [], d: "DEINE GEDANKEN"},
+                {q: "Wofür bin ich heute dankbar?", o: [], d: "DEINE GEDANKEN"}
             ]
         };
 
@@ -170,28 +138,24 @@
 
             async init() {
                 const { data: { session } } = await sbClient.auth.getSession();
-                if (session) { 
-                    this.session = session; 
-                    this.identifyUsers(); 
-                    this.generateDailyQuestions(); 
-                    this.showMain(); 
-                }
+                if (session) { this.session = session; this.identifyUsers(); this.generateDailyQuestions(); this.showMain(); }
             },
 
             identifyUsers() {
                 const email = this.session.user.email.toLowerCase();
                 if (email === 'bisf@gmx.de') { this.myName = "bene"; this.partnerName = "clara"; }
                 else if (email === 'clara-frey@gmx.de') { this.myName = "clara"; this.partnerName = "bene"; }
-                this.updateButtonText();
+                this.updateBtnText();
             },
 
-            updateButtonText() {
+            updateBtnText() {
                 const btn = document.getElementById('next-btn');
-                const nameDisplay = this.myName.charAt(0).toUpperCase() + this.myName.slice(1);
                 if (this.currentStep < 2) {
                     btn.innerText = "Weiter ✨";
                 } else {
-                    btn.innerText = `Gedanken von ${nameDisplay} senden ✈️`;
+                    const me = this.myName.charAt(0).toUpperCase() + this.myName.slice(1);
+                    const you = this.partnerName.charAt(0).toUpperCase() + this.partnerName.slice(1);
+                    btn.innerText = `Gedanken von ${me} an ${you} senden ✈️`;
                 }
             },
 
@@ -199,19 +163,17 @@
                 const seed = parseInt(this.todayKey.replace(/-/g, ''));
                 const getQ = (list, offset) => list[(seed + offset) % list.length];
                 this.dailyQuestions = [
-                    {...getQ(pool.tot, 0), type: 'tot', desc: 'Wähle deine Seite!'},
-                    {...getQ(pool.ranking, 1), type: 'ranking', desc: 'Sortiere nach Wichtigkeit.'},
-                    {...getQ(pool.text, 2), type: 'text', desc: 'Deep Dive: Schreib etwas Schönes.'}
+                    {...getQ(pool.tot, 0), type: 'tot', desc: 'Wähle deinen Favoriten!'},
+                    {...getQ(pool.ranking, 1), type: 'ranking', desc: 'Halte gedrückt und schiebe die Karten.'},
+                    {...getQ(pool.text, 2), type: 'text', desc: 'Lass dein Herz sprechen.'}
                 ];
             },
 
             async login() {
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password').value;
-                if(!email || !password) return alert("Bitte E-Mail und Passwort eingeben.");
                 const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
-                if (error) alert("Login fehlgeschlagen: " + error.message); 
-                else location.reload();
+                if (error) alert("Fehler: " + error.message); else location.reload();
             },
 
             async logout() { await sbClient.auth.signOut(); location.reload(); },
@@ -225,7 +187,7 @@
 
             renderStep() {
                 if (this.currentStep > 2) return;
-                this.updateButtonText();
+                this.updateBtnText();
 
                 for(let i=0; i<3; i++) {
                     document.getElementById(`p-dot-${i}`).className = 'progress-dot' + (i === this.currentStep ? ' active' : (i < this.currentStep ? ' done' : ''));
@@ -233,7 +195,7 @@
 
                 const q = this.dailyQuestions[this.currentStep];
                 document.getElementById('question-text').innerText = q.q;
-                document.getElementById('mode-title').innerText = q.type.toUpperCase();
+                document.getElementById('mode-title').innerText = q.d;
                 document.getElementById('mode-desc').innerText = q.desc;
 
                 const list = document.getElementById('options-list');
@@ -247,24 +209,15 @@
                     tot.classList.remove('hidden');
                     q.o.forEach(opt => {
                         const div = document.createElement('div'); div.className = 'tot-item'; div.innerText = opt;
-                        div.onclick = () => { 
-                            document.querySelectorAll('.tot-item').forEach(i => i.classList.remove('selected')); 
-                            div.classList.add('selected'); 
-                        };
+                        div.onclick = () => { document.querySelectorAll('.tot-item').forEach(i => i.classList.remove('selected')); div.classList.add('selected'); };
                         tot.appendChild(div);
                     });
                 } else if (q.type === 'ranking') {
                     list.classList.remove('hidden');
-                    q.o.forEach(opt => { 
-                        const div = document.createElement('div'); 
-                        div.className = 'option-item'; 
-                        div.innerText = opt; 
-                        list.appendChild(div); 
-                    });
+                    q.o.forEach(opt => { const div = document.createElement('div'); div.className = 'option-item'; div.innerText = opt; list.appendChild(div); });
                     Sortable.create(list, { animation: 150 });
                 } else if (q.type === 'text') {
-                    txt.classList.remove('hidden');
-                    txt.value = "";
+                    txt.classList.remove('hidden'); txt.value = "";
                 }
             },
 
@@ -275,10 +228,9 @@
                 else if (q.type === 'ranking') ans = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" > ");
                 else if (q.type === 'text') ans = document.getElementById('text-input').value.trim();
 
-                if (!ans) return alert("Antwort fehlt noch! ✨");
+                if (!ans) return alert("Halt! Da fehlt noch was. ✨");
                 this.myAnswers.push(ans);
                 this.currentStep++;
-                
                 if (this.currentStep < 3) this.renderStep();
                 else this.submitAll();
             },
@@ -286,11 +238,8 @@
             async submitAll() {
                 const finalStr = this.myAnswers.join(" | ");
                 const { error } = await sbClient.from('answers').insert([{ user_name: this.myName, choice: finalStr, day_key: this.todayKey }]);
-                if (error) alert("Du hast heute schon geantwortet!");
-                else { 
-                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); 
-                    this.syncStatus(); 
-                }
+                if (error) alert("Schon erledigt!");
+                else { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); this.syncStatus(); }
             },
 
             async syncStatus() {
@@ -315,8 +264,7 @@
                     const otherSplit = other ? other.choice.split(" | ") : null;
 
                     this.dailyQuestions.forEach((q, i) => {
-                        const card = document.createElement('div'); 
-                        card.className = 'result-card';
+                        const card = document.createElement('div'); card.className = 'result-card';
                         card.innerHTML = `<b>${q.q}</b>Ich: ${mySplit[i]}<br>` + 
                                        (otherSplit ? `${targetName}: ${otherSplit[i]}` : `<i>Warten auf ${targetName}...</i>`);
                         resCont.appendChild(card);
