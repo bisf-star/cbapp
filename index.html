@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CB-App Premium</title>
+    <title>CB-App ❤️</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -45,9 +45,9 @@
             -webkit-overflow-scrolling: touch; display: flex; flex-direction: column;
         }
 
-        /* FIXED FOOTER - Der Button wird niemals abgeschnitten */
+        /* SICHERER FOOTER-ABSTAND */
         .footer-bar { 
-            padding: 15px 25px calc(30px + env(safe-area-inset-bottom)) 25px; 
+            padding: 15px 25px calc(50px + env(safe-area-inset-bottom)) 25px; 
             flex-shrink: 0; background: white; border-top: 1px solid #f1f2f6;
             z-index: 10;
         }
@@ -65,7 +65,6 @@
             transform: rotate(25deg); animation: shine 4s infinite;
         }
         @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
-        .btn-action:active { transform: scale(0.96); }
 
         .status-box { background: var(--light-bg); border-radius: 28px; padding: 25px; border: 1px solid #edf2f7; }
         .status-pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 50px; font-weight: 600; font-size: 0.85rem; }
@@ -105,14 +104,14 @@
 
 <div class="container">
     <div class="header">
-        <div class="brand" id="nav-label">CB-App</div>
-        <button id="logout-btn" class="logout-btn hidden" onclick="app.logout()">Logout</button>
+        <div class="brand" id="nav-label">Euer Moment</div>
+        <button id="logout-btn" class="logout-btn hidden" onclick="app.logout()">Abmelden</button>
     </div>
 
     <div id="main-content" class="content-area"></div>
 
     <div id="footer-ui" class="footer-bar hidden">
-        <button id="action-btn" class="btn-action">Einen Moment...</button>
+        <button id="action-btn" class="btn-action"></button>
     </div>
 </div>
 
@@ -122,9 +121,9 @@
     const sb = supabase.createClient(SB_URL, SB_KEY);
 
     const pool = {
-        tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], i: "Was passt heute?"}],
-        ranking: [{q: "Beste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], i: "Schiebe deine Favoriten nach oben."}],
-        text: [{q: "Was schätzt du heute an uns?", o: [], i: "Ein kleiner Satz für euch."}]
+        tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], i: "Was passt heute zu dir?"}],
+        ranking: [{q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], i: "Was würdest du heute am liebsten machen?"}],
+        text: [{q: "Drei Worte für unseren Tag?", o: [], i: "Schreib eine kleine Nachricht für deinen Schatz."}]
     };
 
     const greetings = ["Schön, dass du da bist, ", "Toll, dass es dich gibt, ", "Hi, ", "Ein Moment für euch, ", "Genieße den Tag, "];
@@ -134,17 +133,18 @@
         step: 0, results: [], dailyQs: [], isSubmitting: false,
 
         async init() {
-            window.onpopstate = (e) => { if(e.state) location.reload(); };
             const { data: { session } } = await sb.auth.getSession();
-            if (!session) return this.renderLogin();
-            
-            const email = session.user.email.toLowerCase();
-            const rawName = email === 'bisf@gmx.de' ? "Bene" : "Clara";
-            this.user = rawName;
-            this.partner = this.user === "Bene" ? "Clara" : "Bene";
-            
-            document.getElementById('logout-btn').classList.remove('hidden');
-            this.showLobby();
+            if (!session) {
+                this.renderLogin();
+            } else {
+                window.onpopstate = (e) => { if (e.state) location.reload(); };
+                const email = session.user.email.toLowerCase();
+                const rawName = email === 'bisf@gmx.de' ? "Bene" : "Clara";
+                this.user = rawName;
+                this.partner = this.user === "Bene" ? "Clara" : "Bene";
+                document.getElementById('logout-btn').classList.remove('hidden');
+                this.showLobby();
+            }
         },
 
         async showLobby(push = true) {
@@ -154,26 +154,26 @@
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
 
             const greet = greetings[Math.floor(Math.random() * greetings.length)];
-            document.getElementById('nav-label').innerText = "CB-App";
+            document.getElementById('nav-label').innerText = "Euer Moment";
             
             document.getElementById('main-content').innerHTML = `
                 <h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 8px;">${greet}${this.user}! ❤️</h2>
-                <p style="color:var(--muted); margin-bottom: 30px;">Bereit für euren täglichen Vergleich?</p>
+                <p style="color:var(--muted); margin-bottom: 30px;">Bereit für unsere täglichen Gedanken?</p>
                 <div class="status-box">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <span>Dein Status:</span> 
+                        <span>Meine Antwort:</span> 
                         <span class="status-pill ${me?'pill-green':'pill-red'}">${me?'Fertig ✅':'Offen'}</span>
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span>${this.partner}:</span> 
-                        <span class="status-pill ${other?'pill-green':'pill-red'}">${other?'Fertig ✅':'Wartet...'}</span>
+                        <span class="status-pill ${other?'pill-green':'pill-red'}">${other?'Fertig ✅':'Wartet noch...'}</span>
                     </div>
                 </div>
             `;
             const footer = document.getElementById('footer-ui');
             footer.classList.remove('hidden');
             const btn = document.getElementById('action-btn');
-            btn.innerText = me ? "Ergebnisse ansehen ✨" : "Heute starten 🚀";
+            btn.innerText = me ? "Zu unseren Ergebnissen ✨" : "Jetzt starten 🚀";
             btn.onclick = () => me ? this.showComparison() : this.startQuiz();
         },
 
@@ -184,13 +184,13 @@
         },
 
         renderQuiz(push = true) {
-            if (push) history.pushState({view: 'quiz', step: this.step, results: [...this.results]}, "");
+            if (push) history.pushState({view: 'quiz', step: this.step}, "");
             const q = this.dailyQs[this.step];
-            document.getElementById('nav-label').innerText = "Frage " + (this.step + 1);
+            document.getElementById('nav-label').innerText = "Unsere Gedanken";
             
             document.getElementById('main-content').innerHTML = `
                 <div class="prog-dots">${[0,1,2].map(i => `<div class="dot ${i===this.step?'active':(i<this.step?'done':'')}"></div>`).join('')}</div>
-                <div class="info-tab"><b>Vorschlag:</b> ${q.i}</div>
+                <div class="info-tab"><b>Kleine Hilfe:</b> ${q.i}</div>
                 <h2 style="font-size: 1.4rem;">${q.q}</h2>
                 <div id="quiz-input"></div>
             `;
@@ -214,7 +214,7 @@
             }
 
             const btn = document.getElementById('action-btn');
-            btn.innerText = this.step < 2 ? "Weiter ✨" : `Fertig & Senden ✈️`;
+            btn.innerText = this.step < 2 ? "Weiter ✨" : `An ${this.partner} senden ✈️`;
             btn.onclick = () => this.handleNext();
         },
 
@@ -225,7 +225,7 @@
             else if (q.o.length > 2) val = Array.from(document.querySelectorAll('.rank-card span:last-child')).map(s => s.innerText).join(" > ");
             else val = document.getElementById('txt-val').value.trim();
 
-            if (!val) return alert("Antwort fehlt noch! ✨");
+            if (!val) return alert("Halt! Deine Antwort fehlt noch. ❤️");
             this.results.push(val);
             if (this.step < 2) { this.step++; this.renderQuiz(); }
             else this.submit();
@@ -235,11 +235,11 @@
             if (this.isSubmitting) return;
             this.isSubmitting = true;
             const btn = document.getElementById('action-btn');
-            btn.disabled = true; btn.innerText = "Sende Daten...";
+            btn.disabled = true; btn.innerText = "Einen Moment...";
             
             const { error } = await sb.from('answers').insert([{ user_name: this.user.toLowerCase(), choice: this.results.join(" | "), day_key: this.day }]);
             this.isSubmitting = false;
-            if (error) { alert("Senden fehlgeschlagen! Fehler: " + error.message); btn.disabled = false; btn.innerText = "Nochmal versuchen"; }
+            if (error) { alert("Das hat nicht geklappt."); btn.disabled = false; btn.innerText = "Nochmal versuchen"; }
             else { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); this.showComparison(); }
         },
 
@@ -250,19 +250,19 @@
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
             const myA = me.choice.split(" | "), otherA = other ? other.choice.split(" | ") : null;
 
-            document.getElementById('nav-label').innerText = "Euer Vergleich";
-            let html = `<h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 25px;">Ergebnisse</h2>`;
+            document.getElementById('nav-label').innerText = "Was wir denken";
+            let html = `<h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 25px;">Unsere Antworten</h2>`;
             this.dailyQs.forEach((q, i) => {
                 html += `
                     <div style="margin-bottom:20px;">
                         <div style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; margin-bottom:10px;">${q.q}</div>
                         <div class="tot-grid">
                             <div class="res-bubble" style="background:#f1f0ff; border-color:var(--secondary);"><b>ICH</b>${myA[i]}</div>
-                            <div class="res-bubble" style="background:${otherA?'#e3faf3':'#fff1f1'};"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : 'Wartet...'}</div>
+                            <div class="res-bubble" style="background:${otherA?'#e3faf3':'#fff1f1'};"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : '⌛ Wartet noch...'}</div>
                         </div>
                     </div>`;
             });
-            html += `<button class="btn-action" style="background:#f1f2f6; color:var(--muted); box-shadow:none; margin-top:10px; animation:none;" id="del-btn">Antwort korrigieren 📝</button>`;
+            html += `<button class="btn-action" style="background:#f1f2f6; color:var(--muted); box-shadow:none; margin-top:10px; animation:none;" id="del-btn">Alles löschen & neu starten 📝</button>`;
             
             document.getElementById('main-content').innerHTML = html;
             const btn = document.getElementById('action-btn');
@@ -278,10 +278,11 @@
         },
 
         renderLogin() {
+            document.getElementById('nav-label').innerText = "Anmelden";
             document.getElementById('logout-btn').classList.add('hidden');
             document.getElementById('main-content').innerHTML = `
-                <h2 style="margin-top:30px; text-align:left; font-size: 2rem;">CB-App</h2>
-                <p style="color:var(--muted); margin-bottom:35px;">Log dich ein, um euren Moment zu starten.</p>
+                <h2 style="margin-top:30px; text-align:left; font-size: 2rem;">Unsere App</h2>
+                <p style="color:var(--muted); margin-bottom:35px;">Anmelden, um den Moment zu starten.</p>
                 <input id="em" type="email" class="login-field" placeholder="E-Mail Adresse">
                 <input id="pw" type="password" class="login-field" placeholder="Passwort">
             `;
@@ -291,10 +292,14 @@
             btn.innerText = "Einloggen ✨";
             btn.onclick = async () => {
                 const { error } = await sb.auth.signInWithPassword({ email: document.getElementById('em').value, password: document.getElementById('pw').value });
-                if (error) alert("Login fehlgeschlagen!"); else location.reload();
+                if (error) alert("Ups, Fehler!"); else location.reload();
             };
         },
-        logout() { sb.auth.signOut().then(() => location.reload()); }
+
+        async logout() {
+            await sb.auth.signOut();
+            location.href = location.pathname; // Erzwingt Neuladen zur Login-Seite
+        }
     };
     app.init();
 </script>
