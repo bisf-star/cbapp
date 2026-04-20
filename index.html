@@ -84,6 +84,11 @@
         .pill-green { background: #e3faf3; color: var(--accent-green); }
         .pill-red { background: #fff1f1; color: var(--primary); animation: ripple 2s infinite; }
 
+        .timer-info { 
+            font-size: 0.75rem; color: var(--muted); text-align: center; 
+            margin-top: 15px; font-weight: 500; border-top: 1px dashed #ddd; padding-top: 10px;
+        }
+
         .prog-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
         .dot { width: 40px; height: 7px; border-radius: 10px; background: #eee; transition: 0.5s; }
         .dot.active { background: var(--secondary); width: 70px; }
@@ -267,6 +272,9 @@
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span>${this.partner}:</span> <span class="status-pill ${other?'pill-green':'pill-red'}">${other?'Fertig ✅':'Offen'}</span>
+                    </div>
+                    <div class="timer-info">
+                        🕒 Fragen beantworten bis: <b>00:00 Uhr</b>
                     </div>
                 </div>
             `;
