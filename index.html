@@ -70,6 +70,11 @@
             box-shadow: 0 10px 25px rgba(255, 118, 117, 0.35);
             position: relative; overflow: hidden; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        
+        .btn-action:disabled { background: #dfe6e9; color: #b2bec3; box-shadow: none; cursor: not-allowed; }
+
+        .empty-state { text-align: center; padding: 40px 20px; animation: fadeIn 0.8s ease; }
+        .empty-icon { font-size: 4rem; margin-bottom: 20px; display: block; }
 
         .info-hint {
             background: #f1f2ff; color: var(--secondary);
@@ -83,11 +88,6 @@
         .status-pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 50px; font-weight: 600; font-size: 0.85rem; }
         .pill-green { background: #e3faf3; color: var(--accent-green); }
         .pill-red { background: #fff1f1; color: var(--primary); animation: ripple 2s infinite; }
-
-        .timer-info { 
-            font-size: 0.75rem; color: var(--muted); text-align: center; 
-            margin-top: 15px; font-weight: 500; border-top: 1px dashed #ddd; padding-top: 10px;
-        }
 
         .prog-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
         .dot { width: 40px; height: 7px; border-radius: 10px; background: #eee; transition: 0.5s; }
@@ -103,10 +103,6 @@
         }
         .rank-tag { background: var(--secondary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; flex-shrink: 0; }
         
-        .sortable-chosen { background: #fdfdfd; transform: scale(1.02); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: var(--secondary); z-index: 100; }
-        .sortable-ghost { opacity: 0.2; background: var(--secondary); }
-        .sortable-drag { opacity: 0.9; }
-
         .tot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .tot-box { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 28px; padding: 35px 10px; text-align: center; font-weight: 600; min-height: 110px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
         .tot-box.selected { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-5px); }
@@ -142,70 +138,70 @@
 
     const pool = {
         tot: [
-            {q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], h: "Was ist dein Rhythmus?"},
-            {q: "Netflix oder Club?", o: ["Couch 🍿", "Tanzen 🕺"], h: "Wie sieht die Nacht aus?"},
-            {q: "Pizza oder Pasta?", o: ["Pizza 🍕", "Pasta 🍝"], h: "Der Klassiker-Check."},
-            {q: "Berge oder Meer?", o: ["Gipfel 🏔️", "Strand 🌊"], h: "Wohin geht die Reise?"},
-            {q: "Kaffee oder Tee?", o: ["Kaffee ☕", "Tee 🍵"], h: "Dein Muntermacher?"},
-            {q: "Stadt oder Land?", o: ["City-Vibe 🏙️", "Natur pur 🌳"], h: "Wo fühlst du dich wohl?"},
-            {q: "Hund oder Katze?", o: ["Wuff 🐶", "Miau 🐱"], h: "Dein Spirit-Animal?"},
-            {q: "Sommer oder Winter?", o: ["Hitze ☀️", "Schnee ❄️"], h: "Lieblingsjahreszeit?"},
-            {q: "Frühstück oder Abendessen?", o: ["Morgen-Fan 🍳", "Dinner-Date 🍷"], h: "Beste Mahlzeit?"},
-            {q: "Kino oder Heimkino?", o: ["Große Leinwand 📽️", "Zuhause 📺"], h: "Film ab!"},
-            {q: "Action oder Entspannung?", o: ["Adrenalin ⚡", "Wellness 🧘"], h: "Dein Modus?"},
-            {q: "Süß oder Salzig?", o: ["Schokolade 🍫", "Chips 🥨"], h: "Snack-Time!"},
-            {q: "Bücher oder Podcasts?", o: ["Lesen 📖", "Hören 🎧"], h: "Wie konsumierst du?"},
-            {q: "Auto oder Bahn?", o: ["Roadtrip 🚗", "Zugfahren 🚆"], h: "Unterwegs sein."},
-            {q: "Planen oder Spontan?", o: ["Struktur 📅", "Abenteuer 🎲"], h: "Dein Lebensstil?"},
-            {q: "Eis oder Kuchen?", o: ["Eiskugel 🍦", "Tortenstück 🍰"], h: "Dessert-Wahl."},
-            {q: "Podcast oder Musik?", o: ["Wissen 🎙️", "Melodie 🎶"], h: "Was läuft im Ohr?"},
-            {q: "Frühaufsteher oder Nachteule?", o: ["Lerchen 🌅", "Eulen 🌙"], h: "Wann bist du wach?"},
-            {q: "Badewanne oder Dusche?", o: ["Entspannen 🛁", "Erfrischen 🚿"], h: "Self-Care."},
-            {q: "Waldspaziergang oder See-Tag?", o: ["Moos & Bäume 🌲", "Wasser-Vibe 💧"], h: "Natur-Check."}
+            {id: "t1", q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], h: "Was ist dein Rhythmus?"},
+            {id: "t2", q: "Netflix oder Club?", o: ["Couch 🍿", "Tanzen 🕺"], h: "Wie sieht die Nacht aus?"},
+            {id: "t3", q: "Pizza oder Pasta?", o: ["Pizza 🍕", "Pasta 🍝"], h: "Der Klassiker-Check."},
+            {id: "t4", q: "Berge oder Meer?", o: ["Gipfel 🏔️", "Strand 🌊"], h: "Wohin geht die Reise?"},
+            {id: "t5", q: "Kaffee oder Tee?", o: ["Kaffee ☕", "Tee 🍵"], h: "Dein Muntermacher?"},
+            {id: "t6", q: "Stadt oder Land?", o: ["City-Vibe 🏙️", "Natur pur 🌳"], h: "Wo fühlst du dich wohl?"},
+            {id: "t7", q: "Hund oder Katze?", o: ["Wuff 🐶", "Miau 🐱"], h: "Dein Spirit-Animal?"},
+            {id: "t8", q: "Sommer oder Winter?", o: ["Hitze ☀️", "Schnee ❄️"], h: "Lieblingsjahreszeit?"},
+            {id: "t9", q: "Frühstück oder Abendessen?", o: ["Morgen-Fan 🍳", "Dinner-Date 🍷"], h: "Beste Mahlzeit?"},
+            {id: "t10", q: "Kino oder Heimkino?", o: ["Große Leinwand 📽️", "Zuhause 📺"], h: "Film ab!"},
+            {id: "t11", q: "Action oder Entspannung?", o: ["Adrenalin ⚡", "Wellness 🧘"], h: "Dein Modus?"},
+            {id: "t12", q: "Süß oder Salzig?", o: ["Schokolade 🍫", "Chips 🥨"], h: "Snack-Time!"},
+            {id: "t13", q: "Bücher oder Podcasts?", o: ["Lesen 📖", "Hören 🎧"], h: "Wie konsumierst du?"},
+            {id: "t14", q: "Auto oder Bahn?", o: ["Roadtrip 🚗", "Zugfahren 🚆"], h: "Unterwegs sein."},
+            {id: "t15", q: "Planen oder Spontan?", o: ["Struktur 📅", "Abenteuer 🎲"], h: "Dein Lebensstil?"},
+            {id: "t16", q: "Eis oder Kuchen?", o: ["Eiskugel 🍦", "Tortenstück 🍰"], h: "Dessert-Wahl."},
+            {id: "t17", q: "Podcast oder Musik?", o: ["Wissen 🎙️", "Melodie 🎶"], h: "Was läuft im Ohr?"},
+            {id: "t18", q: "Frühaufsteher oder Nachteule?", o: ["Lerchen 🌅", "Eulen 🌙"], h: "Wann bist du wach?"},
+            {id: "t19", q: "Badewanne oder Dusche?", o: ["Entspannen 🛁", "Erfrischen 🚿"], h: "Self-Care."},
+            {id: "t20", q: "Waldspaziergang oder See-Tag?", o: ["Moos & Bäume 🌲", "Wasser-Vibe 💧"], h: "Natur-Check."}
         ],
         ranking: [
-            {q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], h: "Priorisiere eure Zeit!"},
-            {q: "Wichtigste Urlaubsart?", o: ["Wellness 🧖", "Kultur 🏛️", "Sport ⛷️", "Party 🍹"], h: "Was muss im Urlaub sein?"},
-            {q: "Bester Pizza-Belag?", o: ["Margherita 🧀", "Salami 🍕", "Gemüse 🥦", "Scharf 🌶️"], h: "Ranking der Beläge!"},
-            {q: "Lieblings-Genre?", o: ["Comedy 😂", "Thriller 😱", "Romanze ❤️", "Sci-Fi 👽"], h: "Was schauen wir heute?"},
-            {q: "Bester Wochentag?", o: ["Freitag 🥳", "Samstag 🕺", "Sonntag ☕", "Mittwoch 🐫"], h: "Die Favoriten-Woche."},
-            {q: "Hausarbeit-Hass?", o: ["Bügeln 👔", "Saugen 🧹", "Abwaschen 🧼", "Müll 🗑️"], h: "Was ist am schlimmsten?"},
-            {q: "Beste Eissorte?", o: ["Vanille 🍦", "Schoko 🍫", "Fruchtig 🍓", "Nussig 🥜"], h: "Klassiker im Ranking."},
-            {q: "Wichtige Charaktereigenschaft?", o: ["Humor 😂", "Treue 🤝", "Abenteuerlust 🧗", "Empathie ✨"], h: "Was schätzt du am meisten?"},
-            {q: "Traum-Wohnort?", o: ["Großstadt 🏢", "Vorort 🏡", "Bauernhof 🐄", "Insel 🏝️"], h: "Wo landen wir mal?"},
-            {q: "Lieblings-Frühstück?", o: ["Pancakes 🥞", "Rührei 🥚", "Müsli 🥣", "Brötchen 🥨"], h: "Bester Start?"},
-            {q: "Sport-Favorit?", o: ["Laufen 🏃", "Yoga 🧘", "Kraftsport 💪", "Schwimmen 🏊"], h: "Bewegung!"},
-            {q: "Konzert-Vibe?", o: ["Open Air 🎤", "Club-Gig 🎸", "Festival 🏕️", "Klassik 🎻"], h: "Live-Erlebnis."},
-            {q: "Jahreszeiten-Ranking?", o: ["Frühling 🌸", "Sommer ☀️", "Herbst 🍂", "Winter ❄️"], h: "Deine Reihenfolge."},
-            {q: "Beste Superkraft?", o: ["Fliegen 🦅", "Unsichtbar 👻", "Zeitreisen ⏳", "Gedankenlesen 🧠"], h: "Wähle weise."},
-            {q: "Küchen-Dienst?", o: ["Einkaufen 🛒", "Schnippeln 🔪", "Kochen 🍳", "Aufräumen ✨"], h: "Deine Rollen."},
-            {q: "Serien-Marathon?", o: ["Sitcoms 📺", "Krimi 🕵️", "Doku 🌍", "Fantasy 🐉"], h: "Binge-Watch!"},
-            {q: "Geschenk-Typ?", o: ["Erlebnis 🎫", "Selbstgemacht 🎨", "Nützlich 🛠️", "Luxus ✨"], h: "Was freut dich mehr?"},
-            {q: "Wochenend-Aktivität?", o: ["Ausschlafen 😴", "Freunde treffen 👥", "Ausflug 🚗", "Hobby 🎨"], h: "Dein Plan."},
-            {q: "Getränke-Ranking?", o: ["Limo 🥤", "Saft 🍎", "Wasser 💧", "Wein/Bier 🍷"], h: "Durstlöscher."},
-            {q: "Lieblings-Obst?", o: ["Erdbeere 🍓", "Mango 🥭", "Apfel 🍎", "Banane 🍌"], h: "Süße Früchte."}
+            {id: "r1", q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], h: "Priorisiere eure Zeit!"},
+            {id: "r2", q: "Wichtigste Urlaubsart?", o: ["Wellness 🧖", "Kultur 🏛️", "Sport ⛷️", "Party 🍹"], h: "Was muss im Urlaub sein?"},
+            {id: "r3", q: "Bester Pizza-Belag?", o: ["Margherita 🧀", "Salami 🍕", "Gemüse 🥦", "Scharf 🌶️"], h: "Ranking der Beläge!"},
+            {id: "r4", q: "Lieblings-Genre?", o: ["Comedy 😂", "Thriller 😱", "Romanze ❤️", "Sci-Fi 👽"], h: "Was schauen wir heute?"},
+            {id: "r5", q: "Bester Wochentag?", o: ["Freitag 🥳", "Samstag 🕺", "Sonntag ☕", "Mittwoch 🐫"], h: "Die Favoriten-Woche."},
+            {id: "r6", q: "Hausarbeit-Hass?", o: ["Bügeln 👔", "Saugen 🧹", "Abwaschen 🧼", "Müll 🗑️"], h: "Was ist am schlimmsten?"},
+            {id: "r7", q: "Beste Eissorte?", o: ["Vanille 🍦", "Schoko 🍫", "Fruchtig 🍓", "Nussig 🥜"], h: "Klassiker im Ranking."},
+            {id: "r8", q: "Wichtige Charaktereigenschaft?", o: ["Humor 😂", "Treue 🤝", "Abenteuerlust 🧗", "Empathie ✨"], h: "Was schätzt du am meisten?"},
+            {id: "r9", q: "Traum-Wohnort?", o: ["Großstadt 🏢", "Vorort 🏡", "Bauernhof 🐄", "Insel 🏝️"], h: "Wo landen wir mal?"},
+            {id: "r10", q: "Lieblings-Frühstück?", o: ["Pancakes 🥞", "Rührei 🥚", "Müsli 🥣", "Brötchen 🥨"], h: "Bester Start?"},
+            {id: "r11", q: "Sport-Favorit?", o: ["Laufen 🏃", "Yoga 🧘", "Kraftsport 💪", "Schwimmen 🏊"], h: "Bewegung!"},
+            {id: "r12", q: "Konzert-Vibe?", o: ["Open Air 🎤", "Club-Gig 🎸", "Festival 🏕️", "Klassik 🎻"], h: "Live-Erlebnis."},
+            {id: "r13", q: "Jahreszeiten-Ranking?", o: ["Frühling 🌸", "Sommer ☀️", "Herbst 🍂", "Winter ❄️"], h: "Deine Reihenfolge."},
+            {id: "r14", q: "Beste Superkraft?", o: ["Fliegen 🦅", "Unsichtbar 👻", "Zeitreisen ⏳", "Gedankenlesen 🧠"], h: "Wähle weise."},
+            {id: "r15", q: "Küchen-Dienst?", o: ["Einkaufen 🛒", "Schnippeln 🔪", "Kochen 🍳", "Aufräumen ✨"], h: "Deine Rollen."},
+            {id: "r16", q: "Serien-Marathon?", o: ["Sitcoms 📺", "Krimi 🕵️", "Doku 🌍", "Fantasy 🐉"], h: "Binge-Watch!"},
+            {id: "r17", q: "Geschenk-Typ?", o: ["Erlebnis 🎫", "Selbstgemacht 🎨", "Nützlich 🛠️", "Luxus ✨"], h: "Was freut dich mehr?"},
+            {id: "r18", q: "Wochenend-Aktivität?", o: ["Ausschlafen 😴", "Freunde treffen 👥", "Ausflug 🚗", "Hobby 🎨"], h: "Dein Plan."},
+            {id: "r19", q: "Getränke-Ranking?", o: ["Limo 🥤", "Saft 🍎", "Wasser 💧", "Wein/Bier 🍷"], h: "Durstlöscher."},
+            {id: "r20", q: "Lieblings-Obst?", o: ["Erdbeere 🍓", "Mango 🥭", "Apfel 🍎", "Banane 🍌"], h: "Süße Früchte."}
         ],
         text: [
-            {q: "Drei Worte für unseren Tag?", o: [], h: "Beschreibe euren Moment."},
-            {q: "Was war heute dein Highlight?", o: [], h: "Erzähl es deinem Schatz!"},
-            {q: "Was schätzt du heute an mir?", o: [], h: "Ein kleines Kompliment..."},
-            {q: "Was wollen wir bald erleben?", o: [], h: "Ein gemeinsames Ziel?"},
-            {q: "Ein Song, der mich an dich erinnert?", o: [], h: "Teile deine Melodie."},
-            {q: "Worauf freust du dich morgen?", o: [], h: "Dein Vorfreude-Moment."},
-            {q: "Was war dein lustigster Moment heute?", o: [], h: "Bring mich zum Lachen!"},
-            {q: "Wenn wir jetzt wegfliegen könnten - wohin?", o: [], h: "Träumt euch weg."},
-            {q: "Was koche ich dir mal Besonderes?", o: [], h: "Dein Wunschmenü."},
-            {q: "Welche Eigenschaft liebst du an uns?", o: [], h: "Wir als Team."},
-            {q: "Ein Insider, den nur wir verstehen?", o: [], h: "Nur wir zwei..."},
-            {q: "Wofür bist du heute dankbar?", o: [], h: "Dankbarkeits-Check."},
-            {q: "Was ist dein größter Traum gerade?", o: [], h: "Teile deine Vision."},
-            {q: "Wie würde unser perfektes Haus aussehen?", o: [], h: "Architektur-Träume."},
-            {q: "Was ist dein Lieblingsfoto von uns?", o: [], h: "Erinnerungs-Check."},
-            {q: "Was war dein erster Gedanke heute Früh?", o: [], h: "Guten Morgen!"},
-            {q: "Was ist das mutigste, das wir je taten?", o: [], h: "Abenteuer-Rückblick."},
-            {q: "Welches Tier wären wir als Paar?", o: [], h: "Fantasie-Check."},
-            {q: "Womit kann ich dich immer aufheitern?", o: [], h: "Dein SOS-Plan."},
-            {q: "Eine Sache, die du an mir bewunderst?", o: [], h: "Ehrliche Worte."}
+            {id: "x1", q: "Drei Worte für unseren Tag?", o: [], h: "Beschreibe euren Moment."},
+            {id: "x2", q: "Was war heute dein Highlight?", o: [], h: "Erzähl es deinem Schatz!"},
+            {id: "x3", q: "Was schätzt du heute an mir?", o: [], h: "Ein kleines Kompliment..."},
+            {id: "x4", q: "Was wollen wir bald erleben?", o: [], h: "Ein gemeinsames Ziel?"},
+            {id: "x5", q: "Ein Song, der mich an dich erinnert?", o: [], h: "Teile deine Melodie."},
+            {id: "x6", q: "Worauf freust du dich morgen?", o: [], h: "Dein Vorfreude-Moment."},
+            {id: "x7", q: "Was war dein lustigster Moment heute?", o: [], h: "Bring mich zum Lachen!"},
+            {id: "x8", q: "Wenn wir jetzt wegfliegen könnten - wohin?", o: [], h: "Träumt euch weg."},
+            {id: "x9", q: "Was koche ich dir mal Besonderes?", o: [], h: "Dein Wunschmenü."},
+            {id: "x10", q: "Welche Eigenschaft liebst du an uns?", o: [], h: "Wir als Team."},
+            {id: "x11", q: "Ein Insider, den nur wir verstehen?", o: [], h: "Nur wir zwei..."},
+            {id: "x12", q: "Wofür bist du heute dankbar?", o: [], h: "Dankbarkeits-Check."},
+            {id: "x13", q: "Was ist dein größter Traum gerade?", o: [], h: "Teile deine Vision."},
+            {id: "x14", q: "Wie würde unser perfektes Haus aussehen?", o: [], h: "Architektur-Träume."},
+            {id: "x15", q: "Was ist dein Lieblingsfoto von uns?", o: [], h: "Erinnerungs-Check."},
+            {id: "x16", q: "Was war dein erster Gedanke heute Früh?", o: [], h: "Guten Morgen!"},
+            {id: "x17", q: "Was ist das mutigste, das wir je taten?", o: [], h: "Abenteuer-Rückblick."},
+            {id: "x18", q: "Welches Tier wären wir als Paar?", o: [], h: "Fantasie-Check."},
+            {id: "x19", q: "Womit kann ich dich immer aufheitern?", o: [], h: "Dein SOS-Plan."},
+            {id: "x20", q: "Eine Sache, die du an mir bewunderst?", o: [], h: "Ehrliche Worte."}
         ]
     };
 
@@ -213,44 +209,55 @@
 
     const app = {
         user: "", partner: "", day: new Date().toISOString().split('T')[0],
-        step: 0, results: [], dailyQs: [],
+        step: 0, results: [], dailyQs: [], outOfQuestions: false,
 
-        seededShuffle(array, seed) {
-            let currentIndex = array.length, randomIndex;
-            let seedValue = seed;
-            const random = () => {
-                var x = Math.sin(seedValue++) * 10000;
-                return x - Math.floor(x);
-            };
-            while (0 !== currentIndex) {
-                randomIndex = Math.floor(random() * currentIndex);
-                currentIndex -= 1;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
             return array;
         },
 
         async init() {
-            const seed = parseInt(this.day.replace(/-/g, ''));
-            const shuffledTot = this.seededShuffle([...pool.tot], seed);
-            const shuffledRanking = this.seededShuffle([...pool.ranking], seed);
-            const shuffledText = this.seededShuffle([...pool.text], seed);
-
-            this.dailyQs = [
-                shuffledTot[seed % pool.tot.length],
-                shuffledRanking[seed % pool.ranking.length],
-                shuffledText[seed % pool.text.length]
-            ];
-
             const { data: { session } } = await sb.auth.getSession();
-            if (!session) this.renderLogin();
-            else {
+            if (!session) {
+                this.renderLogin();
+            } else {
                 const email = session.user.email.toLowerCase();
                 this.user = email === 'bisf@gmx.de' ? "Bene" : "Clara";
                 this.partner = this.user === "Bene" ? "Clara" : "Bene";
                 document.getElementById('logout-btn').classList.remove('hidden');
+                
+                await this.loadDailyQuestions();
                 this.showLobby();
             }
+        },
+
+        async loadDailyQuestions() {
+            const { data: allMyAnswers } = await sb.from('answers').select('choice').eq('user_name', this.user.toLowerCase());
+            const usedTexts = allMyAnswers ? allMyAnswers.map(a => a.choice) : [];
+
+            const filterPool = (p) => p.filter(q => !usedTexts.some(used => used.includes(q.q)));
+
+            const availableTot = filterPool(pool.tot);
+            const availableRanking = filterPool(pool.ranking);
+            const availableText = filterPool(pool.text);
+
+            // Prüfen, ob eine Kategorie leer ist
+            if (availableTot.length === 0 || availableRanking.length === 0 || availableText.length === 0) {
+                this.outOfQuestions = true;
+                return;
+            }
+
+            const seed = parseInt(this.day.replace(/-/g, ''));
+            const getSeeded = (arr, s) => arr[s % arr.length];
+
+            this.dailyQs = [
+                getSeeded(this.shuffle([...availableTot]), seed),
+                getSeeded(this.shuffle([...availableRanking]), seed),
+                getSeeded(this.shuffle([...availableText]), seed)
+            ];
         },
 
         triggerFade() {
@@ -264,6 +271,21 @@
             const me = data?.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
 
+            if (this.outOfQuestions && !me) {
+                document.getElementById('main-content').innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-icon">✨</span>
+                        <h2 style="font-size: 1.6rem;">Alles geschafft!</h2>
+                        <p style="color:var(--muted); line-height:1.6;">Schade, ihr habt alle Fragen schon beantwortet! ❤️ Bald kommen neue Fragen für eure gemeinsamen Momente.</p>
+                    </div>
+                `;
+                document.getElementById('footer-ui').classList.remove('hidden');
+                const btn = document.getElementById('action-btn');
+                btn.innerText = "Bald mehr... ⌛";
+                btn.disabled = true;
+                return;
+            }
+
             document.getElementById('main-content').innerHTML = `
                 <h2 style="font-size: 1.8rem; margin-bottom: 8px;">${greetings[Math.floor(Math.random()*greetings.length)]}${this.user}! ❤️</h2>
                 <div class="status-box">
@@ -273,13 +295,11 @@
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span>${this.partner}:</span> <span class="status-pill ${other?'pill-green':'pill-red'}">${other?'Fertig ✅':'Offen'}</span>
                     </div>
-                    <div class="timer-info">
-                        🕒 Fragen beantworten bis: <b>00:00 Uhr</b>
-                    </div>
                 </div>
             `;
             document.getElementById('footer-ui').classList.remove('hidden');
             const btn = document.getElementById('action-btn');
+            btn.disabled = false;
             btn.innerText = me ? "Zu unseren Gedanken ✨" : "Jetzt starten 🚀";
             btn.onclick = () => me ? this.showComparison() : this.startQuiz();
         },
@@ -326,13 +346,25 @@
             const q = this.dailyQs[this.step];
             let val = q.o.length === 2 ? document.querySelector('.tot-box.selected')?.innerText : (q.o.length > 2 ? Array.from(document.querySelectorAll('.rank-card span:last-child')).map(s => s.innerText).join(" > ") : document.getElementById('txt-val').value.trim());
             if (!val) return alert("Antwort fehlt! ❤️");
+            
             this.results.push(val);
             if (this.step < 2) { this.step++; this.renderQuiz(); } else this.submit();
         },
 
         async submit() {
-            const { error } = await sb.from('answers').insert([{ user_name: this.user.toLowerCase(), choice: this.results.join(" | "), day_key: this.day }]);
-            if (error) alert("Fehler!"); else { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); this.showComparison(); }
+            const signature = this.dailyQs.map(q => `[${q.q}]`).join("");
+            const finalChoice = this.results.join(" | ") + " " + signature;
+
+            const { error } = await sb.from('answers').insert([{ 
+                user_name: this.user.toLowerCase(), 
+                choice: finalChoice, 
+                day_key: this.day 
+            }]);
+            
+            if (error) alert("Fehler!"); else { 
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); 
+                this.showComparison(); 
+            }
         },
 
         async showComparison() {
@@ -340,7 +372,9 @@
             const { data } = await sb.from('answers').select('*').eq('day_key', this.day);
             const me = data?.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
-            const myA = me.choice.split(" | "), otherA = other ? other.choice.split(" | ") : null;
+            
+            const myA = me.choice.split(" [")[0].split(" | "); 
+            const otherA = other ? other.choice.split(" [")[0].split(" | ") : null;
 
             document.getElementById('main-content').innerHTML = `
                 <h2 style="font-size: 1.8rem; margin-bottom: 25px;">Unsere Antworten</h2>
@@ -355,13 +389,14 @@
             `;
             const btn = document.getElementById('action-btn');
             btn.innerText = "Gedanken korrigieren 📝";
+            btn.disabled = false;
             btn.onclick = () => this.deleteMyOwn();
         },
 
         async deleteMyOwn() {
             if (confirm("Antworten löschen?")) {
                 await sb.from('answers').delete().eq('day_key', this.day).eq('user_name', this.user.toLowerCase());
-                this.showLobby();
+                location.reload();
             }
         },
 
@@ -371,6 +406,7 @@
             document.getElementById('footer-ui').classList.remove('hidden');
             const btn = document.getElementById('action-btn');
             btn.innerText = "Einloggen ✨";
+            btn.disabled = false;
             btn.onclick = async () => {
                 const { error } = await sb.auth.signInWithPassword({ email: document.getElementById('em').value, password: document.getElementById('pw').value });
                 if (error) alert("Falsch!"); else this.init();
