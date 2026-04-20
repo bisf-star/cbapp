@@ -24,8 +24,7 @@
             background: radial-gradient(circle at top right, #2d3436, #0f0c29); 
             margin: 0; padding: 0; 
             display: flex; align-items: center; justify-content: center; 
-            min-height: 100vh; color: var(--text); 
-            overflow: hidden;
+            min-height: 100vh; color: var(--text); overflow: hidden;
         }
         
         .container { 
@@ -36,112 +35,137 @@
             position: relative;
         }
 
-        @media (min-width: 500px) {
-            .container { min-height: 80vh; height: auto; border-radius: 40px; }
+        /* Kopfzeile Fix */
+        .header-nav {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            min-height: 80px; padding-top: 10px; width: 100%;
         }
 
         .logout-btn { 
-            position: absolute; top: 20px; right: 20px; background: none; border: none; 
-            cursor: pointer; color: var(--muted); padding: 5px; z-index: 10; 
+            background: none; border: none; cursor: pointer; color: var(--muted); padding: 5px;
         }
-        .logout-svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; }
+        .logout-svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; }
 
         .brand-title { 
-            font-size: 2rem; font-weight: 600; letter-spacing: -1.5px; 
-            margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
+            font-size: 1.8rem; font-weight: 600; letter-spacing: -1px; 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            line-height: 1.2; margin-top: 5px;
+            line-height: 1.2; text-align: left; max-width: 80%;
         }
 
-        .lobby-card { background: var(--light-bg); border-radius: 20px; padding: 15px; margin: 15px 0; border: 1px solid #eee; }
-        .lobby-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.9rem; }
-        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-        .pill-done { background: #e3faf3; color: var(--accent-green); }
-        .pill-wait { background: #fff1f1; color: var(--accent-red); }
+        /* Info-Fenster pro Kategorie */
+        .mode-explanation {
+            background: #f1f2ff; border-radius: 15px; padding: 12px 15px;
+            margin-bottom: 15px; border-left: 4px solid var(--secondary);
+            text-align: left; font-size: 0.85rem; color: #574b90;
+        }
+        .mode-explanation b { display: block; text-transform: uppercase; font-size: 0.7rem; margin-bottom: 2px; }
 
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-        .dot-pulse { animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.4; } 100% { transform: scale(1); opacity: 1; } }
-
-        .progress-container { display: flex; justify-content: center; gap: 6px; margin: 10px 0; }
-        .progress-dot { width: 25px; height: 5px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
-        .progress-dot.active { background: var(--secondary); width: 45px; }
+        /* Quiz UI */
+        .progress-container { display: flex; justify-content: center; gap: 6px; margin: 5px 0 15px 0; }
+        .progress-dot { width: 20px; height: 5px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
+        .progress-dot.active { background: var(--secondary); width: 40px; }
         .progress-dot.done { background: var(--accent-green); }
         
-        h2 { font-size: 1.1rem; margin: 10px 0 15px 0; font-weight: 600; line-height: 1.3; text-align: center; }
+        h2 { font-size: 1.15rem; margin: 0 0 15px 0; font-weight: 600; line-height: 1.3; text-align: center; }
 
-        #input-zone { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; overflow-y: auto; }
+        #input-zone { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 20px; }
 
-        .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 14px; margin: 6px 0; border-radius: 18px; text-align: left; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; touch-action: none; }
-        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
-        .tot-item { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 20px; padding: 25px 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; }
+        /* Ranking mit Zahlen */
+        .option-item { 
+            background: var(--light-bg); border: 2px solid #edf2f7; padding: 14px; margin: 6px 0; 
+            border-radius: 18px; text-align: left; display: flex; align-items: center; gap: 12px; 
+            font-size: 0.95rem; touch-action: none; position: relative;
+        }
+        .ranking-number {
+            background: var(--secondary); color: white; width: 22px; height: 22px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; font-weight: 600; flex-shrink: 0;
+        }
+
+        .tot-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .tot-item { 
+            background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 20px; 
+            padding: 20px 10px; cursor: pointer; font-weight: 600; font-size: 1rem; 
+            min-height: 100px; display: flex; align-items: center; justify-content: center; text-align: center;
+        }
         .tot-item.selected { background: var(--primary); color: white; border-color: var(--primary); }
         
-        textarea { width: 100%; height: 100px; border-radius: 20px; border: 2px solid #edf2f7; padding: 15px; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); }
+        textarea { 
+            width: 100%; height: 120px; border-radius: 20px; border: 2px solid #edf2f7; 
+            padding: 15px; font-family: inherit; font-size: 1rem; outline: none; resize: none; background: var(--light-bg); 
+        }
         
         .btn-action { 
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
-            color: white; border: none; padding: 18px; width: 100%; border-radius: 20px; 
-            font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 15px;
+            color: white; border: none; padding: 20px; width: 100%; border-radius: 22px; 
+            font-weight: 600; font-size: 1.05rem; cursor: pointer; margin-top: 10px;
+            box-shadow: 0 8px 15px rgba(255, 118, 117, 0.2);
         }
 
-        .result-block { margin-top: 15px; text-align: left; width: 100%; }
-        .question-header { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 3px; }
+        /* Ergebnisse */
         .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .res-bubble { padding: 12px; border-radius: 15px; font-size: 0.8rem; min-height: 50px; display: flex; flex-direction: column; justify-content: center; }
+        .res-bubble { padding: 12px; border-radius: 15px; font-size: 0.8rem; min-height: 50px; display: flex; flex-direction: column; }
         .bubble-me { background: #f1f0ff; border: 1px solid var(--secondary); }
         .bubble-partner { background: #fff1f1; border: 1px solid #fab1a0; }
         .bubble-partner.ready { background: #e3faf3; border-color: var(--accent-green); }
-        .bubble-label { font-size: 0.6rem; font-weight: 600; margin-bottom: 3px; opacity: 0.6; }
         
         .hidden { display: none !important; }
-        .login-field { width: 100%; padding: 16px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; outline: none; }
+        .login-field { width: 100%; padding: 18px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; outline: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <button id="logout-icon" class="logout-btn hidden" onclick="app.logout()">
-            <svg class="logout-svg" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-        </button>
+        <div class="header-nav">
+            <h1 id="header-text" class="brand-title">CB-App</h1>
+            <button id="logout-icon" class="logout-btn hidden" onclick="app.logout()">
+                <svg class="logout-svg" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            </button>
+        </div>
 
         <div id="login-screen" class="hidden">
-            <h1 class="brand-title">CB-App</h1>
-            <p style="color: var(--muted); margin: 5px 0 20px 0; font-size: 0.9rem;">Euer täglicher Moment.</p>
+            <p style="color: var(--muted); margin-bottom: 30px;">Euer täglicher Moment.</p>
             <input type="email" id="email" class="login-field" placeholder="E-Mail">
             <input type="password" id="password" class="login-field" placeholder="Passwort">
-            <button onclick="app.login()" id="login-btn" class="btn-action" style="background: var(--bg);">Einloggen</button>
+            <button onclick="app.login()" class="btn-action" style="background: var(--bg);">Einloggen</button>
         </div>
 
         <div id="lobby-screen" class="hidden">
-            <h1 id="welcome-msg" class="brand-title">Willkommen</h1>
-            <p id="today-date" style="color: var(--muted); font-size: 0.9rem; margin: 5px 0;"></p>
-            <div class="lobby-card">
-                <div class="lobby-item"><span>Deine Antwort:</span><span id="my-lobby-status" class="status-pill"></span></div>
-                <div class="lobby-item"><span id="partner-lobby-name">Partner:</span><span id="partner-lobby-status" class="status-pill"></span></div>
+            <p id="today-date" style="color: var(--muted); font-size: 0.9rem; margin-bottom: 20px;"></p>
+            <div style="background: var(--light-bg); border-radius: 20px; padding: 20px; margin-bottom: 20px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Deine Antwort:</span><span id="my-status"></span></div>
+                <div style="display:flex; justify-content:space-between;"><span id="p-name-label">Partner:</span><span id="p-status"></span></div>
             </div>
             <button id="start-btn" class="btn-action" onclick="app.startQuiz()">Loslegen 🚀</button>
         </div>
 
-        <div id="quiz-view" class="hidden" style="flex-grow: 1; display: flex; flex-direction: column;">
+        <div id="quiz-view" class="hidden" style="flex-grow:1; display:flex; flex-direction:column;">
             <div class="progress-container">
                 <div id="p-dot-0" class="progress-dot"></div>
                 <div id="p-dot-1" class="progress-dot"></div>
                 <div id="p-dot-2" class="progress-dot"></div>
             </div>
+            
+            <div id="mode-info" class="mode-explanation">
+                <b id="mode-title-ui">MODUS</b>
+                <span id="mode-desc-ui">Erklärung...</span>
+            </div>
+
             <h2 id="question-text">...</h2>
+            
             <div id="input-zone">
                 <div id="options-list"></div>
                 <div id="tot-zone" class="tot-container hidden"></div>
-                <textarea id="text-input" class="hidden" placeholder="Deine Gedanken..."></textarea>
+                <textarea id="text-input" class="hidden" placeholder="Was denkst du gerade?"></textarea>
             </div>
+            
             <button id="next-btn" class="btn-action" onclick="app.nextStep()">Weiter ✨</button>
         </div>
 
-        <div id="complete-view" class="hidden" style="overflow-y: auto; flex-grow: 1;">
-            <h1 class="brand-title" style="font-size: 1.8rem;">Eure Sicht</h1>
+        <div id="complete-view" class="hidden" style="overflow-y: auto;">
             <div id="results-display"></div>
-            <button style="background:none; border:none; color:#bbb; padding:15px; font-size:0.75rem; cursor:pointer; width: 100%;" onclick="app.resetToday()">Antworten korrigieren 📝</button>
+            <button style="background:none; border:none; color:#bbb; padding:15px; font-size:0.75rem; width:100%;" onclick="app.resetToday()">Antworten korrigieren 📝</button>
         </div>
     </div>
 
@@ -151,12 +175,10 @@
         const sbClient = supabase.createClient(SB_URL, SB_KEY);
 
         const pool = {
-            tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Vollgas 🏃"]}, {q: "Abend-Vibe?", o: ["Couch 🍿", "Action 🍻"]}, {q: "Reise?", o: ["Berge 🏔️", "Strand 🌊"]}, {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"]}],
-            ranking: [{q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"]}, {q: "Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Wandern"]}],
-            text: [{q: "Drei Worte für unseren Tag.", o: []}, {q: "Was sollten wir bald mal machen?", o: []}]
+            tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Vollgas 🏃"], info: "ENTSCHEIDE DICH: Wähle eine der beiden Kacheln aus."}, {q: "Abend-Vibe?", o: ["Couch 🍿", "Action 🍻"], info: "ENTSCHEIDE DICH: Was passt heute besser zu dir?"}, {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"], info: "ENTSCHEIDE DICH: Die ewige Frage..."}],
+            ranking: [{q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"], info: "RANKING: Schiebe das Wichtigste auf Platz 1."}, {q: "Beste Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Wandern"], info: "RANKING: Sortiere nach deiner persönlichen Vorliebe."}],
+            text: [{q: "Drei Worte für unseren Tag.", o: [], info: "GEDANKEN: Schreib einen kurzen Text für deinen Partner."}, {q: "Was sollten wir bald mal machen?", o: [], info: "GEDANKEN: Ein kleiner Wunsch oder Vorschlag."}]
         };
-
-        const greetings = ["Schön, dass du da bist,", "Toll, dass es dich gibt,", "Hi mein Schatz,", "Zeit für euch,", "Geniess den Tag,"];
 
         const app = {
             session: null, todayKey: new Date().toISOString().split('T')[0],
@@ -177,9 +199,8 @@
                 const email = this.session.user.email.toLowerCase();
                 if (email === 'bisf@gmx.de') { this.myName = "Bene"; this.partnerName = "Clara"; }
                 else if (email === 'clara-frey@gmx.de') { this.myName = "Clara"; this.partnerName = "Bene"; }
-                const greet = greetings[Math.floor(Math.random() * greetings.length)];
-                document.getElementById('welcome-msg').innerText = `${greet} ${this.myName}!`;
-                document.getElementById('partner-lobby-name').innerText = this.partnerName + ":";
+                document.getElementById('header-text').innerText = `Hi ${this.myName}!`;
+                document.getElementById('p-name-label').innerText = this.partnerName + ":";
             },
 
             generateDailyQuestions() {
@@ -193,15 +214,9 @@
                 const { data } = await sbClient.from('answers').select('*').eq('day_key', this.todayKey);
                 const me = data?.find(a => a.user_name === this.myName.toLowerCase());
                 const other = data?.find(a => a.user_name === this.partnerName.toLowerCase());
-                
                 this.meAnswered = !!me;
-                const otherDone = !!other;
-
-                document.getElementById('my-lobby-status').innerHTML = this.meAnswered ? 'Fertig ✅' : '<span class="dot dot-pulse"></span> Offen';
-                document.getElementById('my-lobby-status').className = "status-pill " + (this.meAnswered ? "pill-done" : "pill-wait");
-                document.getElementById('partner-lobby-status').innerHTML = otherDone ? 'Erledigt ✅' : '<span class="dot dot-pulse"></span> Überlegt...';
-                document.getElementById('partner-lobby-status').className = "status-pill " + (otherDone ? "pill-done" : "pill-wait");
-
+                document.getElementById('my-status').innerText = this.meAnswered ? "Erledigt ✅" : "Offen ⏳";
+                document.getElementById('p-status').innerText = other ? "Fertig ✅" : "Überlegt noch ⏳";
                 document.getElementById('start-btn').innerText = this.meAnswered ? "Ergebnisse ansehen ✨" : "Jetzt loslegen 🚀";
                 document.getElementById('lobby-screen').classList.remove('hidden');
                 document.getElementById('login-screen').classList.add('hidden');
@@ -218,12 +233,14 @@
 
             renderStep() {
                 if (this.currentStep > 2) return;
-                document.getElementById('next-btn').innerText = (this.currentStep < 2) ? "Weiter ✨" : `An ${this.partnerName} senden ✈️`;
+                document.getElementById('next-btn').innerText = (this.currentStep < 2) ? "Weiter ✨" : `An ${this.partnerName} schicken ✈️`;
                 for(let i=0; i<3; i++) document.getElementById(`p-dot-${i}`).className = 'progress-dot' + (i === this.currentStep ? ' active' : (i < this.currentStep ? ' done' : ''));
                 
                 const q = this.dailyQuestions[this.currentStep];
                 document.getElementById('question-text').innerText = q.q;
-                
+                document.getElementById('mode-desc-ui').innerText = q.info;
+                document.getElementById('mode-title-ui').innerText = q.type === 'tot' ? 'This or That' : (q.type === 'ranking' ? 'Ranking' : 'Gedanken');
+
                 const list = document.getElementById('options-list');
                 const tot = document.getElementById('tot-zone');
                 const txt = document.getElementById('text-input');
@@ -239,8 +256,17 @@
                     });
                 } else if (q.type === 'ranking') {
                     list.classList.remove('hidden');
-                    q.o.forEach(opt => { const div = document.createElement('div'); div.className = 'option-item'; div.innerText = opt; list.appendChild(div); });
-                    Sortable.create(list, { animation: 200, forceFallback: true });
+                    q.o.forEach((opt, idx) => { 
+                        const div = document.createElement('div'); div.className = 'option-item';
+                        div.innerHTML = `<span class="ranking-number">${idx+1}</span> <span>${opt}</span>`;
+                        list.appendChild(div); 
+                    });
+                    Sortable.create(list, { 
+                        animation: 200, forceFallback: true,
+                        onEnd: () => {
+                            document.querySelectorAll('.ranking-number').forEach((num, i) => num.innerText = i + 1);
+                        }
+                    });
                 } else if (q.type === 'text') {
                     txt.classList.remove('hidden'); txt.value = "";
                 }
@@ -250,7 +276,7 @@
                 let ans = "";
                 const q = this.dailyQuestions[this.currentStep];
                 if (q.type === 'tot') ans = document.querySelector('.tot-item.selected')?.innerText;
-                else if (q.type === 'ranking') ans = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" > ");
+                else if (q.type === 'ranking') ans = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText.replace(/[0-9]/g, '').trim()).join(" > ");
                 else if (q.type === 'text') ans = document.getElementById('text-input').value.trim();
                 
                 if (!ans) return alert("Antwort fehlt! ✨");
@@ -261,33 +287,23 @@
             },
 
             async submitAll() {
-                const btn = document.getElementById('next-btn');
-                btn.disabled = true; btn.innerText = "Sende...";
                 const { error } = await sbClient.from('answers').insert([{ user_name: this.myName.toLowerCase(), choice: this.myAnswers.join(" | "), day_key: this.todayKey }]);
-                if (!error) { 
-                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); 
-                    this.meAnswered = true;
-                    this.showResults(); 
-                } else {
-                    alert("Fehler!"); btn.disabled = false;
-                }
+                if (!error) { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); this.meAnswered = true; this.showResults(); }
             },
 
             async showResults() {
                 const { data } = await sbClient.from('answers').select('*').eq('day_key', this.todayKey);
                 const me = data?.find(a => a.user_name === this.myName.toLowerCase());
                 const other = data?.find(a => a.user_name === this.partnerName.toLowerCase());
-                
                 document.getElementById('lobby-screen').classList.add('hidden');
                 document.getElementById('quiz-view').classList.add('hidden');
                 document.getElementById('complete-view').classList.remove('hidden');
-                
                 const myS = me.choice.split(" | "), otherS = other ? other.choice.split(" | ") : null;
                 let h = "";
                 this.dailyQuestions.forEach((q, i) => {
-                    h += `<div class="result-block"><div class="question-header">${q.q}</div><div class="comparison-grid">
-                        <div class="res-bubble bubble-me"><span class="bubble-label">Ich</span>${myS[i]}</div>
-                        <div class="res-bubble bubble-partner ${otherS ? 'ready' : ''}"><span class="bubble-label">${this.partnerName}</span>${otherS ? otherS[i] : '⌛ Wartet...'}</div>
+                    h += `<div style="margin-top:20px;"><div style="font-size:0.75rem; color:#999; text-transform:uppercase; margin-bottom:5px;">${q.q}</div><div class="comparison-grid">
+                        <div class="res-bubble bubble-me"><span style="font-size:0.6rem; opacity:0.6;">Ich</span>${myS[i]}</div>
+                        <div class="res-bubble bubble-partner ${otherS ? 'ready' : ''}"><span style="font-size:0.6rem; opacity:0.6;">${this.partnerName}</span>${otherS ? otherS[i] : 'Wartet...'}</div>
                     </div></div>`;
                 });
                 document.getElementById('results-display').innerHTML = h;
@@ -302,10 +318,8 @@
 
             async login() {
                 const e = document.getElementById('email').value.trim(), p = document.getElementById('password').value;
-                const b = document.getElementById('login-btn'); b.innerText = "Prüfe..."; b.disabled = true;
                 const { error } = await sbClient.auth.signInWithPassword({ email: e, password: p });
-                if (error) { alert(error.message); b.innerText = "Einloggen"; b.disabled = false; }
-                else location.reload();
+                if (error) alert(error.message); else location.reload();
             },
 
             async logout() { await sbClient.auth.signOut(); location.reload(); }
