@@ -22,6 +22,7 @@
         
         .brand-title { font-size: 3rem; font-weight: 600; letter-spacing: -2px; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
+        /* Fortschritt */
         .progress-container { display: flex; justify-content: center; gap: 6px; margin: 10px 0; }
         .progress-dot { width: 25px; height: 5px; border-radius: 10px; background: #dfe4ea; transition: 0.4s; }
         .progress-dot.active { background: var(--secondary); width: 45px; }
@@ -35,7 +36,7 @@
 
         h2 { font-size: 1.25rem; color: var(--text); margin: 10px 0 20px 0; font-weight: 600; line-height: 1.3; min-height: 3.5rem; display: flex; align-items: center; justify-content: center; }
 
-        /* Anpassung für Mobile-Buttons */
+        /* Eingabefelder & Buttons */
         .option-item { background: var(--light-bg); border: 2px solid #edf2f7; padding: 14px; margin: 6px 0; border-radius: 18px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
         .option-item.selected { background: #f1f0ff; border-color: var(--secondary); color: #574b90; font-weight: 600; }
         
@@ -54,7 +55,7 @@
         .result-card b { display: block; margin-bottom: 2px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; font-size: 0.65rem; }
         
         .hidden { display: none !important; }
-        input.login-field { width: 100%; padding: 15px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; }
+        .login-field { width: 100%; padding: 15px; margin: 8px 0; border-radius: 15px; border: 2px solid #eee; box-sizing: border-box; font-size: 1rem; outline: none; }
     </style>
 </head>
 <body>
@@ -65,7 +66,7 @@
             <p style="color: var(--muted); margin: 5px 0 20px 0; font-size: 0.9rem;">Euer täglicher Moment.</p>
             <input type="email" id="email" class="login-field" placeholder="E-Mail">
             <input type="password" id="password" class="login-field" placeholder="Passwort">
-            <button onclick="app.login()" class="btn-action" style="background: var(--bg); margin-top: 10px;">Einloggen</button>
+            <button onclick="app.login()" id="login-btn" class="btn-action" style="background: var(--bg); margin-top: 10px;">Einloggen</button>
         </div>
 
         <div id="main-screen" class="hidden">
@@ -85,7 +86,7 @@
             <div id="input-zone">
                 <div id="options-list"></div>
                 <div id="tot-zone" class="tot-container hidden"></div>
-                <textarea id="text-input" class="hidden" placeholder="Schreib etwas Liebes..."></textarea>
+                <textarea id="text-input" class="hidden" placeholder="Was denkst du gerade?"></textarea>
                 
                 <div class="info-box">
                     <b id="mode-title">KATEGORIE</b>
@@ -112,19 +113,15 @@
                 {q: "Morgenstund?", o: ["Lange schlummern 😴", "Direkt Vollgas 🏃"], d: "ENTSCHEIDUNG"},
                 {q: "Abend-Vibe?", o: ["Couch & Netflix 🍿", "Bar & Freunde 🍻"], d: "ENTSCHEIDUNG"},
                 {q: "Traumreise?", o: ["Berge 🏔️", "Strand 🌊"], d: "ENTSCHEIDUNG"},
-                {q: "Heißgetränk?", o: ["Kaffee ☕", "Tee 🍵"], d: "ENTSCHEIDUNG"},
-                {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"], d: "ENTSCHEIDUNG"},
-                {q: "Zukunft?", o: ["Weltreise 🌍", "Hausbau 🏠"], d: "ENTSCHEIDUNG"}
+                {q: "Pizza?", o: ["Ananas 🍍", "Niemals! 🚫"], d: "ENTSCHEIDUNG"}
             ],
             ranking: [
                 {q: "Wichtigste Säule?", o: ["Vertrauen", "Humor", "Ehrlichkeit", "Leidenschaft"], d: "SORTIEREN"},
-                {q: "Beste Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Konzert"], d: "SORTIEREN"},
-                {q: "Heim-Gemütlichkeit?", o: ["Licht", "Düfte", "Ordnung", "Fotos"], d: "SORTIEREN"}
+                {q: "Beste Date-Idee?", o: ["Picknick", "Kino", "Kochen", "Konzert"], d: "SORTIEREN"}
             ],
             text: [
                 {q: "Drei Worte für unseren Tag.", o: [], d: "DEINE GEDANKEN"},
-                {q: "Was sollten wir bald mal machen?", o: [], d: "DEINE GEDANKEN"},
-                {q: "Wofür bin ich heute dankbar?", o: [], d: "DEINE GEDANKEN"}
+                {q: "Was sollten wir bald mal machen?", o: [], d: "DEINE GEDANKEN"}
             ]
         };
 
@@ -137,8 +134,19 @@
             myAnswers: [],
 
             async init() {
+                // Prüft SOFORT ob eine Session da ist
                 const { data: { session } } = await sbClient.auth.getSession();
-                if (session) { this.session = session; this.identifyUsers(); this.generateDailyQuestions(); this.showMain(); }
+                
+                if (session) {
+                    this.session = session;
+                    this.identifyUsers();
+                    this.generateDailyQuestions();
+                    this.showMain();
+                } else {
+                    // Bleib beim Login-Screen
+                    document.getElementById('login-screen').classList.remove('hidden');
+                    document.getElementById('main-screen').classList.add('hidden');
+                }
             },
 
             identifyUsers() {
@@ -172,11 +180,29 @@
             async login() {
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password').value;
+                const loginBtn = document.getElementById('login-btn');
+
+                if(!email || !password) return alert("Logindaten eingeben! ❤️");
+
+                loginBtn.innerText = "Prüfe...";
+                loginBtn.disabled = true;
+
                 const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
-                if (error) alert("Fehler: " + error.message); else location.reload();
+                
+                if (error) {
+                    alert("Login fehlgeschlagen: " + error.message);
+                    loginBtn.innerText = "Einloggen";
+                    loginBtn.disabled = false;
+                } else {
+                    // Seite neu laden nach Login für sauberen Start
+                    location.reload();
+                }
             },
 
-            async logout() { await sbClient.auth.signOut(); location.reload(); },
+            async logout() {
+                await sbClient.auth.signOut();
+                location.reload();
+            },
 
             showMain() {
                 document.getElementById('login-screen').classList.add('hidden');
@@ -209,7 +235,10 @@
                     tot.classList.remove('hidden');
                     q.o.forEach(opt => {
                         const div = document.createElement('div'); div.className = 'tot-item'; div.innerText = opt;
-                        div.onclick = () => { document.querySelectorAll('.tot-item').forEach(i => i.classList.remove('selected')); div.classList.add('selected'); };
+                        div.onclick = () => { 
+                            document.querySelectorAll('.tot-item').forEach(i => i.classList.remove('selected')); 
+                            div.classList.add('selected'); 
+                        };
                         tot.appendChild(div);
                     });
                 } else if (q.type === 'ranking') {
@@ -228,7 +257,7 @@
                 else if (q.type === 'ranking') ans = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" > ");
                 else if (q.type === 'text') ans = document.getElementById('text-input').value.trim();
 
-                if (!ans) return alert("Halt! Da fehlt noch was. ✨");
+                if (!ans) return alert("Ein kleiner Gedankenstupser fehlt noch! ✨");
                 this.myAnswers.push(ans);
                 this.currentStep++;
                 if (this.currentStep < 3) this.renderStep();
@@ -238,7 +267,7 @@
             async submitAll() {
                 const finalStr = this.myAnswers.join(" | ");
                 const { error } = await sbClient.from('answers').insert([{ user_name: this.myName, choice: finalStr, day_key: this.todayKey }]);
-                if (error) alert("Schon erledigt!");
+                if (error) alert("Du hast heute schon geantwortet!");
                 else { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); this.syncStatus(); }
             },
 
