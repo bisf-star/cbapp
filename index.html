@@ -58,6 +58,8 @@
             box-shadow: 0 10px 25px rgba(255, 118, 117, 0.35);
             position: relative; overflow: hidden; transition: 0.3s;
         }
+        .btn-action:disabled { opacity: 0.7; cursor: not-allowed; }
+
         .btn-action::after {
             content: ''; position: absolute; top: -50%; left: -100%; width: 100%; height: 200%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
@@ -69,6 +71,7 @@
         .status-pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 50px; font-weight: 600; font-size: 0.85rem; }
         .pill-green { background: #e3faf3; color: var(--accent-green); }
         .pill-red { background: #fff1f1; color: var(--primary); animation: pulseStatus 2s infinite; }
+        
         @keyframes pulseStatus { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.03); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
 
         .prog-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
@@ -86,10 +89,10 @@
         .sortable-ghost { opacity: 0.3; background: #f1f2ff; border: 2px dashed var(--secondary); }
 
         .tot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .tot-box { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 28px; padding: 35px 10px; text-align: center; font-weight: 600; min-height: 110px; display: flex; align-items: center; justify-content: center; }
+        .tot-box { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 28px; padding: 35px 10px; text-align: center; font-weight: 600; min-height: 110px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
         .tot-box.selected { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 5px 15px rgba(255,118,117,0.2); }
 
-        textarea { width: 100%; height: 160px; border-radius: 28px; border: 2px solid #eee; padding: 20px; font-family: inherit; font-size: 1.1rem; outline: none; background: var(--light-bg); }
+        textarea { width: 100%; height: 160px; border-radius: 28px; border: 2px solid #eee; padding: 20px; font-family: inherit; font-size: 1.1rem; outline: none; background: var(--light-bg); resize: none; }
 
         .res-bubble { padding: 15px; border-radius: 22px; font-size: 0.9rem; border: 1px solid #eee; min-height: 80px; display: flex; flex-direction: column; }
         .res-bubble b { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; }
@@ -131,19 +134,28 @@
         step: 0, results: [], dailyQs: [], isSubmitting: false,
 
         async init() {
+            // Fragen basierend auf Datum generieren (immer verfügbar)
+            const seed = parseInt(this.day.replace(/-/g, ''));
+            this.dailyQs = [
+                pool.tot[seed % pool.tot.length], 
+                pool.ranking[seed % pool.ranking.length], 
+                pool.text[seed % pool.text.length]
+            ];
+
             const { data: { session }, error } = await sb.auth.getSession();
             if (!session || error) {
                 this.renderLogin();
             } else {
-                // NUR Nacht-Cleanup: Löscht alles, was VOR heute liegt
+                // Bereinigung alter Daten
                 await sb.from('answers').delete().lt('day_key', this.day);
+                
                 const email = session.user.email.toLowerCase();
                 this.user = email === 'bisf@gmx.de' ? "Bene" : "Clara";
                 this.partner = this.user === "Bene" ? "Clara" : "Bene";
+                
                 document.getElementById('logout-btn').classList.remove('hidden');
                 this.showLobby();
             }
-            window.onpopstate = () => location.reload();
         },
 
         async showLobby() {
@@ -165,17 +177,19 @@
                     </div>
                 </div>
             `;
+            
             const footer = document.getElementById('footer-ui');
             footer.classList.remove('hidden');
             const btn = document.getElementById('action-btn');
+            btn.disabled = false;
             btn.innerText = me ? "Zu unseren Gedanken ✨" : "Jetzt starten 🚀";
             btn.onclick = () => me ? this.showComparison() : this.startQuiz();
         },
 
         startQuiz() {
-            const seed = parseInt(this.day.replace(/-/g, ''));
-            this.dailyQs = [pool.tot[seed % pool.tot.length], pool.ranking[seed % pool.ranking.length], pool.text[seed % pool.text.length]];
-            this.step = 0; this.results = []; this.renderQuiz();
+            this.step = 0; 
+            this.results = []; 
+            this.renderQuiz();
         },
 
         renderQuiz() {
@@ -191,7 +205,10 @@
                 wrap.className = "tot-grid";
                 q.o.forEach(o => {
                     const d = document.createElement('div'); d.className = "tot-box"; d.innerText = o;
-                    d.onclick = () => { document.querySelectorAll('.tot-box').forEach(b => b.classList.remove('selected')); d.classList.add('selected'); };
+                    d.onclick = () => { 
+                        document.querySelectorAll('.tot-box').forEach(b => b.classList.remove('selected')); 
+                        d.classList.add('selected'); 
+                    };
                     wrap.appendChild(d);
                 });
             } else if (q.o.length > 2) {
@@ -227,8 +244,13 @@
 
             if (!val) return alert("Antwort fehlt! ❤️");
             this.results.push(val);
-            if (this.step < 2) { this.step++; this.renderQuiz(); }
-            else this.submit();
+            
+            if (this.step < 2) { 
+                this.step++; 
+                this.renderQuiz(); 
+            } else {
+                this.submit();
+            }
         },
 
         async submit() {
@@ -236,16 +258,31 @@
             this.isSubmitting = true;
             const btn = document.getElementById('action-btn');
             btn.disabled = true; btn.innerText = "Moment...";
-            const { error } = await sb.from('answers').insert([{ user_name: this.user.toLowerCase(), choice: this.results.join(" | "), day_key: this.day }]);
+            
+            const { error } = await sb.from('answers').insert([{ 
+                user_name: this.user.toLowerCase(), 
+                choice: this.results.join(" | "), 
+                day_key: this.day 
+            }]);
+            
             this.isSubmitting = false;
-            if (error) { alert("Senden fehlgeschlagen!"); btn.disabled = false; btn.innerText = "Nochmal versuchen"; }
-            else { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); this.showComparison(); }
+            if (error) { 
+                alert("Senden fehlgeschlagen!"); 
+                btn.disabled = false; 
+                btn.innerText = "Nochmal versuchen"; 
+            } else { 
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); 
+                this.showComparison(); 
+            }
         },
 
         async showComparison() {
             const { data } = await sb.from('answers').select('*').eq('day_key', this.day);
             const me = data?.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
+            
+            if(!me) return this.showLobby();
+
             const myA = me.choice.split(" | "), otherA = other ? other.choice.split(" | ") : null;
 
             let html = `<h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 25px;">Unsere Antworten</h2>
@@ -253,26 +290,29 @@
                     <div style="margin-bottom:20px;">
                         <div style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; margin-bottom:10px;">${q.q}</div>
                         <div class="tot-grid">
-                            <div class="res-bubble" style="background:#f1f0ff;"><b>ICH</b>${myA[i]}</div>
+                            <div class="res-bubble" style="background:#f1f0ff;"><b>ICH</b>${myA[i] || '-'}</div>
                             <div class="res-bubble" style="background:${otherA?'#e3faf3':'#fff1f1'};"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : '⌛ Wartet...'}</div>
                         </div>
                     </div>`).join('')}`;
             
             document.getElementById('main-content').innerHTML = html;
             const btn = document.getElementById('action-btn');
-            // Einziger Button: Gedanken korrigieren
+            btn.disabled = false;
             btn.innerText = "Gedanken korrigieren 📝";
             btn.onclick = () => this.deleteMyOwn();
         },
 
         async deleteMyOwn() {
-            if (confirm("Heutige Gedanken löschen?")) {
+            if (confirm("Heutige Gedanken löschen und neu starten?")) {
                 await sb.from('answers').delete().eq('day_key', this.day).eq('user_name', this.user.toLowerCase());
-                location.reload();
+                this.results = [];
+                this.step = 0;
+                this.showLobby();
             }
         },
 
         renderLogin() {
+            document.getElementById('logout-btn').classList.add('hidden');
             document.getElementById('main-content').innerHTML = `
                 <h2 style="margin-top:30px; text-align:left; font-size: 2rem;">CB-App</h2>
                 <input id="em" type="email" class="login-field" placeholder="E-Mail">
@@ -283,14 +323,20 @@
             const btn = document.getElementById('action-btn');
             btn.innerText = "Einloggen ✨";
             btn.onclick = async () => {
-                const { error } = await sb.auth.signInWithPassword({ email: document.getElementById('em').value, password: document.getElementById('pw').value });
-                if (error) alert("Passwort oder E-Mail falsch!"); else location.reload();
+                const { error } = await sb.auth.signInWithPassword({ 
+                    email: document.getElementById('em').value, 
+                    password: document.getElementById('pw').value 
+                });
+                if (error) alert("Logindaten nicht korrekt!"); else window.location.reload();
             };
         },
 
         async logout() {
             await sb.auth.signOut();
-            window.location.replace(window.location.origin + window.location.pathname);
+            localStorage.clear();
+            sessionStorage.clear();
+            // Erzwingt Neuladen der nackten URL
+            window.location.href = window.location.origin + window.location.pathname;
         }
     };
     app.init();
