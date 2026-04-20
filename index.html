@@ -45,9 +45,9 @@
             -webkit-overflow-scrolling: touch; display: flex; flex-direction: column;
         }
 
-        /* MASSIVER FOOTER-ABSTAND FÜR DIE MOBILE NAVIGATION */
+        /* FIX: Sicherer Abstand für den Button unten */
         .footer-bar { 
-            padding: 15px 25px calc(60px + env(safe-area-inset-bottom)) 25px; 
+            padding: 15px 25px calc(65px + env(safe-area-inset-bottom)) 25px; 
             flex-shrink: 0; background: white; border-top: 1px solid #f1f2f6;
             z-index: 10;
         }
@@ -66,25 +66,26 @@
         }
         @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
 
+        /* STATUS */
         .status-box { background: var(--light-bg); border-radius: 28px; padding: 25px; border: 1px solid #edf2f7; }
         .status-pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 50px; font-weight: 600; font-size: 0.85rem; }
         .pill-green { background: #e3faf3; color: var(--accent-green); }
         .pill-red { background: #fff1f1; color: var(--primary); animation: pulseStatus 2s infinite; }
-        
-        @keyframes pulseStatus { 
-            0% { transform: scale(1); box-shadow: 0 0 0 0px rgba(255, 118, 117, 0.3); } 
-            50% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(255, 118, 117, 0); } 
-            100% { transform: scale(1); box-shadow: 0 0 0 0px rgba(255, 118, 117, 0); } 
+        @keyframes pulseStatus { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.03); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* RANKING CARDS FIX */
+        .rank-card { 
+            background: #fff; border: 2px solid #edf2f7; padding: 18px; margin-bottom: 12px; 
+            border-radius: 22px; display: flex; align-items: center; gap: 15px; 
+            cursor: grab; touch-action: none; /* WICHTIG FÜR HANDY */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+        .rank-tag { background: var(--secondary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; }
+        .sortable-ghost { opacity: 0.3; background: #f1f2ff; border: 2px dashed var(--secondary); }
 
-        .prog-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .dot { width: 40px; height: 7px; border-radius: 10px; background: #eee; transition: 0.5s; }
-        .dot.active { background: var(--secondary); width: 70px; }
-        .dot.done { background: var(--accent-green); }
-
-        .tot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-        .tot-box { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 28px; padding: 35px 15px; text-align: center; font-weight: 600; min-height: 110px; display: flex; align-items: center; justify-content: center; }
-        .tot-box.selected { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255, 118, 117, 0.2); }
+        .tot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .tot-box { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 28px; padding: 35px 10px; text-align: center; font-weight: 600; min-height: 110px; display: flex; align-items: center; justify-content: center; }
+        .tot-box.selected { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 5px 15px rgba(255,118,117,0.2); }
 
         textarea { width: 100%; height: 160px; border-radius: 28px; border: 2px solid #eee; padding: 20px; font-family: inherit; font-size: 1.1rem; outline: none; background: var(--light-bg); }
 
@@ -117,15 +118,15 @@
 
     const pool = {
         tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], i: "Was passt heute zu dir?"}],
-        ranking: [{q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], i: "Was würdest du heute am liebsten machen?"}],
-        text: [{q: "Drei Worte für unseren Tag?", o: [], i: "Schreib eine kleine Nachricht für deinen Schatz."}]
+        ranking: [{q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], i: "Schiebe deine Favoriten nach oben."}],
+        text: [{q: "Ein Gedanke für unseren Tag?", o: [], i: "Schreib eine kleine Nachricht für deinen Schatz."}]
     };
 
     const greetings = ["Schön, dass du da bist, ", "Toll, dass es dich gibt, ", "Hi, ", "Ein Moment für euch, ", "Genieße den Tag, "];
 
     const app = {
         user: "", partner: "", day: new Date().toISOString().split('T')[0],
-        step: 0, results: [], dailyQs: [],
+        step: 0, results: [], dailyQs: [], isSubmitting: false,
 
         async init() {
             const { data: { session }, error } = await sb.auth.getSession();
@@ -141,14 +142,16 @@
                 document.getElementById('logout-btn').classList.remove('hidden');
                 this.showLobby();
             }
+            // Fix für Zurück-Button
             window.onpopstate = () => location.reload();
         },
 
-        async showLobby() {
+        async showLobby(push = true) {
+            if (push) history.pushState({view: 'lobby'}, "");
             const { data } = await sb.from('answers').select('*').eq('day_key', this.day);
             const me = data?.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
-            
+
             document.getElementById('main-content').innerHTML = `
                 <h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 8px;">${greetings[Math.floor(Math.random()*greetings.length)]}${this.user}! ❤️</h2>
                 <p style="color:var(--muted); margin-bottom: 30px;">Bereit für unsere täglichen Gedanken?</p>
@@ -176,7 +179,8 @@
             this.step = 0; this.results = []; this.renderQuiz();
         },
 
-        renderQuiz() {
+        renderQuiz(push = true) {
+            if (push) history.pushState({view: 'quiz', step: this.step}, "");
             const q = this.dailyQs[this.step];
             document.getElementById('main-content').innerHTML = `
                 <div class="prog-dots">${[0,1,2].map(i => `<div class="dot ${i===this.step?'active':(i<this.step?'done':'')}"></div>`).join('')}</div>
@@ -197,9 +201,19 @@
                     const d = document.createElement('div'); d.className = "rank-card";
                     d.innerHTML = `<span class="rank-tag">${i+1}</span><span>${o}</span>`; wrap.appendChild(d);
                 });
-                new Sortable(wrap, { animation: 250, forceFallback: true, onEnd: () => { document.querySelectorAll('.rank-tag').forEach((n, idx) => n.innerText = idx + 1); }});
+                // INITIALISIERUNG DES RANKINGS
+                setTimeout(() => {
+                    new Sortable(wrap, {
+                        animation: 250,
+                        ghostClass: 'sortable-ghost',
+                        forceFallback: true,
+                        onEnd: () => {
+                            document.querySelectorAll('.rank-tag').forEach((tag, idx) => tag.innerText = idx + 1);
+                        }
+                    });
+                }, 50);
             } else {
-                wrap.innerHTML = `<textarea id="txt-val" placeholder="Deine Gedanken hier..."></textarea>`;
+                wrap.innerHTML = `<textarea id="txt-val" placeholder="Deine Gedanken..."></textarea>`;
             }
 
             const btn = document.getElementById('action-btn');
@@ -221,21 +235,25 @@
         },
 
         async submit() {
+            if (this.isSubmitting) return;
+            this.isSubmitting = true;
             const btn = document.getElementById('action-btn');
             btn.disabled = true; btn.innerText = "Moment...";
+            
             const { error } = await sb.from('answers').insert([{ user_name: this.user.toLowerCase(), choice: this.results.join(" | "), day_key: this.day }]);
-            if (error) { alert("Fehler beim Senden."); btn.disabled = false; }
+            this.isSubmitting = false;
+            if (error) { alert("Senden fehlgeschlagen!"); btn.disabled = false; btn.innerText = "Nochmal versuchen"; }
             else { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); this.showComparison(); }
         },
 
-        async showComparison() {
+        async showComparison(push = true) {
+            if (push) history.pushState({view: 'results'}, "");
             const { data } = await sb.from('answers').select('*').eq('day_key', this.day);
             const me = data?.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
             const myA = me.choice.split(" | "), otherA = other ? other.choice.split(" | ") : null;
 
-            document.getElementById('main-content').innerHTML = `
-                <h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 25px;">Unsere Antworten</h2>
+            let html = `<h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 25px;">Unsere Antworten</h2>
                 ${this.dailyQs.map((q, i) => `
                     <div style="margin-bottom:20px;">
                         <div style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; margin-bottom:10px;">${q.q}</div>
@@ -244,17 +262,19 @@
                             <div class="res-bubble" style="background:${otherA?'#e3faf3':'#fff1f1'};"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : '⌛ Wartet...'}</div>
                         </div>
                     </div>`).join('')}
-            `;
+                <button class="btn-action" style="background:#f1f2f6; color:var(--muted); box-shadow:none; margin-top:10px; animation:none;" id="del-btn">Gedanken korrigieren 📝</button>`;
+            
+            document.getElementById('main-content').innerHTML = html;
             const btn = document.getElementById('action-btn');
-            btn.innerText = "Gedanken korrigieren 📝";
-            btn.onclick = () => this.deleteMyOwn();
-        },
+            btn.innerText = "Zurück zum Start 🏠";
+            btn.onclick = () => location.reload();
 
-        async deleteMyOwn() {
-            if (confirm("Heutige Gedanken löschen?")) {
-                await sb.from('answers').delete().eq('day_key', this.day).eq('user_name', this.user.toLowerCase());
-                location.reload();
-            }
+            document.getElementById('del-btn').onclick = async () => {
+                if (confirm("Heutige Gedanken löschen?")) {
+                    await sb.from('answers').delete().eq('day_key', this.day).eq('user_name', this.user.toLowerCase());
+                    location.reload();
+                }
+            };
         },
 
         renderLogin() {
@@ -269,12 +289,13 @@
             btn.innerText = "Einloggen ✨";
             btn.onclick = async () => {
                 const { error } = await sb.auth.signInWithPassword({ email: document.getElementById('em').value, password: document.getElementById('pw').value });
-                if (error) alert("Fehler!"); else location.reload();
+                if (error) alert("Passwort oder E-Mail falsch!"); else location.reload();
             };
         },
 
         async logout() {
             await sb.auth.signOut();
+            // ABSOLUTER FIX: Seite komplett ersetzen
             window.location.replace(window.location.origin + window.location.pathname);
         }
     };
