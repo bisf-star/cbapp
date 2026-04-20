@@ -5,11 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CB-App</title>
-    <!-- Externe Bibliotheken -->
+
+    <!-- Metadaten für Link-Vorschau (WhatsApp, Signal, Social Media) -->
+    <meta property="og:title" content="CB-App">
+    <meta property="og:description" content="Euer tägliches Verbindungs-Ritual. Ein Moment für euch zwei.">
+    <meta property="og:image" content="Vorschau.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://app.beneclara.de">
+    
+    <!-- Twitter / X Metadaten -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CB-App">
+    <meta name="twitter:description" content="Euer tägliches Verbindungs-Ritual.">
+    <meta name="twitter:image" content="Vorschau.jpg">
+
+    <!-- Bibliotheken -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
         :root { 
             --primary: #d63031; 
@@ -160,7 +175,6 @@
     </div>
 
     <script>
-        // Supabase Verbindung
         const SB_URL = "https://eedbdbqvwpquoxzbunwo.supabase.co";
         const SB_KEY = "Sb_publishable_k7vTHNDeNYoBMlfxx9HISg_vFfdfzpm";
         const sbClient = supabase.createClient(SB_URL, SB_KEY);
@@ -170,7 +184,6 @@
             todayKey: new Date().toISOString().split('T')[0],
             currQ: null,
 
-            // Fragenkatalog
             questions: [
                 { type: "choice", q: "Was ist unsere größte Stärke als Team?", opts: ["Humor", "Ehrlichkeit", "Kommunikation", "Loyalität"] },
                 { type: "ranking", q: "Ranke diese Urlaubs-Arten:", opts: ["City Trip", "Strandurlaub", "Berge & Wandern", "Roadtrip"] },
@@ -296,11 +309,10 @@
             }
         };
 
-        // Fülle bis 100 Fragen auf
         for(let i=11; i<=100; i++) {
             app.questions.push({
                 type: ["choice", "ranking", "text"][i % 3],
-                q: `Tag ${i}: Was schätzt du am meisten an unserer gemeinsamen Zeit?`,
+                q: `Inspirationstag ${i}: Was schätzt du an unserer gemeinsamen Reise am meisten?`,
                 opts: ["Das Lachen", "Die Ruhe", "Die Gespräche", "Die Abenteuer"]
             });
         }
@@ -309,3 +321,4 @@
     </script>
 </body>
 </html>
+
