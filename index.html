@@ -17,6 +17,7 @@
             --bg-gradient: linear-gradient(180deg, #ffdee9 0%, #ffffff 100%);
             --text-dark: #4a4a4a;
             --white: #ffffff;
+            --accent-green: #00b894;
             --muted: #8e8e93;
         }
 
@@ -34,7 +35,7 @@
             padding: env(safe-area-inset-top) 20px 100px 20px;
         }
 
-        /* Profile Header */
+        /* Profile & Status Header */
         .profile-section {
             display: flex; justify-content: center; align-items: center;
             margin: 30px 0; position: relative;
@@ -47,12 +48,6 @@
         .avatar.partner { margin-left: -15px; border-color: var(--soft-pink); z-index: 0; }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .status-bubble {
-            position: absolute; top: -20px; background: white;
-            padding: 6px 14px; border-radius: 20px; font-size: 0.8rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-weight: 600;
-        }
-
         /* Timer Banner */
         .timer-banner {
             background: white; border-radius: 20px; padding: 15px 20px;
@@ -61,37 +56,46 @@
         }
         .countdown-display { font-family: monospace; font-size: 1.3rem; font-weight: 700; color: var(--text-dark); }
 
-        /* Cards */
+        /* Status Box (Lobby) */
+        .status-card {
+            background: var(--white); border-radius: 25px; padding: 25px;
+            margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+        }
+        .status-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .status-row:last-child { margin-bottom: 0; }
+        .status-pill { padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+        .pill-done { background: #e3faf3; color: var(--accent-green); }
+        .pill-wait { background: #fff1f1; color: var(--main-pink); }
+
+        /* Question Cards */
         .card {
             background: var(--white); border-radius: 25px; padding: 25px;
             margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.03);
-            position: relative; animation: fadeIn 0.4s ease-out;
+            animation: fadeIn 0.4s ease-out;
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card-label { font-size: 0.75rem; font-weight: 700; color: var(--main-pink); text-transform: uppercase; margin-bottom: 12px; display: block; letter-spacing: 0.5px; }
-        .card-title { font-size: 1.2rem; font-weight: 700; line-height: 1.4; margin-bottom: 20px; color: #333; }
+        .card-label { font-size: 0.75rem; font-weight: 700; color: var(--main-pink); text-transform: uppercase; margin-bottom: 12px; display: block; }
+        .card-title { font-size: 1.2rem; font-weight: 700; line-height: 1.4; margin-bottom: 20px; }
 
-        /* Quiz Elements */
+        /* Input Elements */
         .tot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .tot-box { background: #f8fafc; border: 2px solid #f1f2f6; border-radius: 20px; padding: 25px 10px; text-align: center; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 0.95rem; }
-        .tot-box.selected { background: var(--main-pink); color: white; border-color: var(--main-pink); transform: translateY(-3px); }
+        .tot-box { background: #f8fafc; border: 2px solid #f1f2f6; border-radius: 20px; padding: 25px 10px; text-align: center; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .tot-box.selected { background: var(--main-pink); color: white; border-color: var(--main-pink); }
 
         .rank-card { background: #fff; border: 2px solid #f1f2f6; padding: 15px; margin-bottom: 10px; border-radius: 18px; display: flex; align-items: center; gap: 15px; cursor: grab; font-weight: 600; }
-        .rank-tag { background: var(--main-pink); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+        .rank-tag { background: var(--main-pink); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
 
         .input-area { width: 100%; border-radius: 20px; border: 2px solid #f1f2f6; padding: 15px; font-family: inherit; font-size: 1rem; margin-bottom: 15px; resize: none; min-height: 120px; background: #f8fafc; }
 
-        .btn-action { background: var(--main-pink); color: white; width: 100%; padding: 18px; border-radius: 22px; border: none; font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 126, 179, 0.35); transition: 0.2s; }
-        .btn-action:active { transform: scale(0.98); }
+        .btn-action { background: var(--main-pink); color: white; width: 100%; padding: 18px; border-radius: 22px; border: none; font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 126, 179, 0.35); }
 
-        /* Comparison bubble */
         .res-bubble { padding: 12px; border-radius: 18px; font-size: 0.9rem; border: 1px solid #f1f2f6; margin-bottom: 8px; }
         .res-bubble b { font-size: 0.65rem; color: var(--muted); display: block; margin-bottom: 4px; }
 
         .hidden { display: none !important; }
 
-        /* Bottom Nav */
+        /* Bottom Tab Bar */
         .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; height: 75px; background: white; display: flex; justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
         .tab-item { font-size: 1.4rem; opacity: 0.3; }
         .tab-item.active { opacity: 1; }
@@ -100,9 +104,8 @@
 <body>
 
 <div class="container">
-    <div id="header-ui">
+    <div id="ui-header">
         <div class="profile-section">
-            <div id="status-text" class="status-bubble">Lädt...</div>
             <div class="avatar"><img id="my-avatar" src=""></div>
             <div class="avatar partner"><img id="partner-avatar" src=""></div>
         </div>
@@ -133,50 +136,30 @@
 
     const pool = {
         tot: [
-            {id: "t1", q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], h: "Was ist dein Rhythmus?"},
-            {id: "t2", q: "Netflix oder Club?", o: ["Couch 🍿", "Tanzen 🕺"], h: "Wie sieht die Nacht aus?"},
-            {id: "t3", q: "Pizza oder Pasta?", o: ["Pizza 🍕", "Pasta 🍝"], h: "Der Klassiker-Check."},
-            {id: "t4", q: "Berge oder Meer?", o: ["Gipfel 🏔️", "Strand 🌊"], h: "Wohin geht die Reise?"},
-            {id: "t5", q: "Kaffee oder Tee?", o: ["Kaffee ☕", "Tee 🍵"], h: "Dein Muntermacher?"},
-            {id: "t6", q: "Stadt oder Land?", o: ["City-Vibe 🏙️", "Natur pur 🌳"], h: "Wo fühlst du dich wohl?"},
-            {id: "t7", q: "Hund oder Katze?", o: ["Wuff 🐶", "Miau 🐱"], h: "Dein Spirit-Animal?"},
-            {id: "t8", q: "Sommer oder Winter?", o: ["Hitze ☀️", "Schnee ❄️"], h: "Lieblingsjahreszeit?"},
-            {id: "t9", q: "Frühstück oder Abendessen?", o: ["Morgen-Fan 🍳", "Dinner-Date 🍷"], h: "Beste Mahlzeit?"},
-            {id: "t10", q: "Kino oder Heimkino?", o: ["Große Leinwand 📽️", "Zuhause 📺"], h: "Film ab!"},
-            {id: "t11", q: "Action oder Entspannung?", o: ["Adrenalin ⚡", "Wellness 🧘"], h: "Dein Modus?"},
-            {id: "t12", q: "Süß oder Salzig?", o: ["Schokolade 🍫", "Chips 🥨"], h: "Snack-Time!"},
-            {id: "t13", q: "Bücher oder Podcasts?", o: ["Lesen 📖", "Hören 🎧"], h: "Wie konsumierst du?"},
-            {id: "t14", q: "Auto oder Bahn?", o: ["Roadtrip 🚗", "Zugfahren 🚆"], h: "Unterwegs sein."},
-            {id: "t15", q: "Planen oder Spontan?", o: ["Struktur 📅", "Abenteuer 🎲"], h: "Dein Lebensstil?"},
-            {id: "t16", q: "Eis oder Kuchen?", o: ["Eiskugel 🍦", "Tortenstück 🍰"], h: "Dessert-Wahl."},
-            {id: "t17", q: "Podcast oder Musik?", o: ["Wissen 🎙️", "Melodie 🎶"], h: "Was läuft im Ohr?"},
-            {id: "t18", q: "Frühaufsteher oder Nachteule?", o: ["Lerchen 🌅", "Eulen 🌙"], h: "Wann bist du wach?"},
-            {id: "t19", q: "Badewanne oder Dusche?", o: ["Entspannen 🛁", "Erfrischen 🚿"], h: "Self-Care."},
-            {id: "t20", q: "Waldspaziergang oder See-Tag?", o: ["Moos & Bäume 🌲", "Wasser-Vibe 💧"], h: "Natur-Check."}
+            {id: "t1", q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"]},
+            {id: "t2", q: "Netflix oder Club?", o: ["Couch 🍿", "Tanzen 🕺"]},
+            {id: "t3", q: "Pizza oder Pasta?", o: ["Pizza 🍕", "Pasta 🍝"]},
+            {id: "t4", q: "Berge oder Meer?", o: ["Gipfel 🏔️", "Strand 🌊"]},
+            {id: "t5", q: "Kaffee oder Tee?", o: ["Kaffee ☕", "Tee 🍵"]},
+            {id: "t7", q: "Hund oder Katze?", o: ["Wuff 🐶", "Miau 🐱"]},
+            {id: "t8", q: "Sommer oder Winter?", o: ["Hitze ☀️", "Schnee ❄️"]},
+            {id: "t12", q: "Süß oder Salzig?", o: ["Schokolade 🍫", "Chips 🥨"]},
+            {id: "t18", q: "Frühaufsteher oder Nachteule?", o: ["Lerchen 🌅", "Eulen 🌙"]},
+            {id: "t19", q: "Badewanne oder Dusche?", o: ["Entspannen 🛁", "Erfrischen 🚿"]}
         ],
         ranking: [
-            {id: "r1", q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], h: "Priorisiere eure Zeit!"},
-            {id: "r2", q: "Wichtigste Urlaubsart?", o: ["Wellness 🧖", "Kultur 🏛️", "Sport ⛷️", "Party 🍹"], h: "Was muss im Urlaub sein?"},
-            {id: "r3", q: "Bester Pizza-Belag?", o: ["Margherita 🧀", "Salami 🍕", "Gemüse 🥦", "Scharf 🌶️"], h: "Ranking der Beläge!"},
-            {id: "r4", q: "Lieblings-Genre?", o: ["Comedy 😂", "Thriller 😱", "Romanze ❤️", "Sci-Fi 👽"], h: "Was schauen wir heute?"},
-            {id: "r5", q: "Bester Wochentag?", o: ["Freitag 🥳", "Samstag 🕺", "Sonntag ☕", "Mittwoch 🐫"], h: "Die Favoriten-Woche."},
-            {id: "r6", q: "Hausarbeit-Hass?", o: ["Bügeln 👔", "Saugen 🧹", "Abwaschen 🧼", "Müll 🗑️"], h: "Was ist am schlimmsten?"},
-            {id: "r7", q: "Beste Eissorte?", o: ["Vanille 🍦", "Schoko 🍫", "Fruchtig 🍓", "Nussig 🥜"], h: "Klassiker im Ranking."},
-            {id: "r8", q: "Wichtige Charaktereigenschaft?", o: ["Humor 😂", "Treue 🤝", "Abenteuerlust 🧗", "Empathie ✨"], h: "Was schätzt du am meisten?"},
-            {id: "r9", q: "Traum-Wohnort?", o: ["Großstadt 🏢", "Vorort 🏡", "Bauernhof 🐄", "Insel 🏝️"], h: "Wo landen wir mal?"},
-            {id: "r10", q: "Lieblings-Frühstück?", o: ["Pancakes 🥞", "Rührei 🥚", "Müsli 🥣", "Brötchen 🥨"], h: "Bester Start?"}
+            {id: "r1", q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"]},
+            {id: "r3", q: "Bester Pizza-Belag?", o: ["Margherita 🧀", "Salami 🍕", "Gemüse 🥦", "Scharf 🌶️"]},
+            {id: "r4", q: "Lieblings-Genre?", o: ["Comedy 😂", "Thriller 😱", "Romanze ❤️", "Sci-Fi 👽"]},
+            {id: "r8", q: "Wichtige Charaktereigenschaft?", o: ["Humor 😂", "Treue 🤝", "Abenteuerlust 🧗", "Empathie ✨"]},
+            {id: "r10", q: "Lieblings-Frühstück?", o: ["Pancakes 🥞", "Rührei 🥚", "Müsli 🥣", "Brötchen 🥨"]}
         ],
         text: [
-            {id: "x1", q: "Drei Worte für unseren Tag?", o: [], h: "Beschreibe euren Moment."},
-            {id: "x2", q: "Was war heute dein Highlight?", o: [], h: "Erzähl es deinem Schatz!"},
-            {id: "x3", q: "Was schätzt du heute an mir?", o: [], h: "Ein kleines Kompliment..."},
-            {id: "x4", q: "Was wollen wir bald erleben?", o: [], h: "Ein gemeinsames Ziel?"},
-            {id: "x5", q: "Ein Song, der mich an dich erinnert?", o: [], h: "Teile deine Melodie."},
-            {id: "x6", q: "Worauf freust du dich morgen?", o: [], h: "Dein Vorfreude-Moment."},
-            {id: "x7", q: "Was war dein lustigster Moment heute?", o: [], h: "Bring mich zum Lachen!"},
-            {id: "x8", q: "Wenn wir jetzt wegfliegen könnten - wohin?", o: [], h: "Träumt euch weg."},
-            {id: "x9", q: "Was koche ich dir mal Besonderes?", o: [], h: "Dein Wunschmenü."},
-            {id: "x10", q: "Welche Eigenschaft liebst du an uns?", o: [], h: "Wir als Team."}
+            {id: "x1", q: "Drei Worte für unseren Tag?", o: []},
+            {id: "x2", q: "Was war heute dein Highlight?", o: []},
+            {id: "x3", q: "Was schätzt du heute an mir?", o: []},
+            {id: "x5", q: "Ein Song, der mich an dich erinnert?", o: []},
+            {id: "x8", q: "Wenn wir jetzt wegfliegen könnten - wohin?", o: []}
         ]
     };
 
@@ -203,11 +186,7 @@
         loadDailyQs() {
             const seed = parseInt(this.day.replace(/-/g, ''));
             const getSeeded = (arr, s) => arr[s % arr.length];
-            this.dailyQs = [
-                getSeeded(pool.tot, seed),
-                getSeeded(pool.ranking, seed),
-                getSeeded(pool.text, seed)
-            ];
+            this.dailyQs = [getSeeded(pool.tot, seed), getSeeded(pool.ranking, seed), getSeeded(pool.text, seed)];
         },
 
         async showLobby() {
@@ -215,19 +194,23 @@
             const me = data?.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
 
-            document.getElementById('status-text').innerText = me ? "Alles fertig! ✨" : "Heute schon geredet?";
-
-            if (!me) {
-                document.getElementById('main-content').innerHTML = `
-                    <div class="card">
-                        <span class="card-label">Daily Mix</span>
-                        <div class="card-title">Eure 3 Fragen für heute stehen bereit.</div>
-                        <button class="btn-action" onclick="app.startQuiz()">JETZT STARTEN</button>
+            let content = `
+                <h2 style="font-weight:700; margin-bottom:10px;">Hi ${this.user}! ❤️</h2>
+                <div class="status-card">
+                    <div class="status-row">
+                        <span>Meine Antwort:</span>
+                        <span class="status-pill ${me?'pill-done':'pill-wait'}">${me?'Fertig ✅':'Offen'}</span>
                     </div>
-                `;
-            } else {
-                this.showComparison(data);
-            }
+                    <div class="status-row">
+                        <span>${this.partner}:</span>
+                        <span class="status-pill ${other?'pill-done':'pill-wait'}">${other?'Fertig ✅':'Wartet...'}</span>
+                    </div>
+                </div>
+                <button class="btn-action" onclick="${me ? 'app.showComparison()' : 'app.startQuiz()'}">
+                    ${me ? 'Zu den Antworten ✨' : 'Jetzt starten 🚀'}
+                </button>
+            `;
+            document.getElementById('main-content').innerHTML = content;
         },
 
         startQuiz() { this.currentStep = 0; this.results = []; this.renderStep(); },
@@ -239,14 +222,14 @@
             if (q.o.length === 2) {
                 inputHtml = `<div class="tot-grid">${q.o.map(o => `<div class="tot-box" onclick="app.handleTot('${o}')">${o}</div>`).join('')}</div>`;
             } else if (q.o.length > 2) {
-                inputHtml = `<div id="sort-wrap">${q.o.map((o, i) => `<div class="rank-card"><span class="rank-tag">${i+1}</span><span>${o}</span></div>`).join('')}</div><button class="btn-action" style="margin-top:20px" onclick="app.handleRank()">Reihenfolge speichern</button>`;
+                inputHtml = `<div id="sort-wrap">${q.o.map((o, i) => `<div class="rank-card"><span class="rank-tag">${i+1}</span><span>${o}</span></div>`).join('')}</div><button class="btn-action" style="margin-top:20px" onclick="app.handleRank()">Speichern</button>`;
             } else {
                 inputHtml = `<textarea id="txt-in" class="input-area" placeholder="Deine Antwort..."></textarea><button class="btn-action" onclick="app.handleText()">Weiter</button>`;
             }
 
             document.getElementById('main-content').innerHTML = `
                 <div class="card">
-                    <span class="card-label">Frage ${this.currentStep + 1} von 3</span>
+                    <span class="card-label">Frage ${this.currentStep + 1} / 3</span>
                     <div class="card-title">${q.q}</div>
                     ${inputHtml}
                 </div>
@@ -254,18 +237,14 @@
 
             if (q.o.length > 2) {
                 new Sortable(document.getElementById('sort-wrap'), { 
-                    animation: 200, 
-                    onEnd: () => { document.querySelectorAll('.rank-tag').forEach((t, i) => t.innerText = i + 1); }
+                    animation: 200, onEnd: () => { document.querySelectorAll('.rank-tag').forEach((t, i) => t.innerText = i + 1); }
                 });
             }
         },
 
         handleTot(val) { this.results.push(val); this.nextStep(); },
         handleText() { const v = document.getElementById('txt-in').value.trim(); if(!v) return; this.results.push(v); this.nextStep(); },
-        handleRank() { 
-            const v = Array.from(document.querySelectorAll('#sort-wrap span:last-child')).map(s => s.innerText).join(" > ");
-            this.results.push(v); this.nextStep(); 
-        },
+        handleRank() { const v = Array.from(document.querySelectorAll('#sort-wrap span:last-child')).map(s => s.innerText).join(" > "); this.results.push(v); this.nextStep(); },
 
         nextStep() {
             if (this.currentStep < 2) { this.currentStep++; this.renderStep(); } 
@@ -279,19 +258,20 @@
             location.reload();
         },
 
-        showComparison(data) {
+        async showComparison() {
+            const { data } = await sb.from('answers').select('*').eq('day_key', this.day);
             const me = data.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
             const myA = me.choice.split(" [")[0].split(" | ");
             const otherA = other ? other.choice.split(" [")[0].split(" | ") : null;
 
             document.getElementById('main-content').innerHTML = `
-                <h3 style="margin-bottom:15px">Eure Antworten</h3>
+                <button class="btn-action" style="margin-bottom:20px; background:#eee; color:#4a4a4a; box-shadow:none;" onclick="app.showLobby()">← Zurück</button>
                 ${this.dailyQs.map((q, i) => `
                     <div class="card">
                         <span class="card-label">${q.q}</span>
                         <div class="res-bubble" style="background:var(--soft-pink)"><b>ICH</b>${myA[i]}</div>
-                        <div class="res-bubble" style="background:${otherA?'#e0f9f0':'#fff1f1'}"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : 'Wartet noch... ⌛'}</div>
+                        <div class="res-bubble" style="background:${otherA?'#e0f9f0':'#fff1f1'}"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : 'Noch offen...'}</div>
                     </div>
                 `).join('')}
             `;
@@ -308,10 +288,10 @@
         },
 
         renderLogin() {
-            document.getElementById('header-ui').classList.add('hidden');
+            document.getElementById('ui-header').classList.add('hidden');
             document.getElementById('main-content').innerHTML = `
                 <div class="card" style="margin-top:50px">
-                    <h2 style="text-align:center">CB-App ❤️</h2>
+                    <h2 style="text-align:center; font-weight:700;">CB-App ❤️</h2>
                     <input id="em" type="email" class="input-area" style="height:auto" placeholder="E-Mail">
                     <input id="pw" type="password" class="input-area" style="height:auto" placeholder="Passwort">
                     <button class="btn-action" onclick="app.login()">Einloggen</button>
