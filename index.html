@@ -134,7 +134,7 @@
         step: 0, results: [], dailyQs: [], isSubmitting: false,
 
         async init() {
-            // Fragen basierend auf Datum generieren (immer verfügbar)
+            // Fragen basierend auf Datum generieren (immer verfügbar machen)
             const seed = parseInt(this.day.replace(/-/g, ''));
             this.dailyQs = [
                 pool.tot[seed % pool.tot.length], 
@@ -143,10 +143,11 @@
             ];
 
             const { data: { session }, error } = await sb.auth.getSession();
+            
             if (!session || error) {
                 this.renderLogin();
             } else {
-                // Bereinigung alter Daten
+                // Alte Daten bereinigen
                 await sb.from('answers').delete().lt('day_key', this.day);
                 
                 const email = session.user.email.toLowerCase();
@@ -335,8 +336,8 @@
             await sb.auth.signOut();
             localStorage.clear();
             sessionStorage.clear();
-            // Erzwingt Neuladen der nackten URL
-            window.location.href = window.location.origin + window.location.pathname;
+            // Ersetzt die aktuelle Seite im Verlauf und lädt neu, um Cache-Probleme zu vermeiden
+            window.location.replace(window.location.origin + window.location.pathname);
         }
     };
     app.init();
