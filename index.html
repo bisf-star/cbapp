@@ -5,30 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CB-App</title>
 
+    <meta property="og:title" content="CB-App">
+    <meta property="og:description" content="Euer tägliches Verbindungs-Ritual. Ein Moment für euch zwei.">
+    <meta property="og:type" content="website">
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary: #d63031; --secondary: #6c5ce7; --bg: #0f0c29; --card: #ffffff; --text: #1e272e; --muted: #808e9b; --light-bg: #f1f2f6; }
-        body { font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #302b63, #0f0c29); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: var(--text); padding: 20px; box-sizing: border-box; }
-        .container { width: 100%; max-width: 400px; background: var(--card); border-radius: 35px; padding: 50px 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.6); text-align: center; margin: auto; box-sizing: border-box; position: relative; }
-        .brand-title { font-size: 3.2rem; font-weight: 600; letter-spacing: -2.5px; margin: 0 0 10px 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
-        .status-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; font-size: 0.8rem; font-weight: 600; color: var(--muted); background: var(--light-bg); padding: 8px 16px; border-radius: 50px; }
+        :root { 
+            --primary: #d63031; 
+            --secondary: #6c5ce7; 
+            --bg: #0f0c29; 
+            --card: #ffffff;
+            --text: #1e272e; 
+            --muted: #808e9b;
+            --light-bg: #f1f2f6;
+        }
+        
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: radial-gradient(circle at top right, #302b63, #0f0c29);
+            margin: 0; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh; 
+            color: var(--text); 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 400px; 
+            background: var(--card); 
+            border-radius: 35px; 
+            padding: 50px 30px; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6); 
+            text-align: center; 
+            margin: auto;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .brand-title {
+            font-size: 3.2rem;
+            font-weight: 600;
+            letter-spacing: -2.5px;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .status-badge { 
+            display: inline-flex; 
+            align-items: center;
+            gap: 8px; 
+            margin-bottom: 30px; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            color: var(--muted);
+            background: var(--light-bg);
+            padding: 8px 16px;
+            border-radius: 50px;
+        }
         .dot { width: 10px; height: 10px; border-radius: 50%; background: #dfe4ea; transition: 0.4s; }
         .dot-active { background: #00b894; box-shadow: 0 0 12px #00b894; }
+
         h2 { font-size: 1.45rem; line-height: 1.35; color: var(--text); margin-bottom: 25px; font-weight: 600; }
-        input { width: 100%; padding: 18px; margin: 10px 0; border-radius: 16px; border: 2px solid #f1f2f6; box-sizing: border-box; font-size: 1rem; outline: none; transition: 0.3s; }
-        .option-item { background: var(--light-bg); border: 2px solid #f1f2f6; padding: 18px; margin: 12px 0; border-radius: 18px; cursor: pointer; transition: 0.2s; text-align: left; }
-        .option-item.selected { background: #f1f2ff; border-color: var(--secondary); color: var(--secondary); font-weight: 600; }
+
+        input { 
+            width: 100%; padding: 18px; margin: 10px 0; border-radius: 16px; 
+            border: 2px solid #f1f2f6; box-sizing: border-box; font-size: 1rem; outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: var(--secondary); box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1); }
+
+        .option-item { 
+            background: var(--light-bg); border: 2px solid #f1f2f6; padding: 18px; 
+            margin: 12px 0; border-radius: 18px; cursor: pointer; transition: 0.2s;
+            text-align: left; font-weight: 400;
+        }
+        .option-item.selected { 
+            background: #f1f2ff; border-color: var(--secondary); color: var(--secondary); font-weight: 600; 
+        }
+        
         .ranking-list .option-item { cursor: grab; display: flex; align-items: center; gap: 15px; }
-        textarea { width: 100%; height: 130px; border-radius: 20px; border: 2px solid #f1f2f6; padding: 18px; box-sizing: border-box; font-family: inherit; font-size: 1rem; outline: none; resize: none; }
-        button { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 20px; width: 100%; border-radius: 20px; font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .ranking-list .option-item::before { content: '☰'; color: #b2bec3; font-size: 1.2rem; }
+
+        textarea { 
+            width: 100%; height: 130px; border-radius: 20px; border: 2px solid #f1f2f6; 
+            padding: 18px; box-sizing: border-box; font-family: inherit; font-size: 1rem; outline: none; resize: none;
+        }
+
+        button { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
+            color: white; border: none; padding: 20px; width: 100%; border-radius: 20px; 
+            font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 20px;
+            box-shadow: 0 12px 24px rgba(108, 92, 231, 0.3); transition: 0.3s;
+        }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
+
         .hidden { display: none; }
+
         .result-card { text-align: left; background: #f9f9ff; padding: 25px; border-radius: 22px; border-left: 6px solid var(--secondary); margin-top: 30px; }
         .result-card b { display: block; margin-bottom: 6px; color: var(--secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.2px; }
-        .footer { margin-top: 40px; color: rgba(255, 255, 255, 0.4); font-size: 0.8rem; text-align: center; }
+
+        .footer {
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -60,9 +152,16 @@
         </div>
     </div>
 
+    <div class="footer">
+        Made with love by Bene 2026<br>
+        Freiburg im Breisgau
+    </div>
+
     <script>
+        // Deine verifizierten Projektdaten
         const SB_URL = "https://eedbdbqvwpquoxzbunwo.supabase.co";
-        const SB_KEY = "Sb_publishable_k7vTHNDeNYoBMlfxx9HISg_vFfdfzpm";
+        const SB_KEY = "EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlZGJkYnF2d3BxdW94emJ1bndvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzY0NDEsImV4cCI6MjA5MjI1MjQ0MX0.7RKZjDKvieO-hoCpORQeA9uFcGhLqHNTGwvYiK5ogrs";
+        
         const sbClient = supabase.createClient(SB_URL, SB_KEY);
 
         const app = {
@@ -98,6 +197,9 @@
                 } else if (email === 'clara-frey@gmx.de') {
                     this.myName = "Clara";
                     this.partnerName = "Bene";
+                } else {
+                    this.myName = "User";
+                    this.partnerName = "Partner";
                 }
                 document.getElementById('user-display-name').innerText = this.myName;
                 document.getElementById('partner-name-display').innerText = this.partnerName;
@@ -106,16 +208,28 @@
             async login() {
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password').value;
+                const btn = document.getElementById('login-btn');
+
+                btn.disabled = true;
+                btn.innerText = "Prüfe...";
+
                 const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
-                if (error) alert("Fehler: " + error.message);
-                else {
+                
+                if (error) {
+                    alert("Fehler: " + error.message);
+                    btn.disabled = false;
+                    btn.innerText = "Anmelden";
+                } else {
                     this.session = data.session;
                     this.identifyUsers();
                     this.showMain();
                 }
             },
 
-            async logout() { await sbClient.auth.signOut(); location.reload(); },
+            async logout() {
+                await sbClient.auth.signOut();
+                location.reload();
+            },
 
             showMain() {
                 document.getElementById('login-screen').classList.add('hidden');
@@ -165,8 +279,9 @@
                     { user_name: this.myName.toLowerCase(), choice: val, day_key: this.todayKey }
                 ]);
 
-                if (error) alert("Du hast heute schon geantwortet!");
-                else {
+                if (error) {
+                    alert("Du hast heute schon geantwortet!");
+                } else {
                     confetti({ particleCount: 70, spread: 90, origin: { y: 0.6 }, colors: ['#d63031', '#6c5ce7'] });
                     this.syncResults();
                 }
@@ -185,12 +300,13 @@
                         document.getElementById('input-zone').classList.add('hidden');
                         document.getElementById('complete-view').classList.remove('hidden');
                         document.getElementById('results-box').innerHTML = 
-                            `<b>Deine Antwort:</b> ${me.choice}<br><br>` + 
-                            (other ? `<b>Von ${this.partnerName}:</b> ${other.choice}` : `<i>${this.partnerName} hat noch nicht geantwortet...</i>`);
+                            `<b>Deine Antwort:</b> ${me.choice.replace(/\n/g, '<br>')}<br><br>` + 
+                            (other ? `<b>Von ${this.partnerName}:</b> ${other.choice.replace(/\n/g, '<br>')}` : `<i>${this.partnerName} hat noch nicht geantwortet...</i>`);
                     }
                 }
             }
         };
+
         app.init();
     </script>
 </body>
