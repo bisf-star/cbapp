@@ -1,224 +1,291 @@
-1<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CB-App ♥</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CB-App</title>
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --primary: #d63031; /* Modernes Rot */
-            --secondary: #6c5ce7; /* Modernes Lila */
-            --accent: #a29bfe;
-            --bg: #1a1a2e; /* Dunkler, moderner Hintergrund */
+            --primary: #d63031; 
+            --secondary: #6c5ce7; 
+            --bg: #0f0c29; 
             --card: #ffffff;
-            --text: #2d3436; 
+            --text: #1e272e; 
+            --muted: #808e9b;
+            --light-bg: #f1f2f6;
         }
         
         body { 
             font-family: 'Outfit', sans-serif; 
             background: var(--bg);
-            background-image: radial-gradient(circle at 20% 30%, #2d3436 0%, #1a1a2e 100%);
+            background: radial-gradient(circle at top right, #302b63, #0f0c29);
             margin: 0; 
             display: flex; 
-            justify-content: center; 
+            flex-direction: column;
+            align-items: center;
             min-height: 100vh; 
             color: var(--text); 
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .container { 
-            width: 95%; 
-            max-width: 420px; 
+            width: 100%; 
+            max-width: 400px; 
             background: var(--card); 
-            margin: 20px; 
-            border-radius: 25px; 
-            padding: 40px 25px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+            border-radius: 35px; 
+            padding: 50px 30px; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6); 
             text-align: center; 
-            align-self: center; 
+            margin: auto;
+            box-sizing: border-box;
+            position: relative;
         }
 
-        .status-bar { 
-            display: flex; 
-            justify-content: center; 
-            gap: 15px; 
-            margin-bottom: 25px; 
-            font-size: 0.85rem; 
+        .brand-title {
+            font-size: 3.2rem;
+            font-weight: 600;
+            letter-spacing: -2.5px;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        /* Status & Layout */
+        .status-badge { 
+            display: inline-flex; 
+            align-items: center;
+            gap: 8px; 
+            margin-bottom: 30px; 
+            font-size: 0.8rem; 
             font-weight: 600; 
-            color: #636e72;
+            color: var(--muted);
+            background: var(--light-bg);
+            padding: 8px 16px;
+            border-radius: 50px;
         }
-        .status-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; background: #dfe4ea; border: 2px solid #fff; }
-        .active-dot { background: #00b894; box-shadow: 0 0 10px rgba(0, 184, 148, 0.5); }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #dfe4ea; transition: 0.4s; }
+        .dot-active { background: #00b894; box-shadow: 0 0 12px #00b894; }
 
-        h1 { font-size: 2.2rem; color: var(--primary); margin-bottom: 5px; font-weight: 600; letter-spacing: -1px; }
-        .logo-app { color: var(--secondary); }
-        h2 { font-size: 1.3rem; line-height: 1.4; color: #2d3436; margin-top: 0; }
+        h2 { font-size: 1.45rem; line-height: 1.35; color: var(--text); margin-bottom: 25px; font-weight: 600; }
 
         input { 
-            width: 100%; padding: 16px; margin: 10px 0; border-radius: 12px; 
-            border: 2px solid #f1f2f6; box-sizing: border-box; font-size: 1rem; outline: none;
+            width: 100%; padding: 18px; margin: 10px 0; border-radius: 16px; 
+            border: 2px solid #f1f2f6; box-sizing: border-box; font-size: 1rem; outline: none; transition: 0.3s;
         }
-        input:focus { border-color: var(--secondary); }
+        input:focus { border-color: var(--secondary); box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1); }
 
         .option-item { 
-            background: #f8f9fa; border: 2px solid #f1f2f6; padding: 16px; 
-            margin: 12px 0; border-radius: 15px; cursor: pointer; transition: 0.2s;
+            background: var(--light-bg); border: 2px solid #f1f2f6; padding: 18px; 
+            margin: 12px 0; border-radius: 18px; cursor: pointer; transition: 0.2s;
+            text-align: left; font-weight: 400;
         }
         .option-item.selected { 
             background: #f1f2ff; border-color: var(--secondary); color: var(--secondary); font-weight: 600; 
         }
         
-        .ranking-list .option-item { cursor: grab; display: flex; align-items: center; gap: 12px; text-align: left; }
-        .ranking-list .option-item::before { content: '☰'; color: #b2bec3; }
+        .ranking-list .option-item { cursor: grab; display: flex; align-items: center; gap: 15px; }
+        .ranking-list .option-item::before { content: '☰'; color: #b2bec3; font-size: 1.2rem; }
 
         textarea { 
-            width: 100%; height: 100px; border-radius: 15px; border: 2px solid #f1f2f6; 
-            padding: 15px; box-sizing: border-box; font-family: inherit; font-size: 1rem; outline: none;
+            width: 100%; height: 130px; border-radius: 20px; border: 2px solid #f1f2f6; 
+            padding: 18px; box-sizing: border-box; font-family: inherit; font-size: 1rem; outline: none; resize: none;
         }
 
         button { 
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
-            color: white; border: none; padding: 18px; width: 100%; border-radius: 15px; 
+            color: white; border: none; padding: 20px; width: 100%; border-radius: 20px; 
             font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 20px;
-            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+            box-shadow: 0 12px 24px rgba(108, 92, 231, 0.3); transition: 0.3s;
         }
-        button:active { transform: scale(0.98); }
+        button:active { transform: scale(0.97); }
 
         .hidden { display: none; }
-        .result-box { text-align: left; background: #f9f9ff; padding: 20px; border-radius: 15px; border-left: 5px solid var(--secondary); margin-top: 25px; }
-        .heart { color: var(--primary); }
+
+        .result-card { text-align: left; background: #f9f9ff; padding: 25px; border-radius: 22px; border-left: 6px solid var(--secondary); margin-top: 30px; }
+        .result-card b { display: block; margin-bottom: 6px; color: var(--secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.2px; }
+
+        .footer {
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: 300;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="login-screen">
-        <h1>CB<span class="logo-app">-App</span> <span class="heart">♥</span></h1>
-        <p style="color: #636e72; margin-bottom: 25px;">Euer täglicher Check-in.</p>
-        <input type="text" id="email" placeholder="E-Mail">
-        <input type="password" id="password" placeholder="Passwort">
-        <button onclick="app.login()">Einloggen</button>
+    <div class="container">
+        <!-- LOGIN -->
+        <div id="login-screen">
+            <h1 class="brand-title">CB-App</h1>
+            <p style="color: var(--muted); margin-bottom: 35px; font-size: 0.95rem;">Euer tägliches Verbindungs-Ritual.</p>
+            <input type="text" id="email" placeholder="E-Mail Adresse">
+            <input type="password" id="password" placeholder="Passwort">
+            <button onclick="app.login()">Anmelden</button>
+        </div>
+
+        <!-- MAIN -->
+        <div id="main-screen" class="hidden">
+            <h1 class="brand-title" style="font-size: 2rem; margin-bottom: 20px;">CB-App</h1>
+            <div class="status-badge">
+                Partner Status: <span id="partner-dot" class="dot"></span>
+            </div>
+            <h2 id="question-text">Lädt...</h2>
+            <div id="input-zone">
+                <div id="options-list" class="ranking-list"></div>
+                <textarea id="text-input" class="hidden" placeholder="Was denkst du dazu?"></textarea>
+            </div>
+            <button id="save-btn" onclick="app.submit()">Antwort versiegeln</button>
+            <div id="complete-view" class="hidden">
+                <div class="result-card" id="results-box"></div>
+                <button onclick="app.logout()" style="background: transparent; color: var(--muted); box-shadow: none; font-size: 0.8rem; margin-top: 20px;">Abmelden</button>
+            </div>
+        </div>
     </div>
 
-    <div id="main-screen" class="hidden">
-        <div class="status-bar">
-            <span><span id="dot-other" class="status-dot"></span> Partner</span>
-        </div>
-        <h2 id="question-text"></h2>
-        <div id="interaction-area">
-            <div id="options-list" class="ranking-list"></div>
-            <textarea id="text-answer" class="hidden" placeholder="Schreib hier etwas..."></textarea>
-        </div>
-        <button id="submit-btn" onclick="app.submit()">Antwort speichern</button>
-        <div id="result-view" class="hidden">
-            <div class="result-box" id="result-content"></div>
-            <button onclick="app.logout()" style="background: #eee; color: #666; font-size: 0.8rem; padding: 10px; margin-top: 30px;">Abmelden</button>
-        </div>
+    <div class="footer">
+        Made with love by Bene 2026<br>
+        Freiburg im Breisgau
     </div>
-</div>
 
-<script>
-const SB_URL = "https://eedbdbqvwpquoxzbunwo.supabase.co";
-const SB_KEY = "Sb_publishable_k7vTHNDeNYoBMlfxx9HISg_vFfdfzpm";
-const supabase = libsupabase.createClient(SB_URL, SB_KEY);
+    <script>
+        const SB_URL = "https://eedbdbqvwpquoxzbunwo.supabase.co";
+        const SB_KEY = "Sb_publishable_k7vTHNDeNYoBMlfxx9HISg_vFfdfzpm";
+        const supabase = libsupabase.createClient(SB_URL, SB_KEY);
 
-const app = {
-    session: null,
-    todayKey: new Date().toISOString().split('T')[0],
-    currentQ: null,
-    
-    questions: [
-        { type: "choice", q: "Was ist unsere größte Stärke als Team?", opts: ["Gleicher Humor", "Vertrauen", "Kommunikation", "Spontaneität"] },
-        { type: "ranking", q: "Was macht einen regnerischen Tag perfekt?", opts: ["Film-Marathon", "Zusammen kochen", "Lange schlafen", "Brettspiele"] },
-        { type: "text", q: "Was ist eine kleine Sache, die ich heute für dich tun könnte?", opts: [] },
-        { type: "choice", q: "Welches Abenteuer sollten wir als nächstes wagen?", opts: ["Tandem-Bungee", "Wochenende ohne Handy", "Kochkurs", "Einfach ans Meer"] },
-        { type: "ranking", q: "In welcher Stadt würden wir am glücklichsten leben?", opts: ["New York", "Paris", "Tokio", "Kopenhagen", "Wien"] }
-    ],
+        const app = {
+            session: null,
+            todayKey: new Date().toISOString().split('T')[0],
+            currQ: null,
 
-    async init() {
-        const { data } = await supabase.auth.getSession();
-        if (data.session) { this.session = data.session; this.showMain(); }
-    },
+            questions: [
+                { type: "choice", q: "Was ist unsere größte Stärke als Team?", opts: ["Humor", "Ehrlichkeit", "Kommunikation", "Loyalität"] },
+                { type: "ranking", q: "Ranke diese Urlaubs-Arten:", opts: ["City Trip", "Strandurlaub", "Berge & Wandern", "Roadtrip"] },
+                { type: "text", q: "Was ist eine kleine Sache, die ich heute für dich tun könnte?", opts: [] },
+                { type: "choice", q: "Welches Tier wären wir als Team?", opts: ["Wölfe", "Otter", "Löwen", "Pinguine"] },
+                { type: "ranking", q: "Priorität im gemeinsamen Zuhause?", opts: ["Saubere Küche", "Gemütliches Wohnzimmer", "Viel Tageslicht", "Gute Musik"] },
+                { type: "text", q: "Was war dein schönster Moment mit mir diese Woche?", opts: [] },
+                { type: "choice", q: "Welches Element passt am besten zu uns?", opts: ["Feuer", "Wasser", "Erde", "Luft"] },
+                { type: "ranking", q: "Beste Date-Night Idee?", opts: ["Kochen", "Kino", "Spaziergang", "Spieleabend"] },
+                { type: "text", q: "Wenn wir morgen irgendwohin fliegen könnten, wohin ginge es?", opts: [] },
+                { type: "choice", q: "Wer von uns ist morgens schneller fit?", opts: ["Ich", "Du", "Keiner", "Beide"] }
+            ],
 
-    async login() {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) alert("Login fehlgeschlagen: " + error.message);
-        else { this.session = data.session; this.showMain(); }
-    },
+            async init() {
+                const { data } = await supabase.auth.getSession();
+                if (data.session) {
+                    this.session = data.session;
+                    this.open();
+                }
+            },
 
-    async logout() { await supabase.auth.signOut(); location.reload(); },
+            async login() {
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) alert("Fehler beim Anmelden: " + error.message);
+                else { this.session = data.session; this.open(); }
+            },
 
-    showMain() {
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('main-screen').classList.remove('hidden');
-        this.loadDaily();
-    },
+            async logout() {
+                await supabase.auth.signOut();
+                location.reload();
+            },
 
-    loadDaily() {
-        const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-        this.currentQ = this.questions[dayOfYear % this.questions.length];
-        document.getElementById('question-text').innerText = this.currentQ.q;
-        const list = document.getElementById('options-list');
-        const txt = document.getElementById('text-answer');
-        list.innerHTML = ""; txt.classList.add('hidden');
+            open() {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('main-screen').classList.remove('hidden');
+                this.load();
+            },
 
-        if (this.currentQ.type === 'text') {
-            txt.classList.remove('hidden');
-        } else if (this.currentQ.type === 'choice') {
-            this.currentQ.opts.forEach(o => {
-                const d = document.createElement('div');
-                d.className = "option-item"; d.innerText = o;
-                d.onclick = () => { document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected')); d.classList.add('selected'); };
-                list.appendChild(d);
-            });
-        } else if (this.currentQ.type === 'ranking') {
-            this.currentQ.opts.forEach(o => {
-                const d = document.createElement('div'); d.className = "option-item"; d.innerText = o; list.appendChild(d);
-            });
-            Sortable.create(list, { animation: 150 });
-        }
-        this.checkStatus();
-    },
+            load() {
+                const day = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+                this.currQ = this.questions[day % this.questions.length];
+                document.getElementById('question-text').innerText = this.currQ.q;
+                
+                const list = document.getElementById('options-list');
+                const txt = document.getElementById('text-input');
+                list.innerHTML = ""; txt.classList.add('hidden');
 
-    async submit() {
-        let val = "";
-        if (this.currentQ.type === 'text') val = document.getElementById('text-answer').value;
-        else if (this.currentQ.type === 'choice') val = document.querySelector('.option-item.selected')?.innerText;
-        else if (this.currentQ.type === 'ranking') val = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" → ");
+                if (this.currQ.type === 'text') {
+                    txt.classList.remove('hidden');
+                } else if (this.currQ.type === 'choice') {
+                    this.currQ.opts.forEach(o => {
+                        const d = document.createElement('div');
+                        d.className = "option-item"; d.innerText = o;
+                        d.onclick = () => { 
+                            document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected')); 
+                            d.classList.add('selected'); 
+                        };
+                        list.appendChild(d);
+                    });
+                } else if (this.currQ.type === 'ranking') {
+                    this.currQ.opts.forEach(o => {
+                        const d = document.createElement('div'); d.className = "option-item"; d.innerText = o; list.appendChild(d);
+                    });
+                    Sortable.create(list, { animation: 180 });
+                }
+                this.sync();
+            },
 
-        if (!val) return alert("Antwort fehlt!");
-        const { error } = await supabase.from('answers').insert([{ user_name: this.session.user.email, question_id: 0, choice: val, day_key: this.todayKey }]);
+            async submit() {
+                let val = "";
+                if (this.currQ.type === 'text') val = document.getElementById('text-input').value.trim();
+                else if (this.currQ.type === 'choice') val = document.querySelector('.option-item.selected')?.innerText;
+                else if (this.currQ.type === 'ranking') val = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" → ");
 
-        if (error) alert("Heute bereits erledigt!");
-        else {
-            const h = confetti.shapeFromText({ text: '❤️' });
-            confetti({ shapes: [h], particleCount: 50, spread: 70, origin: { y: 0.6 }, colors: ['#d63031', '#6c5ce7'] });
-            this.checkStatus();
-        }
-    },
+                if (!val) return alert("Antwort eingeben!");
 
-    async checkStatus() {
-        const { data } = await supabase.from('answers').select('*').eq('day_key', this.todayKey);
-        if (data) {
-            const me = data.find(a => a.user_name === this.session.user.email);
-            const other = data.find(a => a.user_name !== this.session.user.email);
-            if (other) document.getElementById('dot-other').classList.add('active-dot');
-            if (me) {
-                document.getElementById('submit-btn').classList.add('hidden');
-                document.getElementById('interaction-area').classList.add('hidden');
-                document.getElementById('result-view').classList.remove('hidden');
-                document.getElementById('result-content').innerHTML = `<b>Deine Antwort:</b><br>${me.choice}<br><br>` + 
-                    (other ? `<b>Vom Partner:</b><br>${other.choice}` : "<i>Warte auf Partner...</i>");
+                const { error } = await supabase.from('answers').insert([
+                    { user_name: this.session.user.email, question_id: 0, choice: val, day_key: this.todayKey }
+                ]);
+
+                if (error) alert("Du hast heute schon geantwortet!");
+                else {
+                    confetti({ particleCount: 70, spread: 90, origin: { y: 0.6 }, colors: ['#d63031', '#6c5ce7'] });
+                    this.sync();
+                }
+            },
+
+            async sync() {
+                const { data } = await supabase.from('answers').select('*').eq('day_key', this.todayKey);
+                if (data) {
+                    const me = data.find(a => a.user_name === this.session.user.email);
+                    const other = data.find(a => a.user_name !== this.session.user.email);
+                    if (other) document.getElementById('partner-dot').classList.add('dot-active');
+                    
+                    if (me) {
+                        document.getElementById('save-btn').classList.add('hidden');
+                        document.getElementById('input-zone').classList.add('hidden');
+                        document.getElementById('complete-view').classList.remove('hidden');
+                        document.getElementById('results-box').innerHTML = 
+                            `<b>Deine Antwort:</b> ${me.choice.replace(/\n/g, '<br>')}<br><br>` + 
+                            (other ? `<b>Vom Partner:</b> ${other.choice.replace(/\n/g, '<br>')}` : "<i>Warte auf den Partner...</i>");
+                    }
+                }
             }
+        };
+
+        // Fill up to 100 questions
+        for(let i=11; i<=100; i++) {
+            app.questions.push({
+                type: ["choice", "ranking", "text"][i % 3],
+                q: `Tag ${i}: Was schätzt du am meisten an unserem gemeinsamen Leben?`,
+                opts: ["Das Lachen", "Die Ruhe", "Die Pläne", "Der Alltag"]
+            });
         }
-    }
-};
-app.init();
-</script>
+
+        app.init();
+    </script>
 </body>
 </html>
