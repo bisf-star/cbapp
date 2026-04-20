@@ -22,64 +22,75 @@
         body { 
             font-family: 'Outfit', sans-serif; background: #0f0c29; 
             margin: 0; padding: 0; display: flex; justify-content: center; 
-            min-height: 100vh; color: var(--text); overflow: hidden;
+            height: 100vh; width: 100vw; color: var(--text); overflow: hidden;
         }
         
         .container { 
             width: 100%; max-width: 450px; height: 100vh; background: var(--card); 
-            display: flex; flex-direction: column; padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px; 
-            position: relative;
+            display: flex; flex-direction: column; 
+            padding: env(safe-area-inset-top) 20px 0 20px;
         }
 
-        /* Header */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
-        .brand { font-size: 1.8rem; font-weight: 600; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .logout-btn { background: var(--light-bg); border: none; border-radius: 12px; padding: 8px 12px; font-size: 0.7rem; font-weight: 600; color: var(--muted); cursor: pointer; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; flex-shrink: 0; }
+        .brand { font-size: 1.6rem; font-weight: 600; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .logout-btn { background: #f1f2f6; border: none; border-radius: 10px; padding: 8px 12px; font-size: 0.75rem; font-weight: 600; color: var(--muted); }
 
-        /* Progress */
-        .prog-bar { display: flex; justify-content: center; gap: 8px; margin: 10px 0 20px 0; }
-        .dot { width: 35px; height: 6px; border-radius: 10px; background: #eee; transition: 0.4s; }
-        .dot.active { background: var(--secondary); transform: scaleX(1.2); }
-        .dot.done { background: var(--accent-green); }
+        .content-scroll { flex-grow: 1; overflow-y: auto; padding: 10px 0; -webkit-overflow-scrolling: touch; }
 
-        /* Animationen */
-        .fade-in { animation: fadeIn 0.4s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Cards & Inputs */
-        .q-card { background: #fff; border-radius: 24px; padding: 5px; flex-grow: 1; display: flex; flex-direction: column; }
-        h2 { font-size: 1.3rem; text-align: center; margin-bottom: 20px; line-height: 1.3; }
-
-        .sortable-item { 
-            background: var(--light-bg); border: 2px solid #edf2f7; padding: 16px; 
-            margin-bottom: 10px; border-radius: 18px; display: flex; align-items: center; 
-            gap: 15px; cursor: grab; transition: transform 0.1s;
+        .footer-fixed { 
+            padding: 15px 0 calc(25px + env(safe-area-inset-bottom)) 0; 
+            flex-shrink: 0; background: var(--card); border-top: 1px solid #f1f2f6;
         }
-        .sortable-ghost { opacity: 0.3; background: var(--secondary); }
-        .rank-num { background: var(--secondary); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600; }
 
-        .tot-box { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .tot-card { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 20px; padding: 35px 10px; text-align: center; font-weight: 600; transition: 0.2s; }
-        .tot-card.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.03); }
-
-        textarea { width: 100%; height: 140px; border-radius: 20px; border: 2px solid #eee; padding: 15px; font-family: inherit; font-size: 1rem; outline: none; background: var(--light-bg); }
-
-        /* Footer */
-        .footer { padding: 20px 0 30px 0; }
         .btn-next { 
             background: linear-gradient(135deg, var(--primary), var(--secondary)); 
             color: white; border: none; padding: 20px; width: 100%; border-radius: 20px; 
-            font-weight: 600; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(255, 118, 117, 0.2);
+            font-weight: 600; font-size: 1.1rem; box-shadow: 0 8px 20px rgba(255, 118, 117, 0.25);
         }
-        .btn-next:disabled { opacity: 0.6; grayscale: 1; }
 
-        /* Lobby Status */
-        .status-box { background: var(--light-bg); border-radius: 20px; padding: 20px; margin: 20px 0; }
-        .status-line { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
-        .pill { padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-        .pill.ready { background: #e3faf3; color: var(--accent-green); }
-        .pill.wait { background: #fff1f1; color: var(--primary); animation: blink 1.5s infinite; }
-        @keyframes blink { 50% { opacity: 0.6; } }
+        /* Info-Box für Kategorien */
+        .category-info {
+            background: #f1f2ff; border-radius: 16px; padding: 12px 15px;
+            margin-bottom: 20px; border-left: 5px solid var(--secondary);
+            font-size: 0.85rem; color: #574b90; text-align: left;
+        }
+        .category-info b { display: block; text-transform: uppercase; font-size: 0.7rem; margin-bottom: 3px; letter-spacing: 0.5px; }
+
+        .prog-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .dot { width: 30px; height: 5px; border-radius: 10px; background: #eee; transition: 0.3s; }
+        .dot.active { background: var(--secondary); width: 50px; }
+        .dot.done { background: var(--accent-green); }
+
+        /* Ranking Styling */
+        .sort-item { 
+            background: var(--light-bg); border: 2px solid #edf2f7; padding: 16px; 
+            margin-bottom: 10px; border-radius: 18px; display: flex; align-items: center; gap: 15px;
+            cursor: grab; touch-action: none; user-select: none;
+        }
+        .rank-badge { 
+            background: var(--secondary); color: white; width: 24px; height: 24px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-size: 0.8rem; font-weight: 600; flex-shrink: 0;
+        }
+        .sortable-fallback { opacity: 0.9 !important; transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+
+        .tot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .tot-card { 
+            background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 20px; 
+            padding: 35px 10px; text-align: center; font-weight: 600; min-height: 110px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .tot-card.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.02); }
+
+        textarea { width: 100%; height: 140px; border-radius: 20px; border: 2px solid #eee; padding: 15px; font-family: inherit; font-size: 1.1rem; outline: none; background: var(--light-bg); }
+
+        .status-card { background: var(--light-bg); border-radius: 20px; padding: 20px; margin: 15px 0; border: 1px solid #eee; }
+        .status-row { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
+        .pill { padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; background: #fff1f1; color: var(--primary); }
+        .pill.done { background: #e3faf3; color: var(--accent-green); }
+
+        .result-box { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+        .res-item { padding: 12px; border-radius: 15px; font-size: 0.85rem; border: 1px solid #eee; display: flex; flex-direction: column; min-height: 70px; }
 
         .hidden { display: none !important; }
     </style>
@@ -89,11 +100,14 @@
 <div class="container">
     <div class="header">
         <h1 class="brand">CB-App</h1>
-        <button id="logout-btn" class="logout-btn hidden" onclick="app.logout()">Logout</button>
+        <button id="logout-btn" class="logout-btn hidden" onclick="app.logout()">Abmelden</button>
     </div>
 
-    <div id="main-view" class="fade-in" style="flex-grow: 1; display: flex; flex-direction: column;">
-        </div>
+    <div id="view-content" class="content-scroll"></div>
+
+    <div id="footer-area" class="footer-fixed hidden">
+        <button id="main-action-btn" class="btn-next">Weiter</button>
+    </div>
 </div>
 
 <script>
@@ -102,147 +116,168 @@
     const sb = supabase.createClient(SB_URL, SB_KEY);
 
     const pool = {
-        tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Vollgas 🏃"]}, {q: "Abend-Vibe?", o: ["Couch 🛋️", "Party 💃"]}],
-        ranking: [{q: "Priorität heute?", o: ["Zweisamkeit", "Freizeit", "Erfolg", "Ruhe"]}],
-        text: [{q: "Ein Wunsch für uns?", o: []}]
+        tot: [{q: "Morgenstund?", o: ["Lange schlummern 😴", "Direkt Vollgas 🏃"], i: "Wähle deinen Favoriten durch Antippen aus!"}, {q: "Abend-Vibe?", o: ["Couch & Serie 🍿", "Bar & Freunde 🍻"], i: "Was passt heute besser zu dir?"}],
+        ranking: [{q: "Was macht ein Zuhause gemütlich?", o: ["Gute Beleuchtung", "Pflanzen", "Sauberkeit", "Erinnerungsfotos"], i: "Halte die Karten gedrückt und schiebe sie auf deine Plätze 1 bis 4."}],
+        text: [{q: "Drei Worte für unseren Tag heute?", o: [], i: "Schreib eine kurze Nachricht für deinen Partner."}]
     };
 
     const app = {
-        user: null, myName: "", pName: "", dayKey: new Date().toISOString().split('T')[0],
+        myName: "", pName: "", dayKey: new Date().toISOString().split('T')[0],
         step: 0, answers: [], dailyQs: [],
 
         async init() {
+            window.onpopstate = (e) => { if(e.state) this.loadState(e.state); };
             const { data: { session } } = await sb.auth.getSession();
-            if (!session) return this.showLogin();
-            this.user = session.user;
-            this.myName = this.user.email.toLowerCase() === 'bisf@gmx.de' ? "Bene" : "Clara";
+            if (!session) return this.renderLogin();
+            this.myName = session.user.email.toLowerCase() === 'bisf@gmx.de' ? "Bene" : "Clara";
             this.pName = this.myName === "Bene" ? "Clara" : "Bene";
             document.getElementById('logout-btn').classList.remove('hidden');
             this.showLobby();
         },
 
-        async showLobby() {
+        pushState(view, step = 0) { history.pushState({view, step, answers: [...this.answers]}, ""); },
+
+        loadState(state) {
+            this.answers = state.answers; this.step = state.step;
+            if(state.view === "lobby") this.showLobby(false);
+            if(state.view === "quiz") this.renderStep(false);
+            if(state.view === "results") this.showResults(false);
+        },
+
+        async showLobby(push = true) {
+            if(push) this.pushState("lobby");
             const { data } = await sb.from('answers').select('*').eq('day_key', this.dayKey);
             const me = data?.find(a => a.user_name === this.myName.toLowerCase());
             const other = data?.find(a => a.user_name === this.pName.toLowerCase());
 
-            const view = document.getElementById('main-view');
+            const view = document.getElementById('view-content');
             view.innerHTML = `
-                <h2 style="text-align:left; margin-top:20px;">Hallo ${this.myName}! ❤️</h2>
-                <div class="status-box">
-                    <div class="status-line"><span>Ich:</span> <span class="pill ${me?'ready':'wait'}">${me?'Fertig ✅':'Offen'}</span></div>
-                    <div class="status-line"><span>${this.pName}:</span> <span class="pill ${other?'ready':'wait'}">${other?'Fertig ✅':'Überlegt...'}</span></div>
+                <h2 style="margin-top:10px; font-size: 1.8rem;">Hi ${this.myName}! ❤️</h2>
+                <div class="status-card">
+                    <div class="status-row"><span>Meine Antwort:</span> <span class="pill ${me?'done':''}">${me?'Fertig ✅':'Offen'}</span></div>
+                    <div class="status-row"><span>${this.pName}:</span> <span class="pill ${other?'done':''}">${other?'Fertig ✅':'Überlegt noch...'}</span></div>
                 </div>
-                <div class="footer"><button class="btn-next" onclick="app.startQuiz()">${me?'Vergleich ansehen ✨':'Loslegen 🚀'}</button></div>
             `;
+            const footer = document.getElementById('footer-area');
+            footer.classList.remove('hidden');
+            const btn = document.getElementById('main-action-btn');
+            btn.innerText = me ? "Vergleich ansehen ✨" : "Heute starten 🚀";
+            btn.onclick = () => me ? this.showResults() : this.startQuiz();
         },
 
         startQuiz() {
             const seed = parseInt(this.dayKey.replace(/-/g, ''));
             this.dailyQs = [pool.tot[seed % pool.tot.length], pool.ranking[seed % pool.ranking.length], pool.text[seed % pool.text.length]];
-            this.renderStep();
+            this.step = 0; this.answers = []; this.renderStep();
         },
 
-        renderStep() {
+        renderStep(push = true) {
+            if(push) this.pushState("quiz", this.step);
             const q = this.dailyQs[this.step];
-            const view = document.getElementById('main-view');
+            const type = q.o.length === 2 ? "This or That" : (q.o.length === 0 ? "Gedanken" : "Ranking");
+            const view = document.getElementById('view-content');
             view.innerHTML = `
-                <div class="prog-bar">${[0,1,2].map(i => `<div class="dot ${i===this.step?'active':(i<this.step?'done':'')}"></div>`).join('')}</div>
-                <div class="q-card">
-                    <h2>${q.q}</h2>
-                    <div id="input-container"></div>
-                </div>
-                <div class="footer"><button id="next-btn" class="btn-next" onclick="app.collect()">${this.step < 2 ? 'Weiter ✨' : 'Abschicken ✈️'}</button></div>
+                <div class="prog-dots">${[0,1,2].map(i => `<div class="dot ${i===this.step?'active':(i<this.step?'done':'')}"></div>`).join('')}</div>
+                <div class="category-info"><b>${type}</b>${q.i}</div>
+                <h2 style="text-align:center; margin-bottom: 25px;">${q.q}</h2>
+                <div id="input-wrap"></div>
             `;
 
-            const container = document.getElementById('input-container');
+            const wrap = document.getElementById('input-wrap');
             if (q.o.length === 2) {
-                container.className = "tot-box";
+                wrap.className = "tot-grid";
                 q.o.forEach(o => {
-                    const div = document.createElement('div'); div.className = "tot-card"; div.innerText = o;
-                    div.onclick = () => { document.querySelectorAll('.tot-card').forEach(c => c.classList.remove('selected')); div.classList.add('selected'); };
-                    container.appendChild(div);
+                    const d = document.createElement('div'); d.className = "tot-card"; d.innerText = o;
+                    d.onclick = () => { document.querySelectorAll('.tot-card').forEach(c => c.classList.remove('selected')); d.classList.add('selected'); };
+                    wrap.appendChild(d);
                 });
             } else if (q.o.length > 2) {
                 q.o.forEach((o, i) => {
-                    const div = document.createElement('div'); div.className = "sortable-item";
-                    div.innerHTML = `<span class="rank-num">${i+1}</span> <span>${o}</span>`;
-                    container.appendChild(div);
+                    const d = document.createElement('div'); d.className = "sort-item";
+                    d.innerHTML = `<span class="rank-badge">${i+1}</span><span>${o}</span>`;
+                    wrap.appendChild(d);
                 });
-                new Sortable(container, { animation: 150, ghostClass: 'sortable-ghost', onEnd: () => {
-                    document.querySelectorAll('.rank-num').forEach((n, idx) => n.innerText = idx + 1);
-                }});
+                new Sortable(wrap, { 
+                    animation: 200, 
+                    forceFallback: true, 
+                    fallbackClass: "sortable-fallback",
+                    onEnd: () => { document.querySelectorAll('.rank-badge').forEach((n, idx) => n.innerText = idx + 1); }
+                });
             } else {
-                container.innerHTML = `<textarea id="txt-input" placeholder="Deine Antwort..."></textarea>`;
+                wrap.innerHTML = `<textarea id="t-in" placeholder="Schreib hier etwas Schönes..."></textarea>`;
             }
+
+            const btn = document.getElementById('main-action-btn');
+            btn.innerText = this.step < 2 ? "Weiter ✨" : `An ${this.pName} senden ✈️`;
+            btn.onclick = () => this.collect();
         },
 
         collect() {
             const q = this.dailyQs[this.step];
             let val = "";
             if (q.o.length === 2) val = document.querySelector('.tot-card.selected')?.innerText;
-            else if (q.o.length > 2) val = Array.from(document.querySelectorAll('.sortable-item span:last-child')).map(s => s.innerText).join(" > ");
-            else val = document.getElementById('txt-input').value.trim();
+            else if (q.o.length > 2) val = Array.from(document.querySelectorAll('.sort-item span:last-child')).map(s => s.innerText).join(" > ");
+            else val = document.getElementById('t-in').value.trim();
 
-            if (!val) return alert("Bitte wähle etwas aus! ✨");
+            if (!val) return alert("Antwort fehlt noch! ✨");
             this.answers.push(val);
             if (this.step < 2) { this.step++; this.renderStep(); }
             else this.submit();
         },
 
         async submit() {
-            const btn = document.getElementById('next-btn');
-            btn.disabled = true; btn.innerText = "Wird gespeichert...";
-            
+            const btn = document.getElementById('main-action-btn');
+            btn.disabled = true; btn.innerText = "Wird gesendet...";
             const payload = { user_name: this.myName.toLowerCase(), choice: this.answers.join(" | "), day_key: this.dayKey };
             
-            // Retry-Logik (3 Versuche)
-            for(let i=0; i<3; i++) {
-                const { error } = await sb.from('answers').insert([payload]);
-                if (!error) { confetti(); return this.showResults(); }
-                console.log(`Versuch ${i+1} fehlgeschlagen...`);
-            }
-            alert("Fehler beim Senden. Bitte prüfe deine Internetverbindung.");
-            btn.disabled = false; btn.innerText = "Erneut versuchen";
+            const { error } = await sb.from('answers').insert([payload]);
+            if (!error) { confetti(); this.showResults(); }
+            else { alert("Fehler beim Absenden!"); btn.disabled = false; btn.innerText = "Nochmal versuchen"; }
         },
 
-        async showResults() {
+        async showResults(push = true) {
+            if(push) this.pushState("results");
             const { data } = await sb.from('answers').select('*').eq('day_key', this.dayKey);
             const me = data?.find(a => a.user_name === this.myName.toLowerCase());
             const other = data?.find(a => a.user_name === this.pName.toLowerCase());
             const myA = me.choice.split(" | "), otherA = other ? other.choice.split(" | ") : null;
 
-            const view = document.getElementById('main-view');
-            let h = `<h2>Euer Vergleich</h2><div style="overflow-y:auto; flex-grow:1;">`;
-            this.dailyQs.forEach((q, i) => {
-                h += `<div style="margin-bottom:20px; font-size:0.8rem;">
-                    <div style="font-weight:600; color:var(--muted); margin-bottom:8px;">${q.q}</div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                        <div style="background:#f1f0ff; padding:12px; border-radius:15px; border:1px solid var(--secondary);">${myA[i]}</div>
-                        <div style="background:${otherA?'#e3faf3':'#fff1f1'}; padding:12px; border-radius:15px; border:1px solid ${otherA? 'var(--accent-green)':'#fab1a0'};">${otherA?otherA[i]:'Wartet...'}</div>
-                    </div>
-                </div>`;
+            const view = document.getElementById('view-content');
+            let h = `<h2 style="font-size: 1.8rem; margin-bottom: 25px;">Euer Vergleich</h2>`;
+            const seed = parseInt(this.dayKey.replace(/-/g, ''));
+            const qs = [pool.tot[seed % pool.tot.length], pool.ranking[seed % pool.ranking.length], pool.text[seed % pool.text.length]];
+            
+            qs.forEach((q, i) => {
+                h += `<div style="margin-bottom:20px;"><div style="font-size:0.75rem; font-weight:600; color:var(--muted); margin-bottom:8px; text-transform: uppercase;">${q.q}</div>
+                    <div class="result-box">
+                        <div class="res-item" style="background:#f1f0ff; border: 1px solid var(--secondary);"><b>Ich:</b>${myA[i]}</div>
+                        <div class="res-item" style="background:${otherA?'#e3faf3':'#fff1f1'}; border: 1px solid ${otherA?'var(--accent-green)':'#fab1a0'};">
+                            <b>${this.pName}:</b>${otherA?otherA[i]:'⌛ Wartet...'}
+                        </div>
+                    </div></div>`;
             });
-            h += `</div><div class="footer"><button class="btn-next" onclick="location.reload()">Zurück</button></div>`;
             view.innerHTML = h;
+            const btn = document.getElementById('main-action-btn');
+            btn.innerText = "Zurück zum Dashboard";
+            btn.onclick = () => location.reload();
         },
 
-        showLogin() {
-            document.getElementById('main-view').innerHTML = `
-                <h2 style="margin-top:40px;">Anmelden</h2>
-                <input id="em" type="email" style="width:100%; padding:15px; margin-bottom:10px; border-radius:15px; border:1px solid #eee;" placeholder="E-Mail">
-                <input id="pw" type="password" style="width:100%; padding:15px; border-radius:15px; border:1px solid #eee;" placeholder="Passwort">
-                <div class="footer"><button class="btn-next" onclick="app.login()">Einloggen</button></div>
+        renderLogin() {
+            document.getElementById('view-content').innerHTML = `
+                <h2 style="margin-top:30px; font-size: 2rem;">Anmelden</h2>
+                <input id="em" type="email" style="width:100%; padding:18px; margin-bottom:12px; border-radius:18px; border:2px solid #eee; font-size: 1rem;" placeholder="E-Mail Adresse">
+                <input id="pw" type="password" style="width:100%; padding:18px; border-radius:18px; border:2px solid #eee; font-size: 1rem;" placeholder="Passwort">
             `;
-        },
-        async login() {
-            const e = document.getElementById('em').value, p = document.getElementById('pw').value;
-            const { error } = await sb.auth.signInWithPassword({ email: e, password: p });
-            if (error) alert("Fehler!"); else location.reload();
+            document.getElementById('footer-area').classList.remove('hidden');
+            const btn = document.getElementById('main-action-btn');
+            btn.innerText = "Einloggen";
+            btn.onclick = async () => {
+                const { error } = await sb.auth.signInWithPassword({ email: document.getElementById('em').value, password: document.getElementById('pw').value });
+                if (error) alert("Login fehlgeschlagen!"); else location.reload();
+            };
         },
         logout() { sb.auth.signOut().then(() => location.reload()); }
     };
-
     app.init();
 </script>
 </body>
