@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CB-App</title>
-    <!-- Bibliotheken -->
+    <!-- Externe Bibliotheken -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -105,7 +105,7 @@
             font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 20px;
             box-shadow: 0 12px 24px rgba(108, 92, 231, 0.3); transition: 0.3s;
         }
-        button:disabled { opacity: 0.7; cursor: not-allowed; transform: scale(1) !important; }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
         button:active { transform: scale(0.97); }
 
         .hidden { display: none; }
@@ -126,7 +126,7 @@
 <body>
 
     <div class="container">
-        <!-- LOGIN SCREEN -->
+        <!-- ANMELDUNG -->
         <div id="login-screen">
             <h1 class="brand-title">CB-App</h1>
             <p style="color: var(--muted); margin-bottom: 35px; font-size: 0.95rem;">Euer tägliches Verbindungs-Ritual.</p>
@@ -135,7 +135,7 @@
             <button onclick="app.login()" id="login-btn">Anmelden</button>
         </div>
 
-        <!-- MAIN APP SCREEN -->
+        <!-- HAUPTSEITE -->
         <div id="main-screen" class="hidden">
             <h1 class="brand-title" style="font-size: 2rem; margin-bottom: 20px;">CB-App</h1>
             <div class="status-badge">
@@ -160,74 +160,60 @@
     </div>
 
     <script>
+        // Supabase Verbindung
         const SB_URL = "https://eedbdbqvwpquoxzbunwo.supabase.co";
         const SB_KEY = "Sb_publishable_k7vTHNDeNYoBMlfxx9HISg_vFfdfzpm";
-        
-        // Supabase Client sicher initialisieren
-        let sbClient;
-        try {
-            sbClient = supabase.createClient(SB_URL, SB_KEY);
-        } catch (e) {
-            console.error("Supabase konnte nicht geladen werden", e);
-        }
+        const sbClient = supabase.createClient(SB_URL, SB_KEY);
 
         const app = {
             session: null,
             todayKey: new Date().toISOString().split('T')[0],
             currQ: null,
 
+            // Fragenkatalog
             questions: [
                 { type: "choice", q: "Was ist unsere größte Stärke als Team?", opts: ["Humor", "Ehrlichkeit", "Kommunikation", "Loyalität"] },
                 { type: "ranking", q: "Ranke diese Urlaubs-Arten:", opts: ["City Trip", "Strandurlaub", "Berge & Wandern", "Roadtrip"] },
                 { type: "text", q: "Was ist eine kleine Sache, die ich heute für dich tun könnte?", opts: [] },
                 { type: "choice", q: "Welches Tier wären wir als Team?", opts: ["Wölfe", "Otter", "Löwen", "Pinguine"] },
-                { type: "ranking", q: "Priorität im gemeinsamen Zuhause?", opts: ["Saubere Küche", "Gemütliches Wohnzimmer", "Viel Tageslicht", "Gute Musik"] },
-                { type: "text", q: "Was war dein schönster Moment mit mir diese Woche?", opts: [] },
-                { type: "choice", q: "Welches Element passt am besten zu uns?", opts: ["Feuer", "Wasser", "Erde", "Luft"] },
-                { type: "ranking", q: "Beste Date-Night Idee?", opts: ["Kochen", "Kino", "Spaziergang", "Spieleabend"] },
-                { type: "text", q: "Wenn wir morgen irgendwohin fliegen könnten, wohin ginge es?", opts: [] },
-                { type: "choice", q: "Wer von uns ist morgens schneller fit?", opts: ["Ich", "Du", "Keiner", "Beide"] }
+                { type: "ranking", q: "Wichtigste Sache im Haushalt?", opts: ["Saubere Küche", "Gemachtes Bett", "Viel Tageslicht", "Leerer Mülleimer"] },
+                { type: "text", q: "Beschreibe unseren heutigen Tag in 3 Worten.", opts: [] },
+                { type: "choice", q: "Wer von uns würde in einem Horrorfilm zuerst sterben?", opts: ["Ich", "Du", "Keiner", "Beide gleichzeitig"] },
+                { type: "ranking", q: "Bestes Date-Night Szenario?", opts: ["Kino & Popcorn", "Zusammen kochen", "Langer Spaziergang", "Spieleabend"] },
+                { type: "text", q: "Was war der schönste Moment, den wir diese Woche geteilt haben?", opts: [] },
+                { type: "choice", q: "Welches Genre beschreibt unsere Beziehung am besten?", opts: ["Romanze", "Abenteuer", "Komödie", "Action"] }
             ],
 
             async init() {
                 const { data } = await sbClient.auth.getSession();
                 if (data.session) {
                     this.session = data.session;
-                    this.open();
+                    this.showMain();
                 }
             },
 
             async login() {
-                const emailInput = document.getElementById('email');
-                const passInput = document.getElementById('password');
-                const loginBtn = document.getElementById('login-btn');
-                
-                const email = emailInput.value.trim();
-                const password = passInput.value;
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const btn = document.getElementById('login-btn');
 
                 if (!email || !password) {
-                    alert("Bitte E-Mail und Passwort eingeben!");
+                    alert("Bitte alles ausfüllen!");
                     return;
                 }
 
-                loginBtn.disabled = true;
-                loginBtn.innerText = "Prüfe...";
+                btn.disabled = true;
+                btn.innerText = "Prüfe...";
 
-                try {
-                    const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
-                    
-                    if (error) {
-                        alert("Login fehlgeschlagen: " + error.message);
-                        loginBtn.disabled = false;
-                        loginBtn.innerText = "Anmelden";
-                    } else {
-                        this.session = data.session;
-                        this.open();
-                    }
-                } catch (err) {
-                    alert("Ein unerwarteter Fehler ist aufgetreten.");
-                    loginBtn.disabled = false;
-                    loginBtn.innerText = "Anmelden";
+                const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
+                
+                if (error) {
+                    alert("Fehler: " + error.message);
+                    btn.disabled = false;
+                    btn.innerText = "Anmelden";
+                } else {
+                    this.session = data.session;
+                    this.showMain();
                 }
             },
 
@@ -236,15 +222,15 @@
                 location.reload();
             },
 
-            open() {
+            showMain() {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('main-screen').classList.remove('hidden');
-                this.load();
+                this.setupContent();
             },
 
-            load() {
-                const day = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-                this.currQ = this.questions[day % this.questions.length];
+            setupContent() {
+                const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+                this.currQ = this.questions[dayOfYear % this.questions.length];
                 document.getElementById('question-text').innerText = this.currQ.q;
                 
                 const list = document.getElementById('options-list');
@@ -269,7 +255,7 @@
                     });
                     Sortable.create(list, { animation: 180 });
                 }
-                this.sync();
+                this.syncResults();
             },
 
             async submit() {
@@ -278,7 +264,7 @@
                 else if (this.currQ.type === 'choice') val = document.querySelector('.option-item.selected')?.innerText;
                 else if (this.currQ.type === 'ranking') val = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" → ");
 
-                if (!val) return alert("Antwort fehlt!");
+                if (!val) return alert("Antwort fehlt noch!");
 
                 const { error } = await sbClient.from('answers').insert([
                     { user_name: this.session.user.email, question_id: 0, choice: val, day_key: this.todayKey }
@@ -287,11 +273,11 @@
                 if (error) alert("Du hast heute schon geantwortet!");
                 else {
                     confetti({ particleCount: 70, spread: 90, origin: { y: 0.6 }, colors: ['#d63031', '#6c5ce7'] });
-                    this.sync();
+                    this.syncResults();
                 }
             },
 
-            async sync() {
+            async syncResults() {
                 const { data } = await sbClient.from('answers').select('*').eq('day_key', this.todayKey);
                 if (data) {
                     const me = data.find(a => a.user_name === this.session.user.email);
@@ -304,95 +290,18 @@
                         document.getElementById('complete-view').classList.remove('hidden');
                         document.getElementById('results-box').innerHTML = 
                             `<b>Deine Antwort:</b> ${me.choice.replace(/\n/g, '<br>')}<br><br>` + 
-                            (other ? `<b>Vom Partner:</b> ${other.choice.replace(/\n/g, '<br>')}` : "<i>Warte auf den Partner...</i>");
+                            (other ? `<b>Vom Partner:</b> ${other.choice.replace(/\n/g, '<br>')}` : "<i>Der Partner hat noch nicht geantwortet...</i>");
                     }
                 }
             }
         };
 
-        // Automatisches Auffüllen
+        // Fülle bis 100 Fragen auf
         for(let i=11; i<=100; i++) {
             app.questions.push({
                 type: ["choice", "ranking", "text"][i % 3],
-                q: `Tag ${i}: Was schätzt du am meisten an unserem gemeinsamen Leben?`,
-                opts: ["Das Lachen", "Die Ruhe", "Die Pläne", "Der Alltag"]
-            });
-        }
-
-        app.init();
-    </script>
-</body>
-</html>
-
-```
-const txt = document.getElementById('text-input');
-                list.innerHTML = ""; txt.classList.add('hidden');
-
-                if (this.currQ.type === 'text') {
-                    txt.classList.remove('hidden');
-                } else if (this.currQ.type === 'choice') {
-                    this.currQ.opts.forEach(o => {
-                        const d = document.createElement('div');
-                        d.className = "option-item"; d.innerText = o;
-                        d.onclick = () => { 
-                            document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected')); 
-                            d.classList.add('selected'); 
-                        };
-                        list.appendChild(d);
-                    });
-                } else if (this.currQ.type === 'ranking') {
-                    this.currQ.opts.forEach(o => {
-                        const d = document.createElement('div'); d.className = "option-item"; d.innerText = o; list.appendChild(d);
-                    });
-                    Sortable.create(list, { animation: 180 });
-                }
-                this.sync();
-            },
-
-            async submit() {
-                let val = "";
-                if (this.currQ.type === 'text') val = document.getElementById('text-input').value.trim();
-                else if (this.currQ.type === 'choice') val = document.querySelector('.option-item.selected')?.innerText;
-                else if (this.currQ.type === 'ranking') val = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" → ");
-
-                if (!val) return alert("Antwort eingeben!");
-
-                const { error } = await supabase.from('answers').insert([
-                    { user_name: this.session.user.email, question_id: 0, choice: val, day_key: this.todayKey }
-                ]);
-
-                if (error) alert("Du hast heute schon geantwortet!");
-                else {
-                    confetti({ particleCount: 70, spread: 90, origin: { y: 0.6 }, colors: ['#d63031', '#6c5ce7'] });
-                    this.sync();
-                }
-            },
-
-            async sync() {
-                const { data } = await supabase.from('answers').select('*').eq('day_key', this.todayKey);
-                if (data) {
-                    const me = data.find(a => a.user_name === this.session.user.email);
-                    const other = data.find(a => a.user_name !== this.session.user.email);
-                    if (other) document.getElementById('partner-dot').classList.add('dot-active');
-                    
-                    if (me) {
-                        document.getElementById('save-btn').classList.add('hidden');
-                        document.getElementById('input-zone').classList.add('hidden');
-                        document.getElementById('complete-view').classList.remove('hidden');
-                        document.getElementById('results-box').innerHTML = 
-                            `<b>Deine Antwort:</b> ${me.choice.replace(/\n/g, '<br>')}<br><br>` + 
-                            (other ? `<b>Vom Partner:</b> ${other.choice.replace(/\n/g, '<br>')}` : "<i>Warte auf den Partner...</i>");
-                    }
-                }
-            }
-        };
-
-        // Fill up to 100 questions
-        for(let i=11; i<=100; i++) {
-            app.questions.push({
-                type: ["choice", "ranking", "text"][i % 3],
-                q: `Tag ${i}: Was schätzt du am meisten an unserem gemeinsamen Leben?`,
-                opts: ["Das Lachen", "Die Ruhe", "Die Pläne", "Der Alltag"]
+                q: `Tag ${i}: Was schätzt du am meisten an unserer gemeinsamen Zeit?`,
+                opts: ["Das Lachen", "Die Ruhe", "Die Gespräche", "Die Abenteuer"]
             });
         }
 
