@@ -89,20 +89,32 @@
         .dot.active { background: var(--secondary); width: 70px; }
         .dot.done { background: var(--accent-green); }
 
-        /* RANKING CARDS IMPROVED */
+        /* RANKING CARDS - OPTIMIERT */
         .rank-card { 
             background: #fff; border: 2px solid #edf2f7; padding: 18px; margin-bottom: 12px; 
             border-radius: 22px; display: flex; align-items: center; gap: 15px; 
             cursor: grab; touch-action: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-            user-select: none;
+            user-select: none; -webkit-user-select: none;
         }
         .rank-tag { background: var(--secondary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; flex-shrink: 0; }
         
-        /* SortableJS Classes */
-        .sortable-chosen { background: #fdfdfd; transform: scale(1.02); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: var(--secondary); z-index: 100; }
-        .sortable-ghost { opacity: 0.2; background: var(--secondary); }
-        .sortable-drag { opacity: 0.9; }
+        /* SortableJS Feedback Klassen */
+        .sortable-chosen { 
+            border-color: var(--secondary) !important;
+            background: #fdfdfd;
+        }
+        .sortable-drag { 
+            opacity: 1 !important;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+            transform: scale(1.04);
+            cursor: grabbing;
+            background: white !important;
+        }
+        .sortable-ghost { 
+            opacity: 0.2; 
+            background: var(--secondary) !important;
+            border: 2px dashed var(--secondary);
+        }
 
         .tot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .tot-box { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 28px; padding: 35px 10px; text-align: center; font-weight: 600; min-height: 110px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
@@ -217,15 +229,19 @@
                     const d = document.createElement('div'); d.className = "rank-card";
                     d.innerHTML = `<span class="rank-tag">${i+1}</span><span>${o}</span>`; wrap.appendChild(d);
                 });
-                // SortableJS Konfiguration für besseres Mobile-Handling
+                
+                // Optimierte SortableJS Konfiguration
                 setTimeout(() => { 
                     new Sortable(wrap, { 
-                        animation: 300, 
+                        animation: 250, 
                         ghostClass: 'sortable-ghost',
                         chosenClass: 'sortable-chosen',
                         dragClass: 'sortable-drag',
-                        forceFallback: true, // Wichtig für iOS/Android Snapping
-                        fallbackTolerance: 3, // Verhindert versehentliches Verschieben beim Scrollen
+                        forceFallback: true,      // Erzwingt Plugin-basiertes Drag & Drop für bessere Touch-Kontrolle
+                        fallbackOnBody: true,     // Heftet das gezogene Element an den Body (verhindert Versatz)
+                        swapThreshold: 0.65,      // Tauscht Plätze früher für flüssigeres Gefühl
+                        fallbackTolerance: 3,     // Verhindert Scroll-Konflikte
+                        onStart: () => { if(window.navigator.vibrate) window.navigator.vibrate(5); },
                         onEnd: () => { 
                             document.querySelectorAll('.rank-tag').forEach((tag, idx) => tag.innerText = idx + 1); 
                         } 
