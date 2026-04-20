@@ -137,17 +137,70 @@
 
     const pool = {
         tot: [
-            {q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], h: "Entscheide dich für eins!"},
-            {q: "Netflix-Abend oder Feiern?", o: ["Couch-Potato 🍿", "Tanzen gehen 💃"], h: "Was passt heute besser?"},
-            {q: "Pizza oder Pasta?", o: ["Pizza 🍕", "Pasta 🍝"], h: "Der Klassiker!"}
+            {q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], h: "Was ist dein Rhythmus?"},
+            {q: "Netflix oder Club?", o: ["Couch 🍿", "Tanzen 🕺"], h: "Wie sieht die Nacht aus?"},
+            {q: "Pizza oder Pasta?", o: ["Pizza 🍕", "Pasta 🍝"], h: "Der Klassiker-Check."},
+            {q: "Berge oder Meer?", o: ["Gipfel 🏔️", "Strand 🌊"], h: "Wohin geht die Reise?"},
+            {q: "Kaffee oder Tee?", o: ["Kaffee ☕", "Tee 🍵"], h: "Dein Muntermacher?"},
+            {q: "Stadt oder Land?", o: ["City-Vibe 🏙️", "Natur pur 🌳"], h: "Wo fühlst du dich wohl?"},
+            {q: "Hund oder Katze?", o: ["Wuff 🐶", "Miau 🐱"], h: "Dein Spirit-Animal?"},
+            {q: "Sommer oder Winter?", o: ["Hitze ☀️", "Schnee ❄️"], h: "Lieblingsjahreszeit?"},
+            {q: "Frühstück oder Abendessen?", o: ["Morgen-Fan 🍳", "Dinner-Date 🍷"], h: "Beste Mahlzeit?"},
+            {q: "Kino oder Heimkino?", o: ["Große Leinwand 📽️", "Zuhause 📺"], h: "Film ab!"},
+            {q: "Action oder Entspannung?", o: ["Adrenalin ⚡", "Wellness 🧘"], h: "Dein Modus?"},
+            {q: "Süß oder Salzig?", o: ["Schokolade 🍫", "Chips 🥨"], h: "Snack-Time!"},
+            {q: "Bücher oder Podcasts?", o: ["Lesen 📖", "Hören 🎧"], h: "Wie konsumierst du?"},
+            {q: "Auto oder Bahn?", o: ["Roadtrip 🚗", "Zugfahren 🚆"], h: "Unterwegs sein."},
+            {q: "Planen oder Spontan?", o: ["Struktur 📅", "Abenteuer 🎲"], h: "Dein Lebensstil?"},
+            {q: "Eis oder Kuchen?", o: ["Eiskugel 🍦", "Tortenstück 🍰"], h: "Dessert-Wahl."},
+            {q: "Podcast oder Musik?", o: ["Wissen 🎙️", "Melodie 🎶"], h: "Was läuft im Ohr?"},
+            {q: "Frühaufsteher oder Nachteule?", o: ["Lerchen 🌅", "Eulen 🌙"], h: "Wann bist du wach?"},
+            {q: "Badewanne oder Dusche?", o: ["Entspannen 🛁", "Erfrischen 🚿"], h: "Self-Care."},
+            {q: "Waldspaziergang oder See-Tag?", o: ["Moos & Bäume 🌲", "Wasser-Vibe 💧"], h: "Natur-Check."}
         ],
         ranking: [
-            {q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], h: "Ranking: Schiebe Platz 1 nach oben!"},
-            {q: "Euer Traum-Urlaub?", o: ["Strand 🏖️", "Städtetrip 🏙️", "Berge 🏔️", "Roadtrip 🚗"], h: "Was wollt ihr zuerst machen?"}
+            {q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], h: "Priorisiere eure Zeit!"},
+            {q: "Wichtigste Urlaubsart?", o: ["Wellness 🧖", "Kultur 🏛️", "Sport ⛷️", "Party 🍹"], h: "Was muss im Urlaub sein?"},
+            {q: "Bester Pizza-Belag?", o: ["Margherita 🧀", "Salami 🍕", "Gemüse 🥦", "Scharf 🌶️"], h: "Ranking der Beläge!"},
+            {q: "Lieblings-Genre?", o: ["Comedy 😂", "Thriller 😱", "Romanze ❤️", "Sci-Fi 👽"], h: "Was schauen wir heute?"},
+            {q: "Bester Wochentag?", o: ["Freitag 🥳", "Samstag 🕺", "Sonntag ☕", "Mittwoch 🐫"], h: "Die Favoriten-Woche."},
+            {q: "Hausarbeit-Hass?", o: ["Bügeln 👔", "Saugen 🧹", "Abwaschen 🧼", "Müll 🗑️"], h: "Was ist am schlimmsten?"},
+            {q: "Beste Eissorte?", o: ["Vanille 🍦", "Schoko 🍫", "Fruchtig 🍓", "Nussig 🥜"], h: "Klassiker im Ranking."},
+            {q: "Wichtige Charaktereigenschaft?", o: ["Humor 😂", "Treue 🤝", "Abenteuerlust 🧗", "Empathie ✨"], h: "Was schätzt du am meisten?"},
+            {q: "Traum-Wohnort?", o: ["Großstadt 🏢", "Vorort 🏡", "Bauernhof 🐄", "Insel 🏝️"], h: "Wo landen wir mal?"},
+            {q: "Lieblings-Frühstück?", o: ["Pancakes 🥞", "Rührei 🥚", "Müsli 🥣", "Brötchen 🥨"], h: "Bester Start?"},
+            {q: "Sport-Favorit?", o: ["Laufen 🏃", "Yoga 🧘", "Kraftsport 💪", "Schwimmen 🏊"], h: "Bewegung!"},
+            {q: "Konzert-Vibe?", o: ["Open Air 🎤", "Club-Gig 🎸", "Festival 🏕️", "Klassik 🎻"], h: "Live-Erlebnis."},
+            {q: "Jahreszeiten-Ranking?", o: ["Frühling 🌸", "Sommer ☀️", "Herbst 🍂", "Winter ❄️"], h: "Deine Reihenfolge."},
+            {q: "Beste Superkraft?", o: ["Fliegen 🦅", "Unsichtbar 👻", "Zeitreisen ⏳", "Gedankenlesen 🧠"], h: "Wähle weise."},
+            {q: "Küchen-Dienst?", o: ["Einkaufen 🛒", "Schnippeln 🔪", "Kochen 🍳", "Aufräumen ✨"], h: "Deine Rollen."},
+            {q: "Serien-Marathon?", o: ["Sitcoms 📺", "Krimi 🕵️", "Doku 🌍", "Fantasy 🐉"], h: "Binge-Watch!"},
+            {q: "Geschenk-Typ?", o: ["Erlebnis 🎫", "Selbstgemacht 🎨", "Nützlich 🛠️", "Luxus ✨"], h: "Was freut dich mehr?"},
+            {q: "Wochenend-Aktivität?", o: ["Ausschlafen 😴", "Freunde treffen 👥", "Ausflug 🚗", "Hobby 🎨"], h: "Dein Plan."},
+            {q: "Getränke-Ranking?", o: ["Limo 🥤", "Saft 🍎", "Wasser 💧", "Wein/Bier 🍷"], h: "Durstlöscher."},
+            {q: "Lieblings-Obst?", o: ["Erdbeere 🍓", "Mango 🥭", "Apfel 🍎", "Banane 🍌"], h: "Süße Früchte."}
         ],
         text: [
-            {q: "Drei Worte für unseren Tag?", o: [], h: "Schreib eine Nachricht für deinen Schatz! ✍️"},
-            {q: "Was war heute dein Highlight?", o: [], h: "Erzähl es kurz und knackig!"}
+            {q: "Drei Worte für unseren Tag?", o: [], h: "Beschreibe euren Moment."},
+            {q: "Was war heute dein Highlight?", o: [], h: "Erzähl es deinem Schatz!"},
+            {q: "Was schätzt du heute an mir?", o: [], h: "Ein kleines Kompliment..."},
+            {q: "Was wollen wir bald erleben?", o: [], h: "Ein gemeinsames Ziel?"},
+            {q: "Ein Song, der mich an dich erinnert?", o: [], h: "Teile deine Melodie."},
+            {q: "Worauf freust du dich morgen?", o: [], h: "Dein Vorfreude-Moment."},
+            {q: "Was war dein lustigster Moment heute?", o: [], h: "Bring mich zum Lachen!"},
+            {q: "Wenn wir jetzt wegfliegen könnten - wohin?", o: [], h: "Träumt euch weg."},
+            {q: "Was koche ich dir mal Besonderes?", o: [], h: "Dein Wunschmenü."},
+            {q: "Welche Eigenschaft liebst du an uns?", o: [], h: "Wir als Team."},
+            {q: "Ein Insider, den nur wir verstehen?", o: [], h: "Nur wir zwei..."},
+            {q: "Wofür bist du heute dankbar?", o: [], h: "Dankbarkeits-Check."},
+            {q: "Was ist dein größter Traum gerade?", o: [], h: "Teile deine Vision."},
+            {q: "Wie würde unser perfektes Haus aussehen?", o: [], h: "Architektur-Träume."},
+            {q: "Was ist dein Lieblingsfoto von uns?", o: [], h: "Erinnerungs-Check."},
+            {q: "Was war dein erster Gedanke heute Früh?", o: [], h: "Guten Morgen!"},
+            {q: "Was ist das mutigste, das wir je taten?", o: [], h: "Abenteuer-Rückblick."},
+            {q: "Welches Tier wären wir als Paar?", o: [], h: "Fantasie-Check."},
+            {q: "Womit kann ich dich immer aufheitern?", o: [], h: "Dein SOS-Plan."},
+            {q: "Eine Sache, die du an mir bewunderst?", o: [], h: "Ehrliche Worte."}
         ]
     };
 
@@ -157,7 +210,6 @@
         user: "", partner: "", day: new Date().toISOString().split('T')[0],
         step: 0, results: [], dailyQs: [],
 
-        // Hilfsfunktion für deterministischen Zufall (immer gleicher Shuffle pro Tag)
         seededShuffle(array, seed) {
             let currentIndex = array.length, randomIndex;
             let seedValue = seed;
@@ -175,13 +227,10 @@
 
         async init() {
             const seed = parseInt(this.day.replace(/-/g, ''));
-            
-            // Logik: Mische die Pools basierend auf dem Tages-Seed
             const shuffledTot = this.seededShuffle([...pool.tot], seed);
             const shuffledRanking = this.seededShuffle([...pool.ranking], seed);
             const shuffledText = this.seededShuffle([...pool.text], seed);
 
-            // Nimm jeweils die "erste" Frage der gemischten Liste (rotierend)
             this.dailyQs = [
                 shuffledTot[seed % pool.tot.length],
                 shuffledRanking[seed % pool.ranking.length],
