@@ -103,7 +103,7 @@
 
 <div class="container">
     <div class="header">
-        <div class="brand" id="nav-label">Euer Moment</div>
+        <div class="brand">CB-App</div>
         <button id="logout-btn" class="logout-btn hidden" onclick="app.logout()">Abmelden</button>
     </div>
 
@@ -121,7 +121,7 @@
 
     const pool = {
         tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], i: "Was passt heute zu dir?"}],
-        ranking: [{q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], i: "Was würdest du heute am liebsten machen?"}],
+        ranking: [{q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], i: "Schiebe deine Favoriten nach oben."}],
         text: [{q: "Drei Worte für unseren Tag?", o: [], i: "Schreib eine kleine Nachricht für deinen Schatz."}]
     };
 
@@ -129,20 +129,22 @@
 
     const app = {
         user: "", partner: "", day: new Date().toISOString().split('T')[0],
-        step: 0, results: [], dailyQs: [], isSubmitting: false,
+        step: 0, results: [], dailyQs: [],
 
         async init() {
             const { data: { session } } = await sb.auth.getSession();
-            if (!session) return this.renderLogin();
-            
-            // --- AUTOMATISCHES AUFRÄUMEN NACH MITTERNACHT ---
-            await sb.from('answers').delete().lt('day_key', this.day);
-
-            const email = session.user.email.toLowerCase();
-            this.user = email === 'bisf@gmx.de' ? "Bene" : "Clara";
-            this.partner = this.user === "Bene" ? "Clara" : "Bene";
-            document.getElementById('logout-btn').classList.remove('hidden');
-            this.showLobby();
+            if (!session) {
+                this.renderLogin();
+            } else {
+                // Automatisches Aufräumen nachts
+                await sb.from('answers').delete().lt('day_key', this.day);
+                const email = session.user.email.toLowerCase();
+                this.user = email === 'bisf@gmx.de' ? "Bene" : "Clara";
+                this.partner = this.user === "Bene" ? "Clara" : "Bene";
+                document.getElementById('logout-btn').classList.remove('hidden');
+                this.showLobby();
+            }
+            window.onpopstate = () => location.reload();
         },
 
         async showLobby() {
@@ -151,7 +153,6 @@
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
 
             const greet = greetings[Math.floor(Math.random() * greetings.length)];
-            document.getElementById('nav-label').innerText = "Euer Moment";
             
             document.getElementById('main-content').innerHTML = `
                 <h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 8px;">${greet}${this.user}! ❤️</h2>
@@ -182,11 +183,9 @@
 
         renderQuiz() {
             const q = this.dailyQs[this.step];
-            document.getElementById('nav-label').innerText = "Unsere Gedanken";
-            
             document.getElementById('main-content').innerHTML = `
                 <div class="prog-dots">${[0,1,2].map(i => `<div class="dot ${i===this.step?'active':(i<this.step?'done':'')}"></div>`).join('')}</div>
-                <div class="info-tab"><b>Kleine Hilfe:</b> ${q.i}</div>
+                <div class="info-tab"><b>Vorschlag:</b> ${q.i}</div>
                 <h2 style="font-size: 1.4rem;">${q.q}</h2>
                 <div id="quiz-input"></div>
             `;
@@ -210,7 +209,7 @@
             }
 
             const btn = document.getElementById('action-btn');
-            btn.innerText = this.step < 2 ? "Weiter ✨" : `An ${this.partner} senden ✈️`;
+            btn.innerText = this.step < 2 ? "Weiter ✨" : "Gedanken teilen ❤️";
             btn.onclick = () => this.handleNext();
         },
 
@@ -221,22 +220,17 @@
             else if (q.o.length > 2) val = Array.from(document.querySelectorAll('.rank-card span:last-child')).map(s => s.innerText).join(" > ");
             else val = document.getElementById('txt-val').value.trim();
 
-            if (!val) return alert("Halt! Deine Antwort fehlt noch. ❤️");
+            if (!val) return alert("Deine Antwort fehlt noch! ❤️");
             this.results.push(val);
             if (this.step < 2) { this.step++; this.renderQuiz(); }
             else this.submit();
         },
 
         async submit() {
-            if (this.isSubmitting) return;
-            this.isSubmitting = true;
             const btn = document.getElementById('action-btn');
-            btn.disabled = true; btn.innerText = "Einen Moment...";
-            
-            const { error } = await sb.from('answers').upsert({ user_name: this.user.toLowerCase(), choice: this.results.join(" | "), day_key: this.day }, { onConflict: 'user_name,day_key' });
-            
-            this.isSubmitting = false;
-            if (error) { alert("Fehler beim Speichern."); btn.disabled = false; btn.innerText = "Nochmal versuchen"; }
+            btn.disabled = true; btn.innerText = "Moment...";
+            const { error } = await sb.from('answers').insert([{ user_name: this.user.toLowerCase(), choice: this.results.join(" | "), day_key: this.day }]);
+            if (error) { alert("Fehler beim Senden."); btn.disabled = false; }
             else { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); this.showComparison(); }
         },
 
@@ -244,39 +238,37 @@
             const { data } = await sb.from('answers').select('*').eq('day_key', this.day);
             const me = data?.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
-            const myA = me ? me.choice.split(" | ") : ["-", "-", "-"], otherA = other ? other.choice.split(" | ") : null;
+            const myA = me.choice.split(" | "), otherA = other ? other.choice.split(" | ") : null;
 
-            document.getElementById('nav-label').innerText = "Was wir denken";
-            let html = `<h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 25px;">Unsere Antworten</h2>`;
+            let html = `<h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 25px;">Unsere Gedanken</h2>`;
             this.dailyQs.forEach((q, i) => {
                 html += `
                     <div style="margin-bottom:20px;">
                         <div style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; margin-bottom:10px;">${q.q}</div>
                         <div class="tot-grid">
                             <div class="res-bubble" style="background:#f1f0ff; border-color:var(--secondary);"><b>ICH</b>${myA[i]}</div>
-                            <div class="res-bubble" style="background:${otherA?'#e3faf3':'#fff1f1'};"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : '⌛ Wartet noch...'}</div>
+                            <div class="res-bubble" style="background:${otherA?'#e3faf3':'#fff1f1'};"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : '⌛ Überlegt noch...'}</div>
                         </div>
                     </div>`;
             });
-            html += `<button class="btn-action" style="background:#f1f2f6; color:var(--muted); box-shadow:none; margin-top:10px; animation:none;" id="del-btn">Meine Antwort korrigieren 📝</button>`;
             
             document.getElementById('main-content').innerHTML = html;
             const btn = document.getElementById('action-btn');
-            btn.innerText = "Zurück zur Übersicht 🏠";
-            btn.onclick = () => location.reload();
+            btn.innerText = "Gedanken korrigieren 📝";
+            btn.onclick = () => this.deleteMyOwn();
+        },
 
-            document.getElementById('del-btn').onclick = async () => {
-                if (confirm("Möchtest du deine heutige Antwort korrigieren?")) {
-                    await sb.from('answers').delete().eq('day_key', this.day).eq('user_name', this.user.toLowerCase());
-                    location.reload();
-                }
-            };
+        async deleteMyOwn() {
+            if (confirm("Möchtest du deine heutigen Gedanken wirklich löschen?")) {
+                await sb.from('answers').delete().eq('day_key', this.day).eq('user_name', this.user.toLowerCase());
+                location.reload();
+            }
         },
 
         renderLogin() {
-            document.getElementById('nav-label').innerText = "Anmelden";
             document.getElementById('main-content').innerHTML = `
-                <h2 style="margin-top:30px; text-align:left; font-size: 2rem;">Unsere App</h2>
+                <h2 style="margin-top:30px; text-align:left; font-size: 2rem;">CB-App</h2>
+                <p style="color:var(--muted); margin-bottom:35px;">Anmelden für euren Moment.</p>
                 <input id="em" type="email" class="login-field" placeholder="E-Mail Adresse">
                 <input id="pw" type="password" class="login-field" placeholder="Passwort">
             `;
@@ -286,11 +278,14 @@
             btn.innerText = "Einloggen ✨";
             btn.onclick = async () => {
                 const { error } = await sb.auth.signInWithPassword({ email: document.getElementById('em').value, password: document.getElementById('pw').value });
-                if (error) alert("Ups, Fehler!"); else location.reload();
+                if (error) alert("Passwort oder E-Mail falsch!"); else location.reload();
             };
         },
 
-        async logout() { await sb.auth.signOut(); location.reload(); }
+        async logout() {
+            await sb.auth.signOut();
+            location.reload();
+        }
     };
     app.init();
 </script>
