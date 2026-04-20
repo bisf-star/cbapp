@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CB-App</title>
-    <!-- Scripts -->
+    <!-- Bibliotheken -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -58,7 +59,6 @@
             line-height: 1;
         }
 
-        /* Status & Layout */
         .status-badge { 
             display: inline-flex; 
             align-items: center;
@@ -105,6 +105,7 @@
             font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-top: 20px;
             box-shadow: 0 12px 24px rgba(108, 92, 231, 0.3); transition: 0.3s;
         }
+        button:disabled { opacity: 0.7; cursor: not-allowed; transform: scale(1) !important; }
         button:active { transform: scale(0.97); }
 
         .hidden { display: none; }
@@ -125,22 +126,22 @@
 <body>
 
     <div class="container">
-        <!-- LOGIN -->
+        <!-- LOGIN SCREEN -->
         <div id="login-screen">
             <h1 class="brand-title">CB-App</h1>
             <p style="color: var(--muted); margin-bottom: 35px; font-size: 0.95rem;">Euer tägliches Verbindungs-Ritual.</p>
-            <input type="text" id="email" placeholder="E-Mail Adresse">
-            <input type="password" id="password" placeholder="Passwort">
-            <button onclick="app.login()">Anmelden</button>
+            <input type="email" id="email" placeholder="E-Mail Adresse" autocomplete="email">
+            <input type="password" id="password" placeholder="Passwort" autocomplete="current-password">
+            <button onclick="app.login()" id="login-btn">Anmelden</button>
         </div>
 
-        <!-- MAIN -->
+        <!-- MAIN APP SCREEN -->
         <div id="main-screen" class="hidden">
             <h1 class="brand-title" style="font-size: 2rem; margin-bottom: 20px;">CB-App</h1>
             <div class="status-badge">
                 Partner Status: <span id="partner-dot" class="dot"></span>
             </div>
-            <h2 id="question-text">Lädt...</h2>
+            <h2 id="question-text">Frage lädt...</h2>
             <div id="input-zone">
                 <div id="options-list" class="ranking-list"></div>
                 <textarea id="text-input" class="hidden" placeholder="Was denkst du dazu?"></textarea>
@@ -161,7 +162,14 @@
     <script>
         const SB_URL = "https://eedbdbqvwpquoxzbunwo.supabase.co";
         const SB_KEY = "Sb_publishable_k7vTHNDeNYoBMlfxx9HISg_vFfdfzpm";
-        const supabase = libsupabase.createClient(SB_URL, SB_KEY);
+        
+        // Supabase Client sicher initialisieren
+        let sbClient;
+        try {
+            sbClient = supabase.createClient(SB_URL, SB_KEY);
+        } catch (e) {
+            console.error("Supabase konnte nicht geladen werden", e);
+        }
 
         const app = {
             session: null,
@@ -182,7 +190,7 @@
             ],
 
             async init() {
-                const { data } = await supabase.auth.getSession();
+                const { data } = await sbClient.auth.getSession();
                 if (data.session) {
                     this.session = data.session;
                     this.open();
@@ -190,15 +198,41 @@
             },
 
             async login() {
-                const email = document.getElementById('email').value.trim();
-                const password = document.getElementById('password').value;
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) alert("Fehler beim Anmelden: " + error.message);
-                else { this.session = data.session; this.open(); }
+                const emailInput = document.getElementById('email');
+                const passInput = document.getElementById('password');
+                const loginBtn = document.getElementById('login-btn');
+                
+                const email = emailInput.value.trim();
+                const password = passInput.value;
+
+                if (!email || !password) {
+                    alert("Bitte E-Mail und Passwort eingeben!");
+                    return;
+                }
+
+                loginBtn.disabled = true;
+                loginBtn.innerText = "Prüfe...";
+
+                try {
+                    const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
+                    
+                    if (error) {
+                        alert("Login fehlgeschlagen: " + error.message);
+                        loginBtn.disabled = false;
+                        loginBtn.innerText = "Anmelden";
+                    } else {
+                        this.session = data.session;
+                        this.open();
+                    }
+                } catch (err) {
+                    alert("Ein unerwarteter Fehler ist aufgetreten.");
+                    loginBtn.disabled = false;
+                    loginBtn.innerText = "Anmelden";
+                }
             },
 
             async logout() {
-                await supabase.auth.signOut();
+                await sbClient.auth.signOut();
                 location.reload();
             },
 
@@ -215,6 +249,83 @@
                 
                 const list = document.getElementById('options-list');
                 const txt = document.getElementById('text-input');
+                list.innerHTML = ""; txt.classList.add('hidden');
+
+                if (this.currQ.type === 'text') {
+                    txt.classList.remove('hidden');
+                } else if (this.currQ.type === 'choice') {
+                    this.currQ.opts.forEach(o => {
+                        const d = document.createElement('div');
+                        d.className = "option-item"; d.innerText = o;
+                        d.onclick = () => { 
+                            document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected')); 
+                            d.classList.add('selected'); 
+                        };
+                        list.appendChild(d);
+                    });
+                } else if (this.currQ.type === 'ranking') {
+                    this.currQ.opts.forEach(o => {
+                        const d = document.createElement('div'); d.className = "option-item"; d.innerText = o; list.appendChild(d);
+                    });
+                    Sortable.create(list, { animation: 180 });
+                }
+                this.sync();
+            },
+
+            async submit() {
+                let val = "";
+                if (this.currQ.type === 'text') val = document.getElementById('text-input').value.trim();
+                else if (this.currQ.type === 'choice') val = document.querySelector('.option-item.selected')?.innerText;
+                else if (this.currQ.type === 'ranking') val = Array.from(document.querySelectorAll('.option-item')).map(i => i.innerText).join(" → ");
+
+                if (!val) return alert("Antwort fehlt!");
+
+                const { error } = await sbClient.from('answers').insert([
+                    { user_name: this.session.user.email, question_id: 0, choice: val, day_key: this.todayKey }
+                ]);
+
+                if (error) alert("Du hast heute schon geantwortet!");
+                else {
+                    confetti({ particleCount: 70, spread: 90, origin: { y: 0.6 }, colors: ['#d63031', '#6c5ce7'] });
+                    this.sync();
+                }
+            },
+
+            async sync() {
+                const { data } = await sbClient.from('answers').select('*').eq('day_key', this.todayKey);
+                if (data) {
+                    const me = data.find(a => a.user_name === this.session.user.email);
+                    const other = data.find(a => a.user_name !== this.session.user.email);
+                    if (other) document.getElementById('partner-dot').classList.add('dot-active');
+                    
+                    if (me) {
+                        document.getElementById('save-btn').classList.add('hidden');
+                        document.getElementById('input-zone').classList.add('hidden');
+                        document.getElementById('complete-view').classList.remove('hidden');
+                        document.getElementById('results-box').innerHTML = 
+                            `<b>Deine Antwort:</b> ${me.choice.replace(/\n/g, '<br>')}<br><br>` + 
+                            (other ? `<b>Vom Partner:</b> ${other.choice.replace(/\n/g, '<br>')}` : "<i>Warte auf den Partner...</i>");
+                    }
+                }
+            }
+        };
+
+        // Automatisches Auffüllen
+        for(let i=11; i<=100; i++) {
+            app.questions.push({
+                type: ["choice", "ranking", "text"][i % 3],
+                q: `Tag ${i}: Was schätzt du am meisten an unserem gemeinsamen Leben?`,
+                opts: ["Das Lachen", "Die Ruhe", "Die Pläne", "Der Alltag"]
+            });
+        }
+
+        app.init();
+    </script>
+</body>
+</html>
+
+```
+const txt = document.getElementById('text-input');
                 list.innerHTML = ""; txt.classList.add('hidden');
 
                 if (this.currQ.type === 'text') {
