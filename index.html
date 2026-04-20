@@ -45,6 +45,7 @@
             -webkit-overflow-scrolling: touch; display: flex; flex-direction: column;
         }
 
+        /* MASSIVER FOOTER-ABSTAND FÜR DIE MOBILE NAVIGATION */
         .footer-bar { 
             padding: 15px 25px calc(60px + env(safe-area-inset-bottom)) 25px; 
             flex-shrink: 0; background: white; border-top: 1px solid #f1f2f6;
@@ -81,11 +82,6 @@
         .dot.active { background: var(--secondary); width: 70px; }
         .dot.done { background: var(--accent-green); }
 
-        .info-tab { background: #f1f2ff; border-radius: 18px; padding: 15px; margin-bottom: 25px; font-size: 0.85rem; color: #574b90; border-left: 6px solid var(--secondary); }
-
-        .rank-card { background: var(--light-bg); border: 2px solid #edf2f7; padding: 18px; margin-bottom: 12px; border-radius: 22px; display: flex; align-items: center; gap: 18px; cursor: grab; }
-        .rank-tag { background: var(--secondary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; }
-
         .tot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
         .tot-box { background: var(--light-bg); border: 2px solid #edf2f7; border-radius: 28px; padding: 35px 15px; text-align: center; font-weight: 600; min-height: 110px; display: flex; align-items: center; justify-content: center; }
         .tot-box.selected { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255, 118, 117, 0.2); }
@@ -121,7 +117,7 @@
 
     const pool = {
         tot: [{q: "Morgenstund?", o: ["Ausschlafen 😴", "Früh sporteln 🏃"], i: "Was passt heute zu dir?"}],
-        ranking: [{q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], i: "Schiebe deine Favoriten nach oben."}],
+        ranking: [{q: "Schönste Date-Idee?", o: ["Picknick 🧺", "Kino 🎬", "Kochen 🍳", "Wandern 🥾"], i: "Was würdest du heute am liebsten machen?"}],
         text: [{q: "Drei Worte für unseren Tag?", o: [], i: "Schreib eine kleine Nachricht für deinen Schatz."}]
     };
 
@@ -132,11 +128,12 @@
         step: 0, results: [], dailyQs: [],
 
         async init() {
-            const { data: { session } } = await sb.auth.getSession();
-            if (!session) {
+            const { data: { session }, error } = await sb.auth.getSession();
+            
+            if (!session || error) {
                 this.renderLogin();
             } else {
-                // Automatisches Aufräumen nachts
+                // Nacht-Cleanup
                 await sb.from('answers').delete().lt('day_key', this.day);
                 const email = session.user.email.toLowerCase();
                 this.user = email === 'bisf@gmx.de' ? "Bene" : "Clara";
@@ -151,11 +148,9 @@
             const { data } = await sb.from('answers').select('*').eq('day_key', this.day);
             const me = data?.find(a => a.user_name.toLowerCase() === this.user.toLowerCase());
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
-
-            const greet = greetings[Math.floor(Math.random() * greetings.length)];
             
             document.getElementById('main-content').innerHTML = `
-                <h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 8px;">${greet}${this.user}! ❤️</h2>
+                <h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 8px;">${greetings[Math.floor(Math.random()*greetings.length)]}${this.user}! ❤️</h2>
                 <p style="color:var(--muted); margin-bottom: 30px;">Bereit für unsere täglichen Gedanken?</p>
                 <div class="status-box">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -171,7 +166,7 @@
             const footer = document.getElementById('footer-ui');
             footer.classList.remove('hidden');
             const btn = document.getElementById('action-btn');
-            btn.innerText = me ? "Zu unseren Ergebnissen ✨" : "Jetzt starten 🚀";
+            btn.innerText = me ? "Zu unseren Gedanken ✨" : "Jetzt starten 🚀";
             btn.onclick = () => me ? this.showComparison() : this.startQuiz();
         },
 
@@ -185,7 +180,6 @@
             const q = this.dailyQs[this.step];
             document.getElementById('main-content').innerHTML = `
                 <div class="prog-dots">${[0,1,2].map(i => `<div class="dot ${i===this.step?'active':(i<this.step?'done':'')}"></div>`).join('')}</div>
-                <div class="info-tab"><b>Vorschlag:</b> ${q.i}</div>
                 <h2 style="font-size: 1.4rem;">${q.q}</h2>
                 <div id="quiz-input"></div>
             `;
@@ -220,7 +214,7 @@
             else if (q.o.length > 2) val = Array.from(document.querySelectorAll('.rank-card span:last-child')).map(s => s.innerText).join(" > ");
             else val = document.getElementById('txt-val').value.trim();
 
-            if (!val) return alert("Deine Antwort fehlt noch! ❤️");
+            if (!val) return alert("Antwort fehlt! ❤️");
             this.results.push(val);
             if (this.step < 2) { this.step++; this.renderQuiz(); }
             else this.submit();
@@ -240,26 +234,24 @@
             const other = data?.find(a => a.user_name.toLowerCase() === this.partner.toLowerCase());
             const myA = me.choice.split(" | "), otherA = other ? other.choice.split(" | ") : null;
 
-            let html = `<h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 25px;">Unsere Gedanken</h2>`;
-            this.dailyQs.forEach((q, i) => {
-                html += `
+            document.getElementById('main-content').innerHTML = `
+                <h2 style="text-align:left; font-size: 1.8rem; margin-bottom: 25px;">Unsere Antworten</h2>
+                ${this.dailyQs.map((q, i) => `
                     <div style="margin-bottom:20px;">
                         <div style="font-size:0.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; margin-bottom:10px;">${q.q}</div>
                         <div class="tot-grid">
-                            <div class="res-bubble" style="background:#f1f0ff; border-color:var(--secondary);"><b>ICH</b>${myA[i]}</div>
-                            <div class="res-bubble" style="background:${otherA?'#e3faf3':'#fff1f1'};"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : '⌛ Überlegt noch...'}</div>
+                            <div class="res-bubble" style="background:#f1f0ff;"><b>ICH</b>${myA[i]}</div>
+                            <div class="res-bubble" style="background:${otherA?'#e3faf3':'#fff1f1'};"><b>${this.partner.toUpperCase()}</b>${otherA ? otherA[i] : '⌛ Wartet...'}</div>
                         </div>
-                    </div>`;
-            });
-            
-            document.getElementById('main-content').innerHTML = html;
+                    </div>`).join('')}
+            `;
             const btn = document.getElementById('action-btn');
             btn.innerText = "Gedanken korrigieren 📝";
             btn.onclick = () => this.deleteMyOwn();
         },
 
         async deleteMyOwn() {
-            if (confirm("Möchtest du deine heutigen Gedanken wirklich löschen?")) {
+            if (confirm("Heutige Gedanken löschen?")) {
                 await sb.from('answers').delete().eq('day_key', this.day).eq('user_name', this.user.toLowerCase());
                 location.reload();
             }
@@ -268,8 +260,7 @@
         renderLogin() {
             document.getElementById('main-content').innerHTML = `
                 <h2 style="margin-top:30px; text-align:left; font-size: 2rem;">CB-App</h2>
-                <p style="color:var(--muted); margin-bottom:35px;">Anmelden für euren Moment.</p>
-                <input id="em" type="email" class="login-field" placeholder="E-Mail Adresse">
+                <input id="em" type="email" class="login-field" placeholder="E-Mail">
                 <input id="pw" type="password" class="login-field" placeholder="Passwort">
             `;
             const footer = document.getElementById('footer-ui');
@@ -278,13 +269,13 @@
             btn.innerText = "Einloggen ✨";
             btn.onclick = async () => {
                 const { error } = await sb.auth.signInWithPassword({ email: document.getElementById('em').value, password: document.getElementById('pw').value });
-                if (error) alert("Passwort oder E-Mail falsch!"); else location.reload();
+                if (error) alert("Fehler!"); else location.reload();
             };
         },
 
         async logout() {
             await sb.auth.signOut();
-            location.reload();
+            window.location.replace(window.location.origin + window.location.pathname);
         }
     };
     app.init();
